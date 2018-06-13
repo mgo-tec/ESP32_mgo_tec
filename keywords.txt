@@ -1,0 +1,124 @@
+mgo_tec_esp32_ili9341_sd	KEYWORD1
+
+mgo_tec_esp32_bv1	KEYWORD1
+
+FontParameter	KEYWORD1
+ScrolleParameter	KEYWORD1
+ILI9341Spi	KEYWORD1
+  
+  LCD	KEYWORD2
+  ILI9341init	KEYWORD2
+  dispRotation	KEYWORD2
+  displayClear	KEYWORD2
+  drawPixel65kDotColor_sd	KEYWORD2
+  drawPixel65kDotColor	KEYWORD2
+  drawPixel65k3Color_sd	KEYWORD2
+  drawPixel65k3Color	KEYWORD2
+  drawLine	KEYWORD2
+  drawHorizontalLine	KEYWORD2
+  drawVerticallLine	KEYWORD2
+  drawRectangleLine	KEYWORD2
+  drawRectangleFill	KEYWORD2
+  drawCircleLine	KEYWORD2
+  drawCircleFill	KEYWORD2
+  brightness	KEYWORD2
+
+  XscrolleFontArrayInit	KEYWORD2
+  YscrolleFontArrayInit	KEYWORD2
+  XscrolleFontArrayInitMax	KEYWORD2
+  YscrolleFontArrayInitMax	KEYWORD2
+  scrolleArrayDelete	KEYWORD2
+  scrolleFontSetUp	KEYWORD2
+  scrolleFontColorSet	KEYWORD2
+  scrolleXYrangeComChange	KEYWORD2
+  scrolle8x16font	KEYWORD2
+  scrolle8x16fontInc	KEYWORD2
+  reverseScrolle8x16font	KEYWORD2
+  reverseScrolle8x16fontInc	KEYWORD2
+  Yscrolle8x16fontInc	KEYWORD2
+  YdownScrolle8x16fontInc	KEYWORD2
+  display8x16Font	KEYWORD2
+
+SdUtf8toSjis	KEYWORD1
+  init	KEYWORD2
+  fileClose	KEYWORD2
+  convUtf8ToSjis	KEYWORD2
+  convUtf8ToSjisF	KEYWORD2
+  codeConvUtf8ToSjis	KEYWORD2
+  readTableUtf8SjisF	KEYWORD2
+
+SdShinonomeFont	KEYWORD1
+  SFR	KEYWORD2
+  init3File	KEYWORD2
+  init2File	KEYWORD2
+  close3File	KEYWORD2
+  close2File	KEYWORD2
+  convStrToFont	KEYWORD2
+  convStrToFontF	KEYWORD2
+  convStrToSjisToFont	KEYWORD2
+  convSjisToFontF2	KEYWORD2
+  convSjisToFont	KEYWORD2
+  convSjisToFontF2All	KEYWORD2
+  convSjisToFontAdrs	KEYWORD2
+  convTableAdrsToFullFont	KEYWORD2
+  convTableAdrsToHarfFont	KEYWORD2
+  convSjisToFontInc	KEYWORD2
+  convStrToSjis	KEYWORD2
+
+WebGetClass	KEYWORD1
+  EWG	KEYWORD2
+  EWG_Get_Ntp_Time	KEYWORD2
+  EWG_Send_NTP_Packet	KEYWORD2
+
+  wifiAPconnect	KEYWORD2
+  ntpServerInit	KEYWORD2
+  getNtpTimeInit	KEYWORD2
+  webGet	KEYWORD2
+  httpsWebGet	KEYWORD2
+  httpsWebGet	KEYWORD2
+  httpsGet	KEYWORD2
+  weatherJfontNum	KEYWORD2
+  getNtpServerSelect	KEYWORD2
+  getNtpInterval	KEYWORD2
+
+ILI9341Watch	KEYWORD1
+  NtpStatus	KEYWORD2
+  watchFontSetup	KEYWORD2
+  watchFontRead	KEYWORD2
+  scrolleWatch	KEYWORD2
+  displayColon	KEYWORD2
+  displayColon2	KEYWORD2
+  getNTP	KEYWORD2
+  getNTP2	KEYWORD2
+  getNTPserverSel	KEYWORD2
+  watchStrFontConv	KEYWORD2
+  displayYMDW	KEYWORD2
+  watchDispReset	KEYWORD2
+
+YahooJrssGet	KEYWORD1
+  NewsStatus	KEYWORD2
+  WeatherStatus	KEYWORD2
+  dispYahooJweatherMyFont	KEYWORD2
+  getYahooJnews	KEYWORD2
+  getYahooJnews2	KEYWORD2
+  getYahooJweather	KEYWORD2
+  getYahooJweather2	KEYWORD2
+  scrolleYahooJnews	KEYWORD2
+
+MessageWindow	KEYWORD1
+  WifiStatus	KEYWORD2
+  WebGetStatus	KEYWORD2
+  dispWifiStatusMsg	KEYWORD2
+  dispWifiStatusMsg2	KEYWORD2
+  dispWebGetStatusMsgShort	KEYWORD2
+  dispWebGetStatusMsgLong	KEYWORD2
+  dispMsgWindow	KEYWORD2
+
+ButtonSwitch	KEYWORD1
+  ButtonStatus	KEYWORD2
+  Release	KEYWORD2
+  OnStart	KEYWORD2
+  MomentPress	KEYWORD2
+  LongPress	KEYWORD2
+  ContPress	KEYWORD2
+  buttonAction	KEYWORD2
