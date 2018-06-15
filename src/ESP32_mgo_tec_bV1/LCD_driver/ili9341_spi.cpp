@@ -1,6 +1,6 @@
 /*
   ili9341_spi.cpp - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0
+  Beta version 1.0.1
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -101,88 +101,88 @@ void ILI9341Spi::dispRotation(uint8_t rot){
   switch( rot ){
     case 0: //M5stack 横表示、デフォルト
       b = 0b00001000;
-      m_max_disp_width = 320;
-      m_max_disp_height = 240;
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
       break;
     case 1: //M5stack 縦表示、デフォルト
       b = 0b10101000;
-      m_max_disp_width = 240;
-      m_max_disp_height = 320;
+      m_max_disp_width = mp_max_disp_height;
+      m_max_disp_height = mp_max_disp_width;
       break;
     case 2: //M5stack 横表示、上下逆
       b = 0b11001000;
-      m_max_disp_width = 320;
-      m_max_disp_height = 240;
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
       break;
     case 3: //M5stack 縦表示、上下逆
       b = 0b01101000;
-      m_max_disp_width = 240;
-      m_max_disp_height = 320;
+      m_max_disp_width = mp_max_disp_height;
+      m_max_disp_height = mp_max_disp_width;
       break;
     //------------------------
     case 4: //M5stack 横表示、左右反転
       b = 0b01001000;
-      m_max_disp_width = 320;
-      m_max_disp_height = 240;
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
       break;
     case 5: //M5stack 縦表示、左右反転
       b = 0b00101000;
-      m_max_disp_width = 240;
-      m_max_disp_height = 320;
+      m_max_disp_width = mp_max_disp_height;
+      m_max_disp_height = mp_max_disp_width;
       break;
     case 6: //M5stack 横表示、上下逆、左右反転
       b = 0b10001000;
-      m_max_disp_width = 320;
-      m_max_disp_height = 240;
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
       break;
     case 7: //M5stack 縦表示、上下逆、左右反転
       b = 0b11101000;
-      m_max_disp_width = 240;
-      m_max_disp_height = 320;
+      m_max_disp_width = mp_max_disp_height;
+      m_max_disp_height = mp_max_disp_width;
       break;
     //-------------------------------
     case 8: //M5stack 横表示、デフォルト、上下反転
       b = 0b10001000;
-      m_max_disp_width = 320;
-      m_max_disp_height = 240;
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
       break;
     case 9: //M5stack 縦表示、デフォルト、上下反転
       b = 0b11101000;
-      m_max_disp_width = 240;
-      m_max_disp_height = 320;
+      m_max_disp_width = mp_max_disp_height;
+      m_max_disp_height = mp_max_disp_width;
       break;
     case 10: //M5stack 横表示、上下逆、上下反転
       b = 0b01001000;
-      m_max_disp_width = 320;
-      m_max_disp_height = 240;
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
       break;
     case 11: //M5stack 縦表示、上下逆、上下反転
       b = 0b00101000;
-      m_max_disp_width = 240;
-      m_max_disp_height = 320;
+      m_max_disp_width = mp_max_disp_height;
+      m_max_disp_height = mp_max_disp_width;
       break;
     //-------------------------------
     case 12: //M5stack で表示変わらず
       b = 0b00001100;
-      m_max_disp_width = 320;
-      m_max_disp_height = 240;
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
       break;
     case 13: //M5stack で表示変わらず
       b = 0b00011000;
-      m_max_disp_width = 320;
-      m_max_disp_height = 240;
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
       break;
 
     //------------------------
     case 250:
       b = 0b00101000; //サインスマート販売のILI9341横正常表示(M5stack 縦pixelサイズと横pixelサイズが異なるのでノイズ)
-      m_max_disp_width = 320;
-      m_max_disp_height = 240;
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
       break;
     case 251:
       b = 0b10001000; //サインスマート販売のILI9341の縦方向表示
-      m_max_disp_width = 240;
-      m_max_disp_height = 320;
+      m_max_disp_width = mp_max_disp_height;
+      m_max_disp_height = mp_max_disp_width;
       break;
     default:
       break;

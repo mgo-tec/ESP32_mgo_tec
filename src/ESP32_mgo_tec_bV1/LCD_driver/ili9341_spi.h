@@ -1,6 +1,6 @@
 /*
   ili9341_spi.h - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0
+  Beta version 1.0.1
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -143,7 +143,11 @@ private: //SPIインターフェース関連変数
   uint32_t m_Freq;
 
 private:
+  const uint16_t mp_max_disp_width = 320;
+  const uint16_t mp_max_disp_height = 240;
+
   #define SWAP(type, x, y) do { type tmp = x; x = y; y = tmp; } while (0)
+
   void commandWrite( uint8_t b );
   void dataWrite( uint8_t b );
   void dataWrite16( uint16_t b );
@@ -159,8 +163,8 @@ private:
   void fontParamMaxClip( FontParameter &font, ScrolleParameter &scl_set );
 
 public: //LCD変数群
-  uint16_t m_max_disp_width = 320;
-  uint16_t m_max_disp_height = 240;
+  uint16_t m_max_disp_width = mp_max_disp_width;
+  uint16_t m_max_disp_height = mp_max_disp_height;
   uint8_t m_max_font8x16_x = m_max_disp_width / 8;
   uint8_t m_max_font8x16_y = m_max_disp_height / 16;
   uint16_t m_max_pix_x1 = m_max_disp_width - 1;

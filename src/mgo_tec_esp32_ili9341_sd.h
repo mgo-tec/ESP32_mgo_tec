@@ -1,7 +1,9 @@
 /*
   mgo_tec_esp32_ili9341_sd.h
   This is an include-only file for linking other files.
-  
+
+  beta ver 1.0.0
+
   Use ESP32, LCD ILI9341 spi, SD spi
 */
 

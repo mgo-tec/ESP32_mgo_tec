@@ -1,16 +1,26 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0  
+Beta ver 1.0.1  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
   
   
 # Change log
+(beta ver 1.0.1)  
+ili9341_spi.h  
+ili9341_spi.cpp  
+Fix LCD ILI9341 screen MAX size variable initialization.  
+  
 (beta ver 1.0)  
 New Release.   
   
-# 【更新履歴】(Japanese)  
+# 【更新履歴】(Japanese)
+(beta ver 1.0.1)  
+ili9341_spi.h  
+ili9341_spi.cpp  
+LCD ILI9341 画面MAXサイズ変数初期化を修正。  
+  
 (beta ver 1.0)  
 新規リリース。  
 過去の私の自作ライブラリを１つのパッケージにまとめました。  
