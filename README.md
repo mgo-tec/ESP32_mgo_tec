@@ -1,12 +1,16 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.1  
+Beta ver 1.0.11 
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
   
   
 # Change log
+(beta ver 1.0.11)  
+message_window.cpp  
+Fix spelling error of dispWifiStatusMsg () function message.  
+  
 (beta ver 1.0.1)  
 ili9341_spi.h  
 ili9341_spi.cpp  
@@ -16,6 +20,10 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.11)  
+message_window.cpp  
+dispWifiStatusMsg()関数のメッセージのスペルミスを修正。  
+  
 (beta ver 1.0.1)  
 ili9341_spi.h  
 ili9341_spi.cpp  

@@ -1,7 +1,7 @@
 /*
   message_window.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0
+  Beta version 1.0.11
   
 The MIT License (MIT)
 
@@ -48,7 +48,7 @@ void MessageWindow::dispWifiStatusMsg(){
       font.red = 0;
       font.green = 63;
       font.blue = 0;
-      MessageWindow::dispMsgWindow(1001, "WiFi Conneced!");
+      MessageWindow::dispMsgWindow(1001, "WiFi Connected!");
       WifiStatus = WifiMsgReset;
       break;
     case WifiFailed:
