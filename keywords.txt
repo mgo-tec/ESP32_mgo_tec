@@ -4,6 +4,7 @@ mgo_tec_esp32_bv1	KEYWORD1
 
 FontParameter	KEYWORD1
 ScrolleParameter	KEYWORD1
+GraphParameter	KEYWORD1
 ILI9341Spi	KEYWORD1
   
   LCD	KEYWORD2
