@@ -1,10 +1,15 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.2
+Beta ver 1.0.2  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
   
+Download and use the following library.  
+- Time Library URL:  
+https://github.com/PaulStoffregen/Time  
+- BOSCH BME280 Driver URL:  
+https://github.com/BoschSensortec/BME280_driver  
   
 # Change log
 (beta ver 1.0.2)  
