@@ -1,7 +1,7 @@
 /*
   watch.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0
+  Beta version 1.0.11
   
 The MIT License (MIT)
 
@@ -88,6 +88,78 @@ void ILI9341Watch::watchFontSetup( uint16_t x0, uint16_t y0, uint8_t Xsize, uint
   font[num].x0 = 272;
   font[num].y0 = y0 + 16;
   if( Ysize == 1 ) font[num].y0 = y0;
+  //垂直方向スクロール文字フォント配列生成、および初期化
+  LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
+
+  for( num = 0; num < MAX_TXT_NUM; num++ ){
+    LCD.scrolleFontSetUp( font[num], scllole[num] );
+  }
+
+  //コロンフォント初期化
+  colon1_font.x0 = 96, colon1_font.y0 = y0;
+  colon1_font.Xsize = Xsize, colon1_font.Ysize = Ysize;
+
+  colon2_font.x0 = 216, colon2_font.y0 = y0;
+  colon2_font.Xsize = Xsize, colon2_font.Ysize = Ysize;
+
+  watchDispReset();
+
+  Serial.printf("Free Heap Size = %d\r\n", esp_get_free_heap_size());
+}
+  //*******************************************************
+void ILI9341Watch::watchFontSetup2( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize ){
+  uint8_t num = 0;
+  uint8_t X_max_txt = 2; //横スクロール時刻文字、各桁全角１文字表示(半角２文字分）
+  uint8_t Y_max_txt = 1; //縦スクロール時刻文字、各桁全角１文字表示(半角２文字分）
+  for( num = 0; num < MAX_TXT_NUM; num++ ){
+    LCD.scrolleArrayDelete( scllole[num] ); //ヒープ領域メモリ、配列消去
+  }
+  for( num = 0; num < 6; num++ ){
+    font[num].Xsize = Xsize, font[num].Ysize = Ysize;
+    font[num].y0 = y0; //各文字開始位置
+  }
+
+  num = 0; //時表示十の位
+  scllole[num].interval = 50;
+  font[num].x0 = 0; //各文字開始位置
+  //水平方向スクロール文字フォント配列生成、および初期化
+  LCD.XscrolleFontArrayInit( font[num], scllole[num], X_max_txt, font[num].Xsize, font[num].Ysize);
+
+  num = 1; //時表示一の位
+  scllole[num].interval = 50;
+  font[num].x0 = 48;
+  //垂直方向スクロール文字フォント配列生成、および初期化
+  LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
+
+  num = 2; //分表示十の位
+  scllole[num].interval = 50;
+  font[num].x0 = 120;
+  //水平方向スクロール文字フォント配列生成、および初期化
+  LCD.XscrolleFontArrayInit( font[num], scllole[num], X_max_txt, font[num].Xsize, font[num].Ysize );
+
+  num = 3; //分表示一の位
+  scllole[num].interval = 50;
+  font[num].x0 = 168;
+  //垂直方向スクロール文字フォント配列生成、および初期化
+  LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );  LCD.scrolleFontSetUp( font[num], scllole[num] );
+
+  num = 4; //秒表示十の位
+  scllole[num].interval = 30;
+//  if( Xsize != 1 ) font[num].Xsize = Xsize - 1;
+//  if( Ysize != 1 ) font[num].Ysize = Ysize - 1;
+  font[num].x0 = 240;
+//  font[num].y0 = y0 + 16;
+//  if( Ysize == 1 ) font[num].y0 = y0;
+  //水平方向スクロール文字フォント配列生成、および初期化
+  LCD.XscrolleFontArrayInit( font[num], scllole[num], X_max_txt, font[num].Xsize, font[num].Ysize );
+
+  num = 5; //秒表示一の位
+  scllole[num].interval = 24;
+//  if( Xsize != 1 ) font[num].Xsize = Xsize - 1;
+//  if( Ysize != 1 ) font[num].Ysize = Ysize - 1;
+  font[num].x0 = 272;
+//  font[num].y0 = y0 + 16;
+//  if( Ysize == 1 ) font[num].y0 = y0;
   //垂直方向スクロール文字フォント配列生成、および初期化
   LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
 
@@ -276,27 +348,45 @@ void ILI9341Watch::getNTP(){
 void ILI9341Watch::getNTPserverSel( int timezone, const char *ntp_server_name ){
   delay(2000); //WiFi接続後、ブランクが必要。
   NtpStatus = Connecting;
-  ntp_msg_status = Connecting;
+  ntp_msg_status = (int)Connecting;
 
   Serial.println(F("NTP Getting Wait"));
   Serial.print(F("WiFi.status = ")); Serial.println( WiFi.status() );
-  if( WiFi.status() <= WL_CONNECTED ){
+
+  /*
+  WiFi.status()結果は、Arduino-ESP32 WiFiライブラリ中の WiFiType.h ファイルに記載されている。
+  
+  typedef enum {
+      WL_NO_SHIELD        = 255,   // for compatibility with WiFi Shield library
+      WL_IDLE_STATUS      = 0,
+      WL_NO_SSID_AVAIL    = 1,
+      WL_SCAN_COMPLETED   = 2,
+      WL_CONNECTED        = 3,
+      WL_CONNECT_FAILED   = 4,
+      WL_CONNECTION_LOST  = 5,
+      WL_DISCONNECTED     = 6
+  } wl_status_t;
+  */
+
+  int16_t wifi_state = WiFi.status();
+  if( wifi_state == WL_CONNECTED ){
     EWG.ntpServerInit( timezone, ntp_server_name );
     delay(1000);
     bool isNtpOK = EWG.getNtpServerSelect( timezone ); //NTPサーバーと接続できなかった場合、他のNTPサーバーと接続できるか試す関数
 
     if( isNtpOK ){
       NtpStatus = ConnectOK;
-      ntp_msg_status = ConnectOK;
+      ntp_msg_status = (int)ConnectOK;
       Serial.println( "NTP Get OK! " + String( hour() ) + ":" + String( minute() ) );
     }else{
       NtpStatus = ConnectFailed;
-      ntp_msg_status = ConnectFailed;
+      ntp_msg_status = (int)ConnectFailed;
       Serial.println(F( "NTP Get Failed" ));
     }
   }else{
     NtpStatus = ConnectFailed;
-    ntp_msg_status = ConnectFailed;
+    delay(30); //マルチタスクでメッセージ表示させるためにはこのdelayが無いと、正常にディスプレイに表示してくれない。
+    ntp_msg_status = (int)ConnectFailed;
     Serial.println(F("WiFi Disconnected NTP failed"));
   }
 }

@@ -1,6 +1,6 @@
 /*
   WebGet.h
-  Beta version 1.0
+  Beta version 1.0.1
 
 Copyright (c) 2018 Mgo-tec
 
@@ -80,7 +80,7 @@ public:
 
 private:
   uint32_t mp_LastNTPtime = 0;
-
+  //WiFiClientSecure client;
 };
 
 }// namespace mgo_tec_esp32_bv1

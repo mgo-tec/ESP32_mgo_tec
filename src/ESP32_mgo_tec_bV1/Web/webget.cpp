@@ -1,6 +1,6 @@
 /*
   webget.cpp
-  Beta version 1.0
+  Beta version 1.0.1
 
 Copyright (c) 2017 Mgo-tec
 
@@ -234,7 +234,7 @@ String WebGetClass::httpsGet(const char *Root_Ca, uint8_t rca_set, const char* H
     client.print(str1); //client.println にしないこと。最後に改行コードをプラスして送ってしまう為
     client.flush(); //client出力が終わるまで待つ
     Serial.print(str1);
-    Serial.flush(); //シリアル出力が終わるまで待つ
+    //Serial.flush(); //シリアル出力が終わるまで待つ指令は、余分なdelayがかかってしまうので基本的に使わない
 
   }else{
     Serial.println(F("connection failed"));
@@ -294,8 +294,6 @@ String WebGetClass::httpsGet(const char *Root_Ca, uint8_t rca_set, const char* H
     delay(10);
     Serial.println(F("-------Client Stop"));
   }
-
-  Serial.flush(); //シリアル出力が終わるまで待つ
 
   return ret_str1;
 }

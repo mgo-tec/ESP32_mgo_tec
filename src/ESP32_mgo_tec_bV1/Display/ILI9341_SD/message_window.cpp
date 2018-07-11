@@ -1,7 +1,7 @@
 /*
   message_window.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.11
+  Beta version 1.0.12
   
 The MIT License (MIT)
 
@@ -40,7 +40,10 @@ void MessageWindow::dispWifiStatusMsg(){
     case WifiConnecting:
       font.red = 31;
       font.green = 63;
-      font.blue = 31;
+      font.blue = 0;
+      m_bg_red = 15;
+      m_bg_green = 30;
+      m_bg_blue = 15;
       MessageWindow::dispMsgWindow(1000, "WiFi Connecting...");
       WifiStatus = WifiMsgReset;
       break;
@@ -48,6 +51,9 @@ void MessageWindow::dispWifiStatusMsg(){
       font.red = 0;
       font.green = 63;
       font.blue = 0;
+      m_bg_red = 0;
+      m_bg_green = 30;
+      m_bg_blue = 0;
       MessageWindow::dispMsgWindow(1001, "WiFi Connected!");
       WifiStatus = WifiMsgReset;
       break;
@@ -55,6 +61,9 @@ void MessageWindow::dispWifiStatusMsg(){
       font.red = 31;
       font.green = 0;
       font.blue = 0;
+      m_bg_red = 15;
+      m_bg_green = 0;
+      m_bg_blue = 0;
       MessageWindow::dispMsgWindow(1002, "WiFi Failed");
       WifiStatus = WifiMsgReset;
       break;
@@ -62,6 +71,7 @@ void MessageWindow::dispWifiStatusMsg(){
       break;
   }
 }
+
 //*********************************************
 /* Wifi.status()
     WL_NO_SHIELD        = 255,   // for compatibility with WiFi Shield library
@@ -101,12 +111,52 @@ void MessageWindow::dispWifiStatusMsg2(){
   }
 }
 //*********************************************
+void MessageWindow::dispWifiStatusMsgShort(){
+  switch( WifiStatus ){
+    case WifiConnecting:
+      font.red = 31;
+      font.green = 63;
+      font.blue = 0;
+      m_bg_red = 15;
+      m_bg_green = 30;
+      m_bg_blue = 15;
+      MessageWindow::dispMsgWindow(1000, "WiFi？");
+      WifiStatus = WifiMsgReset;
+      break;
+    case WifiConnected:
+      font.red = 0;
+      font.green = 63;
+      font.blue = 0;
+      m_bg_red = 0;
+      m_bg_green = 30;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(1001, "WiFi◎");
+      WifiStatus = WifiMsgReset;
+      break;
+    case WifiFailed:
+      font.red = 31;
+      font.green = 0;
+      font.blue = 0;
+      m_bg_red = 15;
+      m_bg_green = 0;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(1002, "WiFi×");
+      WifiStatus = WifiMsgReset;
+      break;
+    default:
+      break;
+  }
+}
+//*********************************************
 void MessageWindow::dispWebGetStatusMsgShort( int &web_status, String str ){
   switch( web_status ){
     case Connecting:
       font.red = 31;
       font.green = 63;
-      font.blue = 31;
+      font.blue = 0;
+      m_bg_red = 15;
+      m_bg_green = 30;
+      m_bg_blue = 15;
       MessageWindow::dispMsgWindow(2000, str + "??");
       web_status = MsgReset;
       break;
@@ -114,6 +164,9 @@ void MessageWindow::dispWebGetStatusMsgShort( int &web_status, String str ){
       font.red = 0;
       font.green = 63;
       font.blue = 0;
+      m_bg_red = 0;
+      m_bg_green = 30;
+      m_bg_blue = 0;
       MessageWindow::dispMsgWindow(2001, str + "◎");
       web_status = MsgReset;
       break;
@@ -121,6 +174,9 @@ void MessageWindow::dispWebGetStatusMsgShort( int &web_status, String str ){
       font.red = 31;
       font.green = 0;
       font.blue = 0;
+      m_bg_red = 15;
+      m_bg_green = 0;
+      m_bg_blue = 0;
       MessageWindow::dispMsgWindow(2002, str + "×");
       web_status = MsgReset;
       break;
@@ -128,13 +184,17 @@ void MessageWindow::dispWebGetStatusMsgShort( int &web_status, String str ){
       break;
   }
 }
+
 //*********************************************
 void MessageWindow::dispWebGetStatusMsgLong( uint8_t &web_status, String str ){
   switch( web_status ){
     case Connecting:
       font.red = 31;
       font.green = 63;
-      font.blue = 31;
+      font.blue = 0;
+      m_bg_red = 15;
+      m_bg_green = 30;
+      m_bg_blue = 15;
       MessageWindow::dispMsgWindow(2100, str + " Connecting");
       web_status = MsgReset;
       break;
@@ -142,6 +202,9 @@ void MessageWindow::dispWebGetStatusMsgLong( uint8_t &web_status, String str ){
       font.red = 0;
       font.green = 63;
       font.blue = 0;
+      m_bg_red = 0;
+      m_bg_green = 30;
+      m_bg_blue = 0;
       MessageWindow::dispMsgWindow(2101, str + " Connect OK!");
       web_status = MsgReset;
       break;
@@ -149,6 +212,121 @@ void MessageWindow::dispWebGetStatusMsgLong( uint8_t &web_status, String str ){
       font.red = 31;
       font.green = 0;
       font.blue = 0;
+      m_bg_red = 15;
+      m_bg_green = 0;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(2102, str + " Failed");
+      web_status = MsgReset;
+      break;
+    default:
+      break;
+  }
+}
+//*********白黒反転************************************
+void MessageWindow::dispWifiStatusMsgRev(){
+  switch( WifiStatus ){
+    case WifiConnecting:
+      m_bg_red = 20;
+      m_bg_green = 40;
+      m_bg_blue = 20;
+      MessageWindow::dispMsgWindow(1000, "WiFi Connecting...");
+      WifiStatus = WifiMsgReset;
+      break;
+    case WifiConnected:
+      m_bg_red = 0;
+      m_bg_green = 50;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(1001, "WiFi Connected!");
+      WifiStatus = WifiMsgReset;
+      break;
+    case WifiFailed:
+      m_bg_red = 25;
+      m_bg_green = 0;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(1002, "WiFi Failed");
+      WifiStatus = WifiMsgReset;
+      break;
+    default:
+      break;
+  }
+}
+//*********************************************
+void MessageWindow::dispWifiStatusMsgShortRev(){
+  switch( WifiStatus ){
+    case WifiConnecting:
+      m_bg_red = 20;
+      m_bg_green = 40;
+      m_bg_blue = 20;
+      MessageWindow::dispMsgWindow(1000, "WiFi？");
+      WifiStatus = WifiMsgReset;
+      break;
+    case WifiConnected:
+      m_bg_red = 0;
+      m_bg_green = 40;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(1001, "WiFi◎");
+      WifiStatus = WifiMsgReset;
+      break;
+    case WifiFailed:
+      m_bg_red = 20;
+      m_bg_green = 0;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(1002, "WiFi×");
+      WifiStatus = WifiMsgReset;
+      break;
+    default:
+      break;
+  }
+}
+//********白黒反転*************************************
+void MessageWindow::dispWebGetStatusMsgShortRev( int &web_status, String str ){
+  switch( web_status ){
+    case Connecting:
+      m_bg_red = 20;
+      m_bg_green = 40;
+      m_bg_blue = 20;
+      MessageWindow::dispMsgWindow(2000, str + "??");
+      web_status = MsgReset;
+      break;
+    case ConnectOK:
+      m_bg_red = 0;
+      m_bg_green = 40;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(2001, str + "◎");
+      web_status = MsgReset;
+      break;
+    case ConnectFailed:
+      m_bg_red = 20;
+      m_bg_green = 0;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(2002, str + "×");
+      web_status = MsgReset;
+      break;
+    default:
+      break;
+  }
+}
+//********白黒反転*************************************
+void MessageWindow::dispWebGetStatusMsgLongRev( uint8_t &web_status, String str ){
+  switch( web_status ){
+    case Connecting:
+      m_bg_red = 20;
+      m_bg_green = 40;
+      m_bg_blue = 20;
+      MessageWindow::dispMsgWindow(2100, str + " Connecting");
+      web_status = MsgReset;
+      break;
+    case ConnectOK:
+      m_bg_red = 0;
+      m_bg_green = 40;
+      m_bg_blue = 0;
+      MessageWindow::dispMsgWindow(2101, str + " Connect OK!");
+      web_status = MsgReset;
+      break;
+    case ConnectFailed:
+      m_bg_red = 20;
+      m_bg_green = 0;
+      m_bg_blue = 0;
       MessageWindow::dispMsgWindow(2102, str + " Failed");
       web_status = MsgReset;
       break;
@@ -186,6 +364,7 @@ void MessageWindow::dispMsgWindow( int16_t msg_num, String str ){
     LCD.display8x16Font( font, len, f_buf );
     LCD.drawRectangleLine( m_x0, m_y0, X1, Y1, m_line_red, m_line_green, m_line_blue );
     mp_prev_msg_num = msg_num;
+    //Serial.printf( "message_window no.%d, (%s)\r\n", msg_num, str.c_str() );
   }
 }
 

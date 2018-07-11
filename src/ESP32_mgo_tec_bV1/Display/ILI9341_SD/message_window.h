@@ -1,7 +1,7 @@
 /*
   message_window.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0
+  Beta version 1.0.12
   
 The MIT License (MIT)
 
@@ -48,7 +48,7 @@ namespace mgo_tec_esp32_bv1 {
 class MessageWindow
 {
 private:
-  int16_t mp_prev_msg_num = -1;
+  
 
 public:
   enum WifiMsgStatus { WifiMsgReset, WifiConnecting , WifiConnected, WifiFailed }
@@ -58,7 +58,7 @@ public:
     WebGetStatus = MsgReset;
 
   FontParameter font;
-
+int16_t mp_prev_msg_num = -1;
   uint8_t m_size = 1;
   uint8_t m_txt_length = 38;
   uint16_t m_x0 = 0;
@@ -68,14 +68,24 @@ public:
   uint8_t m_line_red = 31;
   uint8_t m_line_green = 63;
   uint8_t m_line_blue = 31;
+  uint8_t m_red = 31;
+  uint8_t m_green = 63;
+  uint8_t m_blue = 31;
   uint8_t m_bg_red = 0;
   uint8_t m_bg_green = 0;
   uint8_t m_bg_blue = 0;
 
   void dispWifiStatusMsg();
   void dispWifiStatusMsg2();
+  void dispWifiStatusMsgShort();
   void dispWebGetStatusMsgShort( int &web_status, String str );
   void dispWebGetStatusMsgLong( uint8_t &web_status, String str );
+  //--------白黒反転------------
+  void dispWifiStatusMsgRev();
+  void dispWifiStatusMsgShortRev();
+  void dispWebGetStatusMsgShortRev( int &web_status, String str );
+  void dispWebGetStatusMsgLongRev( uint8_t &web_status, String str );
+  //---------------------------
   void dispMsgWindow( int16_t msg_num, String str );
 
 };

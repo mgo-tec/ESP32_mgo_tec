@@ -1,6 +1,6 @@
 /*
   ili9341_spi.cpp - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.1
+  Beta version 1.0.2
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -428,6 +428,18 @@ void ILI9341Spi::drawCircleFill(uint16_t x0, uint16_t y0, uint16_t r, uint8_t re
     }
   }
 }
+//********* LCD Idle Mode OFF ***********************
+void ILI9341Spi::idleModeOff(){
+  ILI9341Spi::spiSetChange();
+  ILI9341Spi::commandWrite(0x38); //Idle mode OFF
+  if(!m_useHw_Cs) digitalWrite(m_cs, HIGH);
+}
+//********* LCD Idle Mode ON ************************
+void ILI9341Spi::idleModeOn(){
+  ILI9341Spi::spiSetChange();
+  ILI9341Spi::commandWrite(0x39); //Idle mode ON
+  if(!m_useHw_Cs) digitalWrite(m_cs, HIGH);
+}
 //********* LCD Display LED brightness **************
 void ILI9341Spi::brightness(uint8_t brightness){
   uint8_t ledc_ch = 0;
@@ -568,7 +580,7 @@ void ILI9341Spi::fontParamMaxClip( FontParameter &font, ScrolleParameter &scl_se
     font.Xsize = m_max_font8x16_x;
   }
   if(font.Ysize >= m_max_font8x16_y){
-    font.Ysize = m_max_font8x16_y;  //under 15
+    font.Ysize = m_max_font8x16_y;
   }
 
   //scl_set.txt_widthは少数を下げて文字欠けを防ぐ
@@ -592,6 +604,48 @@ void ILI9341Spi::fontParamMaxClip( FontParameter &font, ScrolleParameter &scl_se
 
   if( scl_set.x_scl_send_bytes > scl_set.heap_array_size1 ){
     scl_set.x_scl_send_bytes = scl_set.heap_array_size1;
+  }
+}
+//********************************************************************
+void ILI9341Spi::fontParamMaxClip( FontParameter &font ){
+  if( font.x0 >= m_max_disp_width || font.x0 < 0 ) font.x0 = 0;
+  if( font.y0 >= m_max_disp_height || font.y0 < 0 ) font.y0 = 0;
+
+  font.max_disp_x0_x1 = m_max_disp_width - font.x0;
+  if( font.max_disp_x0_x1 < font.Xsize * 8 ){
+    font.x0 = 0;
+    font.max_disp_x0_x1 = m_max_disp_width;
+  }
+  font.max_disp_y0_y1 = m_max_disp_height - font.y0;
+  if( font.max_disp_y0_y1 < font.Ysize * 16 ){
+    font.y0 = 0;
+    font.max_disp_y0_y1 = m_max_disp_height;
+  }
+
+  if(font.Xsize >= m_max_font8x16_x){
+    font.Xsize = m_max_font8x16_x;
+  }
+  if(font.Ysize >= m_max_font8x16_y){
+    font.Ysize = m_max_font8x16_y;
+  }
+
+  //font.txt_widthは少数を下げて文字欠けを防ぐ
+  uint8_t txt_wd_max = floor((float)font.max_disp_x0_x1 / (8 * font.Xsize));
+  if(font.txt_width > txt_wd_max){
+    font.txt_width = txt_wd_max;
+  }
+  uint8_t txt_ht_max = floor((float)font.max_disp_y0_y1/ (16 * font.Ysize));
+  if(font.txt_height > txt_ht_max){
+    font.txt_height = txt_ht_max;
+  }
+
+  font.x_pixel_size = font.txt_width * ( 8 * font.Xsize );
+  if( font.x_pixel_size > font.max_disp_x0_x1 ){
+    font.x_pixel_size = font.max_disp_x0_x1;
+  }
+  font.y_pixel_size = font.txt_height * ( font.Ysize * 16 );
+  if( font.y_pixel_size > font.max_disp_y0_y1 ){
+    font.y_pixel_size = font.max_disp_y0_y1;
   }
 }
 //********************************************************************
@@ -664,7 +718,7 @@ void ILI9341Spi::scrolle8x16font( FontParameter &font, ScrolleParameter &scl_set
         for( j = font.Xsize; j > 0; j-- ){
           scl_set.heap_array[ i ][ inc_ary++ ] = font.dot_msb;
           scl_set.heap_array[ i ][ inc_ary++ ] = font.dot_lsb;
-          if(inc_ary >= array_max) break;;
+          if(inc_ary >= array_max) break;
         }
       }else{
         for( j = font.Xsize; j > 0; j-- ){
@@ -950,15 +1004,13 @@ boolean ILI9341Spi::YdownScrolle8x16fontInc( FontParameter &font, ScrolleParamet
   }
   return ret;
 }
+
 //********************************************************************
 void ILI9341Spi::display8x16Font( FontParameter &font, uint16_t fontSJ_Length, uint8_t Fnt[][16] ){
   ILI9341Spi::spiSetChange();
 
-  if(font.Xsize > 16) font.Xsize = 16;
-  if(font.Ysize > 16) font.Ysize = 16;
-
-  uint8_t X_txt_MAX = (uint8_t)ceilf( (float)m_max_font8x16_x / (float)font.Xsize );
-  if( fontSJ_Length > X_txt_MAX) fontSJ_Length = X_txt_MAX;
+  font.txt_width = fontSJ_Length;
+  ILI9341Spi::fontParamMaxClip( font );
 
   uint8_t bt = 0b00000001;
   uint8_t dot_MSB = (font.red << 3) | (font.green >> 3);
@@ -971,37 +1023,38 @@ void ILI9341Spi::display8x16Font( FontParameter &font, uint16_t fontSJ_Length, u
     bg_dot_LSB = (font.bg_green << 5) | font.bg_blue;
   }
 
-  uint8_t disp_byte[(fontSJ_Length * 8 * font.Xsize) * 2] = {};
+  uint16_t array_max = font.x_pixel_size * 2;
+  uint8_t disp_byte[ array_max ] = {};
   uint16_t byte_cnt = 0;
   uint16_t X_pix_cnt = font.x0, Y_pix_cnt = font.y0;
   uint16_t Y_tmp_range = 0;
 
   int i, j, k, ii, jj;
   for(i = 0; i < 16; i++){
-    for(j = 0; j < fontSJ_Length; j++){
+    for(j = 0; j < font.txt_width; j++){
       for( k = 7; k >= 0; k--){
         if( Fnt[j][i] & (bt << k) ){
           for(ii = font.Xsize; ii > 0; ii--){
             disp_byte[byte_cnt++] = dot_MSB;
             disp_byte[byte_cnt++] = dot_LSB;
             X_pix_cnt++;
-            if(X_pix_cnt > ILI9341Spi::m_max_pix_x1) goto EXIT_max_pixX;
+            if(byte_cnt >= array_max) goto EXIT_max_pixX;
           }
         }else{
           for(ii = font.Xsize; ii > 0; ii--){
             disp_byte[byte_cnt++] = bg_dot_MSB;
             disp_byte[byte_cnt++] = bg_dot_LSB;
             X_pix_cnt++;
-            if(X_pix_cnt > ILI9341Spi::m_max_pix_x1) goto EXIT_max_pixX;
+            if(byte_cnt >= array_max) goto EXIT_max_pixX;
           }
         }
       }
     }
-
+    
 EXIT_max_pixX:
 
     Y_tmp_range = Y_pix_cnt + font.Ysize -1;
-    if(Y_tmp_range > ILI9341Spi::m_max_pix_y1) Y_tmp_range = ILI9341Spi::m_max_pix_y1;
+    if( Y_tmp_range > ILI9341Spi::m_max_pix_y1 ) Y_tmp_range = ILI9341Spi::m_max_pix_y1;
     ILI9341Spi::rangeXY(font.x0, Y_pix_cnt, X_pix_cnt - 1, Y_tmp_range);
     ILI9341Spi::commandWrite( 0x2C ); //RAM write
     for(jj = 0; jj < font.Ysize; jj++){

@@ -1,6 +1,6 @@
 /*
   ili9341_spi.h - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.1
+  Beta version 1.0.2
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -77,6 +77,10 @@ public:
   uint8_t dot_msb = 0, dot_lsb = 0;
   uint8_t bg_dot_msb = 0, bg_dot_lsb = 0;
 
+  uint16_t max_disp_x0_x1, max_disp_y0_y1;
+  uint8_t txt_width = 0, txt_height = 0;
+  uint16_t x_pixel_size,  y_pixel_size;
+
   FontParameter& Set_Xsize( uint8_t value ) { Xsize = value; return *this; };
   FontParameter& Set_Ysize( uint8_t value ) { Ysize = value; return *this; };
   FontParameter& Set_x0( uint8_t value ) { x0 = value; return *this; };
@@ -126,6 +130,45 @@ public:
 
   bool isHeap_create = false;
 };
+  
+//------------------------------------
+class GraphParameter
+{
+private:
+
+public:
+  GraphParameter(){
+    //Serial.println(F("ScrolleParameter Constructor called!"));
+  };
+
+  ~GraphParameter(){
+    //Serial.println(F("ScrolleParameter Destructor called!"));
+  };
+
+  boolean isHeap_create = false;
+  int16_t frame_x0 = 0;
+  int16_t frame_y0 = 0;
+  int16_t frame_x1 = 319;
+  int16_t frame_y1 = 102;
+  int16_t x_data_min = 1;
+  int16_t y_data_min = 1;
+  int16_t x_data_max = 318;
+  int16_t y_data_max = 101;
+
+  uint16_t x_total_points = 317;
+  uint16_t y_total_points = 100;
+
+  float max_value = 100.0;
+  float min_value = 0.0;
+  
+  uint8_t red = 31, green = 63, blue = 31;
+  uint8_t bg_red = 0, bg_green = 0, bg_blue = 0;
+
+public:
+  //heap memory
+  float *array_fGraph;
+
+};
 
 //------------------------------------
 class ILI9341Spi
@@ -161,6 +204,7 @@ private:
 
   void scrolleFormSet( FontParameter &font, ScrolleParameter &scl_set, uint8_t txt_width, uint8_t txt_height, uint8_t Xsize, uint8_t Ysize );
   void fontParamMaxClip( FontParameter &font, ScrolleParameter &scl_set );
+  void fontParamMaxClip( FontParameter &font );
 
 public: //LCD変数群
   uint16_t m_max_disp_width = mp_max_disp_width;
@@ -186,8 +230,8 @@ public:
   void drawRectangleFill( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t red, uint8_t green, uint8_t blue );
   void drawCircleLine( uint16_t x0, uint16_t y0, uint16_t r, uint8_t red, uint8_t green, uint8_t blue );
   void drawCircleFill( uint16_t x0, uint16_t y0, uint16_t r, uint8_t red, uint8_t green, uint8_t blue );
-  //void Idle_mode_OFF();
-  //void Idle_mode_ON();
+  void idleModeOff();
+  void idleModeOn();
   void brightness( uint8_t brightness );
 
   //-------------以下フォント表示系関数----------------------------

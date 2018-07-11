@@ -1,12 +1,22 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.11 
+Beta ver 1.0.2
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
   
   
 # Change log
+(beta ver 1.0.2)  
+- Added mgo_tec_m5stack_bme280.h file.  
+- display_bme280_i2c.h Add & cpp file.  
+Using the BOSCH BME 280 driver, create functions to display graphs and numerical values to ILI9341 such as M5Stack.  
+BOSCH BME280 Driver URL:  
+https://github.com/BoschSensortec/BME280_driver  
+- Added the GraphParameter class to the ili9341_spi file.  
+- Add black and white highlighted display to message_window file.  
+- Other minor modifications.  
+  
 (beta ver 1.0.11)  
 message_window.cpp  
 Fix spelling error of dispWifiStatusMsg () function message.  
@@ -20,6 +30,16 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.2)  
+- mgo_tec_m5stack_bme280.hファイル追加。  
+- display_bme280_i2c.h & cppファイルの追加。  
+BOSCH BME280 ドライバを使い、M5Stack等のILI9341へグラフや数値を表示させる関数を作成。  
+BOSCH BME280 Driver URL:  
+https://github.com/BoschSensortec/BME280_driver  
+- ili9341_spiファイルに、GraphParameterクラス追加。  
+- message_windowファイルに、白黒反転表示を追加。  
+- その他、軽微な修正多数。  
+  
 (beta ver 1.0.11)  
 message_window.cpp  
 dispWifiStatusMsg()関数のメッセージのスペルミスを修正。  

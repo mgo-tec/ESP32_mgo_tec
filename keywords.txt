@@ -110,8 +110,13 @@ MessageWindow	KEYWORD1
   WebGetStatus	KEYWORD2
   dispWifiStatusMsg	KEYWORD2
   dispWifiStatusMsg2	KEYWORD2
+  dispWifiStatusMsgShort	KEYWORD2
   dispWebGetStatusMsgShort	KEYWORD2
   dispWebGetStatusMsgLong	KEYWORD2
+  dispWifiStatusMsgRev	KEYWORD2
+  dispWifiStatusMsgShortRev	KEYWORD2
+  dispWebGetStatusMsgShortRev	KEYWORD2
+  dispWebGetStatusMsgLongRev	KEYWORD2
   dispMsgWindow	KEYWORD2
 
 ButtonSwitch	KEYWORD1
@@ -122,3 +127,17 @@ ButtonSwitch	KEYWORD1
   LongPress	KEYWORD2
   ContPress	KEYWORD2
   buttonAction	KEYWORD2
+
+DisplayBme280I2c	KEYWORD1
+  DispStatus	KEYWORD2
+  TimeMeasureMode	KEYWORD2
+  m_time_measure_mode	KEYWORD2
+  initBme280Force	KEYWORD2
+  getData	KEYWORD2
+  serialPrintSensorData	KEYWORD2
+  initGraphAll	KEYWORD2
+  reDrawGraphAll	KEYWORD2
+  drawGraphNowAll	KEYWORD2
+  initDispValue	KEYWORD2
+  displayValue	KEYWORD2
+  displayMinMaxValue	KEYWORD2

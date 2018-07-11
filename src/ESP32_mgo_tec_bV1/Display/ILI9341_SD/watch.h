@@ -1,7 +1,7 @@
 /*
   watch.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0
+  Beta version 1.0.11
   
 The MIT License (MIT)
 
@@ -96,6 +96,7 @@ public:
 
 public:
   void watchFontSetup( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
+  void watchFontSetup2( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
   void watchFontRead();
   void scrolleWatch();
   void displayColon(uint16_t colon1_sj_len, uint16_t colon2_sj_len, uint8_t colon1_buf[][ 16 ], uint8_t colon2_buf[][ 16 ]);

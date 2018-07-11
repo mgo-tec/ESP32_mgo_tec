@@ -1,7 +1,7 @@
 /*
   yahooj_rss.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0
+  Beta version 1.0.1
   
 The MIT License (MIT)
 
@@ -49,7 +49,7 @@ void YahooJrssGet::dispYahooJweatherMyFont( File F, FontParameter &weather_font 
     String w_str2 = dummy1.substring(0, dummy1.indexOf('|', 2));
     Serial.print(F("Weather Today = ")); Serial.println(w_str1);
     Serial.print(F("Weather Tomorrow = ")); Serial.println(w_str2);
-    Serial.flush();
+    //Serial.flush(); //シリアル出力が終わるまで待つ指令は、余分なdelayがかかってしまうので基本的に使わない
 
     weatherJfontNum(w_str1, 0, hour(), today_fnum, today_col);
     weatherJfontNum(w_str2, 1, hour(), tomorrow_fnum, tomorrow_col);
@@ -194,6 +194,7 @@ void YahooJrssGet::getYahooJnews( const char *host, const char *target_url ){
   String tmp_str = EWG.httpsWebGet( host, String(target_url), '\n', "</rss>", "<title>", "</title>", "◆ " );
 
   if( tmp_str.length() < 80 ){
+    delay(500); //メッセージウィンドウを正しく表示させるために必要
     m_news_str = tmp_str;
     Serial.printf("Cannot News Getting = %s\r\n", tmp_str.c_str());
     NewsStatus = ConnectFailed;
@@ -225,6 +226,7 @@ void YahooJrssGet::getYahooJweather( const char *host, const char *target_url ){
 
   Serial.print(F("Weather forecast = ")); Serial.println(m_weather_str);
   if( m_weather_str.indexOf("※") == 0 ){
+    delay(500); //メッセージウィンドウを正しく表示させるために必要
     WeatherStatus = ConnectFailed;
     weather_msg_status = ConnectFailed;
   }else{
@@ -248,9 +250,9 @@ void YahooJrssGet::scrolleYahooJnews( FontParameter &news_font, ScrolleParameter
       m_news_font_count = 0;
       m_news_sj_length = SFR.convStrToSjis( m_news_str, sj_txt );
       scl_set.full_or_half = SFR.convSjisToFontInc( sj_txt, m_news_sj_length, &m_news_font_count, font_buf);
-      Serial.printf( "m_news_sj_length = %d\r\n", m_news_sj_length );
+      //Serial.printf( "m_news_sj_length = %d\r\n", m_news_sj_length );
       m_news_str = "";
-      Serial.printf("Free Heap Size ( After News Get ) = %d\r\n", esp_get_free_heap_size());
+      //Serial.printf("Free Heap Size ( After News Get ) = %d\r\n", esp_get_free_heap_size());
       m_isNews_get = false;
     }
 
