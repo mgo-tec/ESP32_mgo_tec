@@ -1,7 +1,7 @@
 /*
   message_window.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.12
+  Beta version 1.0.2
   
 The MIT License (MIT)
 
@@ -58,7 +58,8 @@ public:
     WebGetStatus = MsgReset;
 
   FontParameter font;
-int16_t mp_prev_msg_num = -1;
+
+  int16_t m_prev_msg_num = -1;
   uint8_t m_size = 1;
   uint8_t m_txt_length = 38;
   uint16_t m_x0 = 0;
@@ -87,6 +88,7 @@ int16_t mp_prev_msg_num = -1;
   void dispWebGetStatusMsgLongRev( uint8_t &web_status, String str );
   //---------------------------
   void dispMsgWindow( int16_t msg_num, String str );
+  void clearMsgWindow( int16_t msg_num );
 
 };
 

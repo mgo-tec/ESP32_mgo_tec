@@ -1,7 +1,7 @@
 /*
   message_window.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.12
+  Beta version 1.0.2
   
 The MIT License (MIT)
 
@@ -336,7 +336,7 @@ void MessageWindow::dispWebGetStatusMsgLongRev( uint8_t &web_status, String str 
 }
 //*****************************************************
 void MessageWindow::dispMsgWindow( int16_t msg_num, String str ){
-  if( msg_num != mp_prev_msg_num ){
+  if( msg_num != m_prev_msg_num ){
     if( m_txt_length > 40 ) m_txt_length = 40; //最大半角40文字
     uint16_t X1 = m_x0 + m_padding * 2 + (m_txt_length * 8) * m_size - 1;
     if( X1 > LCD.m_max_pix_x1){
@@ -363,8 +363,24 @@ void MessageWindow::dispMsgWindow( int16_t msg_num, String str ){
 
     LCD.display8x16Font( font, len, f_buf );
     LCD.drawRectangleLine( m_x0, m_y0, X1, Y1, m_line_red, m_line_green, m_line_blue );
-    mp_prev_msg_num = msg_num;
+    m_prev_msg_num = msg_num;
     //Serial.printf( "message_window no.%d, (%s)\r\n", msg_num, str.c_str() );
+  }
+}
+//*****************************************************
+void MessageWindow::clearMsgWindow( int16_t msg_num ){
+  //表示されたメッセージ番号(msg_num)と合うものだけクリアーする
+  if( msg_num == m_prev_msg_num ){
+    uint16_t X1 = m_x0 + m_padding * 2 + (m_txt_length * 8) * m_size - 1;
+    if( X1 > LCD.m_max_pix_x1){
+      X1 = LCD.m_max_pix_x1;
+    }
+    uint16_t Y1 = m_y0 + m_padding * 2 + m_size * 16 - 1;
+    if( Y1 > LCD.m_max_pix_y1){
+      Y1 = LCD.m_max_pix_y1;
+    }
+    LCD.drawRectangleFill( m_x0, m_y0, X1, Y1, m_bg_red, m_bg_green, m_bg_blue );
+    m_prev_msg_num = -1;
   }
 }
 

@@ -142,3 +142,18 @@ DisplayBme280I2c	KEYWORD1
   initDispValue	KEYWORD2
   displayValue	KEYWORD2
   displayMinMaxValue	KEYWORD2
+
+DisplayBme680I2c	KEYWORD1
+  DispStatus	KEYWORD2
+  TimeMeasureMode	KEYWORD2
+  m_time_measure_mode	KEYWORD2
+  initBme680Force	KEYWORD2
+  getData	KEYWORD2
+  serialPrintSensorData	KEYWORD2
+  initGraphAll	KEYWORD2
+  reDrawGraphAll	KEYWORD2
+  drawGraphNowAll	KEYWORD2
+  initDispValue	KEYWORD2
+  displayValue	KEYWORD2
+  displayMinMaxValue	KEYWORD2
+  calcGasAverageValue	KEYWORD2

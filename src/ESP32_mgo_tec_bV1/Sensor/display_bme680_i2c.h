@@ -1,6 +1,6 @@
 /*
-  display_bme280_i2c.h - for Arduino core for the ESP32.
-  Beta version 1.0.1
+  display_bme680_i2c.h - for Arduino core for the ESP32.
+  Beta version 1.0.0
   
 The MIT License (MIT)
 
@@ -25,14 +25,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Use BOSCH BME280 Driver.
-URL: https://github.com/BoschSensortec/BME280_driver
+Use BOSCH BME680 Driver.
+URL: https://github.com/BoschSensortec/BME680_driver
 Copyright (C) 2016 - 2017 Bosch Sensortec GmbH
 
 */
 
-#ifndef _MGO_TEC_ESP32_DISPLAY_BME280_I2C_H_INCLUDED
-#define _MGO_TEC_ESP32_DISPLAY_BME280_I2C_H_INCLUDED
+#ifndef _MGO_TEC_ESP32_DISPLAY_BME680_I2C_H_INCLUDED
+#define _MGO_TEC_ESP32_DISPLAY_BME680_I2C_H_INCLUDED
 
 #include <Arduino.h>
 #include <Wire.h>
@@ -41,7 +41,7 @@ Copyright (C) 2016 - 2017 Bosch Sensortec GmbH
 #include "ESP32_mgo_tec_bV1/SD_font_read/shinonome.h"
 
 extern "C" {
-#include "bme280.h" //Bosch Driver ( The 3-Clause BSD License )
+#include "bme680.h" //Bosch Driver ( The 3-Clause BSD License )
 }
 
 extern mgo_tec_esp32_bv1::ILI9341Spi LCD;
@@ -56,19 +56,20 @@ namespace mgo_tec_esp32_bv1 {
 extern "C" {
   //Boschドライバー側で、typedef の関数ポインタがあり、C++コンパイラエラーが出る。
   //その為、この２つの関数のみクラスから外し、externで囲う
-  int8_t bme280UserI2cRead( uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len );
-  int8_t bme280UserI2cWrite( uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len );
+  int8_t bme680UserI2cRead( uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len );
+  int8_t bme680UserI2cWrite( uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len );
 }
 
-class DisplayBme280I2c
+class DisplayBme680I2c
 {
 private:
-  //using bme280_com_fptr_t = int8_t(*)(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
-  struct bme280_dev dev;
-  struct bme280_data comp_data;
+  //using bme680_com_fptr_t = int8_t(*)(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
+  struct bme680_dev gas_sensor;
+  struct bme680_field_data data;
   uint32_t mp_get_data_last_time = 0;
+  uint32_t mp_plot_graph_last_time = 0;
   uint32_t mp_disp_min_max_last_time = 0;
-  String mp_prev_pres_str, mp_prev_temp_str, mp_prev_hum_str;
+  String mp_prev_pres_str, mp_prev_temp_str, mp_prev_hum_str, mp_prev_gas_str;
   boolean isTime_plot_heap_create = false;
 
 public:
@@ -81,16 +82,23 @@ public:
   float m_fTemperature = -500.0;
   float m_fPressure = -500.0;
   float m_fHumidity = -500.0;
+  float m_fGas = 0.0;
   int16_t m_iTemperature = -500;
   int16_t m_iPressure = -500;
   int16_t m_iHumidity = -500;
-  String m_pres_str, m_temp_str, m_hum_str;
+  uint32_t m_iGas = 0;
 
-  uint32_t m_meas_period = 3000; //3000ms
+  String m_pres_str, m_temp_str, m_hum_str, m_gas_str;
+
+  uint32_t m_graph_plot_period = 3000;
+  uint16_t m_meas_period = 3000; //温度・湿度の精度が良いのは3000ms程度
+  uint16_t m_auto_meas_period = 3000; //16bit値。ガスセンサが最低限計測可能になる時間間隔が自動計算される値。
   int8_t m_time_measure_mode = 0;
   boolean m_graph_disp_ok = false;
   boolean m_value_disp_ok = false;
+  boolean m_gas_value_disp_ok = false;
   boolean m_isNewData = false;
+  boolean m_isNewGraphPlotData = false;
   boolean m_isDisp_min_max = false;
   boolean m_isShowing_min_max = false;
 
@@ -104,18 +112,21 @@ private:
   void userDelayMs( uint32_t period );
 
 public:
-  void initBme280Force( int sda, int scl, uint32_t freq );
+  void initBme680Force( int sda, int scl, uint32_t freq, int8_t sensor_ambient_temp );
   void getData();
-  DispState getDataFloat( float *fT, float *fP, float *fH );
+  DispState getDataInteger( float *fT, float *fP, float *fH, float *gas_data );
   void serialPrintSensorData();
-  void initGraphAll( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph, FontParameter &graph_font );
-  void reDrawGraphAll( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph, FontParameter &graph_font );
-  void drawGraphLineAll( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph );
-  void drawGraphNowAll( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph );
+  void initGraphAll( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph, GraphParameter &gas_graph, FontParameter &graph_font );
+  void reDrawGraphFrame( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph, GraphParameter &gas_graph, FontParameter &graph_font );
+  void reDrawGraphAll( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph, GraphParameter &gas_graph, FontParameter &graph_font );
+  void drawGraphLineAll( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph, GraphParameter &gas_graph );
+  void drawGraphNowAll( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph, GraphParameter &gas_graph );
   void initDispValue( FontParameter &pres_font, FontParameter &temp_font, FontParameter &hum_font, int16_t x0, int16_t y0, char unit_c[][5] );
+  void initDispGasValue( FontParameter &gas_font, int16_t x0, int16_t y0, char unit_c[5] );
   void displayValue( FontParameter &pres_font, FontParameter &temp_font, FontParameter &hum_font );
-  void displayMinMaxValue( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph, FontParameter &pres_font, FontParameter &temp_font, FontParameter &hum_font );
-
+  void displayGasValue( FontParameter &gas_font );
+  void displayMinMaxValue( GraphParameter &pres_graph, GraphParameter &temp_graph, GraphParameter &hum_graph, GraphParameter &gas_graph, FontParameter &pres_font, FontParameter &temp_font, FontParameter &hum_font, FontParameter &gas_font );
+  int32_t calcGasAverageValue( GraphParameter &gas_graph, uint16_t sample );
 };
 
 }// namespace mgo_tec_esp32_bv1
