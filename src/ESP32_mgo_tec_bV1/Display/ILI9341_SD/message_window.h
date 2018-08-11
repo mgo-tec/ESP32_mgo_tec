@@ -1,7 +1,7 @@
 /*
   message_window.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.2
+  Beta version 1.0.21
   
 The MIT License (MIT)
 

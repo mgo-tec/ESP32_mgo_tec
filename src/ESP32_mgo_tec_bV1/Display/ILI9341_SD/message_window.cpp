@@ -1,7 +1,7 @@
 /*
   message_window.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.2
+  Beta version 1.0.21
   
 The MIT License (MIT)
 
@@ -347,7 +347,7 @@ void MessageWindow::dispMsgWindow( int16_t msg_num, String str ){
       Y1 = LCD.m_max_pix_y1;
     }
 
-    uint8_t f_buf[ str.length() ][ 16 ] = {};
+    uint8_t f_buf[ str.length() + 2 ][ 16 ] = {};
     uint16_t len = SFR.convStrToFont(str, f_buf);
     if( len > m_txt_length ) len = m_txt_length;
 

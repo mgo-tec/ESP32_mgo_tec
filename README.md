@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.3  
+Beta ver 1.0.31  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -12,6 +12,9 @@ https://github.com/PaulStoffregen/Time
 https://github.com/BoschSensortec/BME280_driver  
   
 # Change log
+(beta ver 1.0.31)  
+Modified dispMsgWindow function in message_window.cpp file slightly.  
+  
 (beta ver 1.0.3)  
 - display_bme680_i2c.h Add a new & cpp file.  
 - Added clearMsgWindow function to message_window file.  
@@ -40,6 +43,9 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.31)  
+message_window.cpp ファイルのdispMsgWindow関数を少々修正しました。  
+  
 (beta ver 1.0.3)  
 - display_bme680_i2c.h & cppファイルを新たに追加。  
 - message_windowファイルに、clearMsgWindow関数追加。  
