@@ -1,7 +1,7 @@
 /*
   message_window.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.21
+  Beta version 1.0.3
   
 The MIT License (MIT)
 
@@ -186,7 +186,7 @@ void MessageWindow::dispWebGetStatusMsgShort( int &web_status, String str ){
 }
 
 //*********************************************
-void MessageWindow::dispWebGetStatusMsgLong( uint8_t &web_status, String str ){
+void MessageWindow::dispWebGetStatusMsgLong( int &web_status, String str ){
   switch( web_status ){
     case Connecting:
       font.red = 31;
@@ -307,7 +307,7 @@ void MessageWindow::dispWebGetStatusMsgShortRev( int &web_status, String str ){
   }
 }
 //********白黒反転*************************************
-void MessageWindow::dispWebGetStatusMsgLongRev( uint8_t &web_status, String str ){
+void MessageWindow::dispWebGetStatusMsgLongRev( int &web_status, String str ){
   switch( web_status ){
     case Connecting:
       m_bg_red = 20;

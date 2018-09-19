@@ -1,7 +1,7 @@
 /*
   yahooj_rss.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.1
+  Beta version 1.0.2
   
 The MIT License (MIT)
 
@@ -186,12 +186,20 @@ void YahooJrssGet::weatherJfontNum(String str, uint8_t wDay, uint8_t Htime, uint
 }
 //**************************************
 void YahooJrssGet::getYahooJnews( const char *host, const char *target_url ){
+  YahooJrssGet::getYahooJnewsRCA( "\0", 0, host, target_url );
+}
+//**************************************
+void YahooJrssGet::getYahooJnews( const char *Root_Ca, const char *host, const char *target_url ){
+  YahooJrssGet::getYahooJnewsRCA( Root_Ca, 1, host, target_url );
+}
+//**************************************
+void YahooJrssGet::getYahooJnewsRCA( const char *Root_Ca, uint8_t rca_set, const char *host, const char *target_url ){
   char web_get_time[6];
   sprintf(web_get_time, "%02d:%02d", hour(), minute()); //ゼロを空白で埋める場合は%2dとする
   NewsStatus = Connecting;
   news_msg_status = Connecting;
 
-  String tmp_str = EWG.httpsWebGet( host, String(target_url), '\n', "</rss>", "<title>", "</title>", "◆ " );
+  String tmp_str = EWG.httpsGet( Root_Ca, rca_set, host, String(target_url), '\n', "</rss>", "<title>", "</title>", "◆ " );
 
   if( tmp_str.length() < 80 ){
     delay(500); //メッセージウィンドウを正しく表示させるために必要
@@ -219,10 +227,18 @@ void YahooJrssGet::getYahooJnews2(const char *host, const char *target_url, uint
 }
 //************** Yahoo RSS 天気予報取得 *************************
 void YahooJrssGet::getYahooJweather( const char *host, const char *target_url ){
+  YahooJrssGet::getYahooJweatherRCA( "\0", 0, host, target_url );
+}
+  //************** Yahoo RSS 天気予報取得 *************************
+void YahooJrssGet::getYahooJweather( const char *Root_Ca, const char *host, const char *target_url ){
+  YahooJrssGet::getYahooJweatherRCA( Root_Ca, 1, host, target_url );
+}
+//************** Yahoo RSS 天気予報取得 *************************
+void YahooJrssGet::getYahooJweatherRCA( const char *Root_Ca, uint8_t rca_set, const char *host, const char *target_url ){
   WeatherStatus = Connecting;
   weather_msg_status = Connecting;
 
-  m_weather_str = EWG.httpsWebGet( host, String(target_url),  '>', "</rss", "】 ", " - ", "|" );
+  m_weather_str = EWG.httpsGet( Root_Ca, rca_set, host, String(target_url),  '>', "</rss", "】 ", " - ", "|" );
 
   Serial.print(F("Weather forecast = ")); Serial.println(m_weather_str);
   if( m_weather_str.indexOf("※") == 0 ){
@@ -247,17 +263,19 @@ void YahooJrssGet::getYahooJweather2( const char *host, const char *target_url, 
 void YahooJrssGet::scrolleYahooJnews( FontParameter &news_font, ScrolleParameter &scl_set, uint8_t *sj_txt, uint8_t font_buf[][16] ){
   if( m_isNews_first_get == false ){
     if( m_isNews_get == true ){
-      m_news_font_count = 0;
-      m_news_sj_length = SFR.convStrToSjis( m_news_str, sj_txt );
-      scl_set.full_or_half = SFR.convSjisToFontInc( sj_txt, m_news_sj_length, &m_news_font_count, font_buf);
+      scl_set.font_count = 0;
+      scl_set.font_sjis_len = SFR.convStrToSjis( m_news_str, sj_txt );
+      scl_set.full_or_half = SFR.convSjisToFontInc( sj_txt, scl_set.font_sjis_len, &scl_set.font_count, font_buf );
       //Serial.printf( "m_news_sj_length = %d\r\n", m_news_sj_length );
       m_news_str = "";
       //Serial.printf("Free Heap Size ( After News Get ) = %d\r\n", esp_get_free_heap_size());
       m_isNews_get = false;
+      scl_set.single_fnt_scl_cnt = 0;
+      scl_set.full_or_half_cnt = 0;
     }
 
-    if( LCD.scrolle8x16fontInc( news_font, scl_set, m_news_sj_length, font_buf ) ){
-      scl_set.full_or_half = SFR.convSjisToFontInc( sj_txt, m_news_sj_length, &m_news_font_count, font_buf);
+    if( LCD.scrolle8x16fontInc( news_font, scl_set, scl_set.font_sjis_len, font_buf ) ){
+      scl_set.full_or_half = SFR.convSjisToFontInc( sj_txt, scl_set.font_sjis_len, &scl_set.font_count, font_buf );
     }
   }
 }

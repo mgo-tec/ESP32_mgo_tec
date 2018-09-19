@@ -1,6 +1,6 @@
 /*
   shinonome.cpp - Arduino core for the ESP32 Library.
-  Beta version 1.0
+  Beta version 1.0.1
   This is micro SD card library for reading Shinonome font.  
   
 The MIT License (MIT)
@@ -408,16 +408,17 @@ uint8_t SdShinonomeFont::convSjisToFontInc(uint8_t *sj, uint16_t length, uint16_
 
     SdShinonomeFont::convTableAdrsToHarfFont(mp_half_shino_file, fnt_adrs_half, buf[0]);
     cp = 1;
-    
-    if((*(sj + *sj_cnt+1)>=0x20 && *(sj + *sj_cnt+1)<=0x7E) || (*(sj + *sj_cnt+1)>=0xA1 && *(sj + *sj_cnt+1)<=0xDF)){
-      if(*(sj + *sj_cnt+1)<=0x63) fnt_adrs_half = 0x1346+(*(sj + *sj_cnt+1)-0x20)*126;
-      else if(*(sj + *sj_cnt+1)<=0x7E) fnt_adrs_half = 0x34BF+(*(sj + *sj_cnt+1)-0x64)*127;
-      else if(*(sj + *sj_cnt+1)>=0xA1) fnt_adrs_half = 0x4226+(*(sj + *sj_cnt+1)-0xA1)*129;
-      
-      SdShinonomeFont::convTableAdrsToHarfFont(mp_half_shino_file, fnt_adrs_half, buf[1]);
-      cp = 2;
-    }else{
-      cp = 1;
+    if( *sj_cnt < (length - 1) ){
+      if((*(sj + *sj_cnt+1)>=0x20 && *(sj + *sj_cnt+1)<=0x7E) || (*(sj + *sj_cnt+1)>=0xA1 && *(sj + *sj_cnt+1)<=0xDF)){
+        if(*(sj + *sj_cnt+1)<=0x63) fnt_adrs_half = 0x1346+(*(sj + *sj_cnt+1)-0x20)*126;
+        else if(*(sj + *sj_cnt+1)<=0x7E) fnt_adrs_half = 0x34BF+(*(sj + *sj_cnt+1)-0x64)*127;
+        else if(*(sj + *sj_cnt+1)>=0xA1) fnt_adrs_half = 0x4226+(*(sj + *sj_cnt+1)-0xA1)*129;
+
+        SdShinonomeFont::convTableAdrsToHarfFont(mp_half_shino_file, fnt_adrs_half, buf[1]);
+        cp = 2;
+      }else{
+        cp = 1;
+      }
     }
   }else{
     SdShinonomeFont::convSjisToFontAdrs(*(sj + *sj_cnt), *(sj + *sj_cnt+1), &fnt_adrs_Zen);

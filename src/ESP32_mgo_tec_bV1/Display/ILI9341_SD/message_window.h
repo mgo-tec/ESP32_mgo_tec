@@ -1,7 +1,7 @@
 /*
   message_window.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.21
+  Beta version 1.0.3
   
 The MIT License (MIT)
 
@@ -80,12 +80,12 @@ public:
   void dispWifiStatusMsg2();
   void dispWifiStatusMsgShort();
   void dispWebGetStatusMsgShort( int &web_status, String str );
-  void dispWebGetStatusMsgLong( uint8_t &web_status, String str );
+  void dispWebGetStatusMsgLong( int &web_status, String str );
   //--------白黒反転------------
   void dispWifiStatusMsgRev();
   void dispWifiStatusMsgShortRev();
   void dispWebGetStatusMsgShortRev( int &web_status, String str );
-  void dispWebGetStatusMsgLongRev( uint8_t &web_status, String str );
+  void dispWebGetStatusMsgLongRev( int &web_status, String str );
   //---------------------------
   void dispMsgWindow( int16_t msg_num, String str );
   void clearMsgWindow( int16_t msg_num );

@@ -1,6 +1,6 @@
 /*
   ili9341_spi.cpp - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.2
+  Beta version 1.0.3
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -694,8 +694,6 @@ void ILI9341Spi::scrolleXYrangeComChange( FontParameter &font, ScrolleParameter 
 void ILI9341Spi::scrolle8x16font( FontParameter &font, ScrolleParameter &scl_set, uint16_t *fnt_cnt, const uint16_t &font_sjis_len, uint8_t Fnt[][16], bool xy_range_set){
   //Default xy_range_set = true;
   if( millis() - scl_set.scl_last_time > scl_set.interval){
-    scl_set.font_sjis_len = font_sjis_len;
-
     if( (font.Xsize != font.prev_Xsize) || (font.Ysize != font.prev_Ysize) ){
       ILI9341Spi::scrolleFormSet( font, scl_set,  scl_set.txt_width, scl_set.txt_height, font.Xsize, font.Ysize );
     }
@@ -714,7 +712,7 @@ void ILI9341Spi::scrolle8x16font( FontParameter &font, ScrolleParameter &scl_set
 
     for(i = 0; i < 16; i++){
       inc_ary = scl_set.x_scl_send_bytes;
-      if( Fnt[ *fnt_cnt ][ i ] & (bt1 >> scl_set.sngle_fnt_scl_cnt) ){
+      if( Fnt[ *fnt_cnt ][ i ] & (bt1 >> scl_set.single_fnt_scl_cnt) ){
         for( j = font.Xsize; j > 0; j-- ){
           scl_set.heap_array[ i ][ inc_ary++ ] = font.dot_msb;
           scl_set.heap_array[ i ][ inc_ary++ ] = font.dot_lsb;
@@ -733,7 +731,7 @@ void ILI9341Spi::scrolle8x16font( FontParameter &font, ScrolleParameter &scl_set
 
     int16_t now_dec_send_byteNum = array_max - inc_ary;
 //Serial.printf("arry_max=%d, inc_ary=%d, now_dec_send_byteNum=%d\r\n",array_max, inc_ary, now_dec_send_byteNum);
-//Serial.printf("scl_cnt=%d, fnt_cnt=%d\r\n", scl_set.sngle_fnt_scl_cnt, *fnt_cnt);
+//Serial.printf("scl_cnt=%d, fnt_cnt=%d\r\n", scl_set.single_fnt_scl_cnt, *fnt_cnt);
     for(i = 0; i < 16; i++){
       for(j = font.Ysize; j > 0; j--){
         ILI9341Spi::dataWriteBytes( &scl_set.heap_array[ i ][ inc_ary ], now_dec_send_byteNum );
@@ -743,11 +741,11 @@ void ILI9341Spi::scrolle8x16font( FontParameter &font, ScrolleParameter &scl_set
 
     scl_set.x_scl_send_bytes = inc_ary;
 
-    scl_set.sngle_fnt_scl_cnt++;
-    if( scl_set.sngle_fnt_scl_cnt > 7 ){
-      scl_set.sngle_fnt_scl_cnt = 0;
+    scl_set.single_fnt_scl_cnt++;
+    if( scl_set.single_fnt_scl_cnt > 7 ){
+      scl_set.single_fnt_scl_cnt = 0;
       (*fnt_cnt)++;
-      if( *fnt_cnt >= scl_set.font_sjis_len ) {
+      if( *fnt_cnt >= font_sjis_len ) {
         *fnt_cnt = 0;
       }
     }
@@ -760,8 +758,8 @@ void ILI9341Spi::scrolle8x16font( FontParameter &font, ScrolleParameter &scl_set
 boolean ILI9341Spi::scrolle8x16fontInc( FontParameter &font, ScrolleParameter &scl_set, const uint16_t &fontSJ_Length, uint8_t Fnt[][16], bool xy_range_set ){
   boolean ret = false;
   scl_set.font_sjis_len = fontSJ_Length;
-
-  ILI9341Spi::scrolle8x16font( font, scl_set, &scl_set.full_or_half_cnt, fontSJ_Length, Fnt, xy_range_set );
+  //半角２文字分スクロールし、次のフォントを毎回読み出すようにする。
+  ILI9341Spi::scrolle8x16font( font, scl_set, &scl_set.full_or_half_cnt, scl_set.font_sjis_len, Fnt, xy_range_set );
   if((scl_set.full_or_half == 2) && (scl_set.full_or_half_cnt == 2)){
     scl_set.full_or_half_cnt = 0;
     ret = true;
@@ -798,7 +796,7 @@ void ILI9341Spi::reverseScrolle8x16font( FontParameter &font, ScrolleParameter &
 
     for(i = 0; i < 16; i++){
       dec_ary = array_max - scl_set.x_scl_send_bytes;
-      if( Fnt[ f_cnt ][ i ] & (bt1 << scl_set.sngle_fnt_scl_cnt) ){
+      if( Fnt[ f_cnt ][ i ] & (bt1 << scl_set.single_fnt_scl_cnt) ){
         for( j = font.Xsize; j > 0; j-- ){
           scl_set.heap_array[ i ][ dec_ary-- ] = font.dot_lsb; //正スクロールと逆のバイト配列になり、LSBが先行
           scl_set.heap_array[ i ][ dec_ary-- ] = font.dot_msb;
@@ -834,8 +832,8 @@ void ILI9341Spi::reverseScrolle8x16font( FontParameter &font, ScrolleParameter &
       }
     }
 
-    if( ++scl_set.sngle_fnt_scl_cnt > 7 ){
-      scl_set.sngle_fnt_scl_cnt = 0;
+    if( ++scl_set.single_fnt_scl_cnt > 7 ){
+      scl_set.single_fnt_scl_cnt = 0;
       if( ++(*fnt_cnt) >= scl_set.font_sjis_len ) {
         *fnt_cnt = 0;
       }
@@ -892,7 +890,7 @@ boolean ILI9341Spi::Yscrolle8x16fontInc( FontParameter &font, ScrolleParameter &
         }
       }else{
         for( bit_count = 0; bit_count < 8; bit_count++){
-          if( Fnt[ i ][ scl_set.sngle_fnt_scl_cnt ] & (bt1 >> bit_count) ){
+          if( Fnt[ i ][ scl_set.single_fnt_scl_cnt ] & (bt1 >> bit_count) ){
             for( j = font.Xsize; j > 0; j-- ){
               scl_set.heap_array[ scl_set.y_cnt ][ x_count++ ] = font.dot_msb;
               scl_set.heap_array[ scl_set.y_cnt ][ x_count++ ] = font.dot_lsb;
@@ -921,9 +919,9 @@ boolean ILI9341Spi::Yscrolle8x16fontInc( FontParameter &font, ScrolleParameter &
       }
     }
 
-    scl_set.sngle_fnt_scl_cnt++;
-    if( scl_set.sngle_fnt_scl_cnt > 15 ){
-      scl_set.sngle_fnt_scl_cnt = 0;
+    scl_set.single_fnt_scl_cnt++;
+    if( scl_set.single_fnt_scl_cnt > 15 ){
+      scl_set.single_fnt_scl_cnt = 0;
       ret = true;
     }
 
@@ -964,7 +962,7 @@ boolean ILI9341Spi::YdownScrolle8x16fontInc( FontParameter &font, ScrolleParamet
         }
       }else{
         for( bit_count = 0; bit_count < 8; bit_count++){
-          if( Fnt[i][ 15 - scl_set.sngle_fnt_scl_cnt ] & (bt1 >> bit_count) ){
+          if( Fnt[i][ 15 - scl_set.single_fnt_scl_cnt ] & (bt1 >> bit_count) ){
             for( j = font.Xsize; j > 0; j-- ){
               scl_set.heap_array[ scl_rev_Y_cnt ][ x_count++ ] = font.dot_msb;
               scl_set.heap_array[ scl_rev_Y_cnt ][ x_count++ ] = font.dot_lsb;
@@ -993,9 +991,9 @@ boolean ILI9341Spi::YdownScrolle8x16fontInc( FontParameter &font, ScrolleParamet
     scl_set.y_cnt++; 
     if( scl_set.y_cnt > array_Y_max ) scl_set.y_cnt = 0;
 
-    scl_set.sngle_fnt_scl_cnt++;
-    if( scl_set.sngle_fnt_scl_cnt > 15 ){
-      scl_set.sngle_fnt_scl_cnt = 0;
+    scl_set.single_fnt_scl_cnt++;
+    if( scl_set.single_fnt_scl_cnt > 15 ){
+      scl_set.single_fnt_scl_cnt = 0;
       ret = true;
     }
 

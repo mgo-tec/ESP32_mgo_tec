@@ -1,4 +1,7 @@
 mgo_tec_esp32_ili9341_sd	KEYWORD1
+mgo_tec_m5stack_bme280	KEYWORD1
+mgo_tec_m5stack_bme680	KEYWORD1
+mgo_tec_esp32_m5stack_firebase	KEYWORD1
 
 mgo_tec_esp32_bv1	KEYWORD1
 
@@ -157,3 +160,18 @@ DisplayBme680I2c	KEYWORD1
   displayValue	KEYWORD2
   displayMinMaxValue	KEYWORD2
   calcGasAverageValue	KEYWORD2
+
+FirebaseRD	KEYWORD1
+  FirebaseState	KEYWORD2
+  PatchStatus	KEYWORD2
+  SseStatus	KEYWORD2
+  init	KEYWORD2
+  sendGetRequestSSE	KEYWORD2
+  patchHTTPrequest	KEYWORD2
+  pickUpStrSSEdataAll	KEYWORD2
+  pickUpStrToTargetStr	KEYWORD2
+  pickUpTargetStr	KEYWORD2
+
+DispShinonomeFnt	KEYWORD1
+  scrolleText	KEYWORD2
+  newSetText	KEYWORD2

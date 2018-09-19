@@ -225,7 +225,7 @@ String WebGetClass::httpsGet(const char *Root_Ca, uint8_t rca_set, const char* H
     Serial.println(F("connected"));
     Serial.println(F("-------WEB HTTPS GET Request"));
     
-    String str1 = String("GET https://") + String( Host ) + t_ip + " HTTP/1.1\r\n";
+    String str1 = String("GET ") + t_ip + " HTTP/1.1\r\n";
            str1 += "Host: " + String( Host ) + "\r\n";
            str1 += "User-Agent: BuildFailureDetectorESP32\r\n";
            str1 += "Connection: close\r\n\r\n"; //closeを使うと、サーバーの応答後に切断される。最後に空行必要

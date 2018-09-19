@@ -1,7 +1,7 @@
 /*
   yahooj_rss.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.1
+  Beta version 1.0.2
   
 The MIT License (MIT)
 
@@ -79,8 +79,12 @@ public:
   void dispYahooJweatherMyFont( File F, FontParameter &weather_font );
 
   void getYahooJnews( const char *host, const char *target_url );
+  void getYahooJnews( const char *Root_Ca, const char *host, const char *target_url );
+  void getYahooJnewsRCA( const char *Root_Ca, uint8_t rca_set, const char *host, const char *target_url );
   void getYahooJnews2( const char *host, const char *target_url, uint32_t get_interval );
   void getYahooJweather( const char *host, const char *target_url );
+  void getYahooJweather( const char *Root_Ca, const char *host, const char *target_url );
+  void getYahooJweatherRCA( const char *Root_Ca, uint8_t rca_set, const char *host, const char *target_url );
   void getYahooJweather2( const char *host, const char *target_url, uint32_t get_interval );
 
   void scrolleYahooJnews( FontParameter &font, ScrolleParameter &scl_set, uint8_t *sj_txt, uint8_t font_buf[][16] );

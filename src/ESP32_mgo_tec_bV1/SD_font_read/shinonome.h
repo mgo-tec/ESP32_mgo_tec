@@ -1,6 +1,6 @@
 /*
   shinonome.h - Arduino core for the ESP32 Library.
-  Beta version 1.0
+  Beta version 1.0.1
   This is micro SD card library for reading Shinonome font.  
   
 The MIT License (MIT)

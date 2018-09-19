@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.31  
+Beta ver 1.0.40  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -12,6 +12,16 @@ https://github.com/PaulStoffregen/Time
 https://github.com/BoschSensortec/BME280_driver  
   
 # Change log
+(beta ver 1.0.40)  
+- Added firebase_realtime_database.h & cpp file.  
+- Add display_shinonome_fnt. & cpp file.  
+I tried scrolling the Japanese Shinonome font string easily.  
+- Fix scrolle8x16font function of ili9341spi.cpp. Other minor fixes.  
+- Fix convSjisToFontInc function of shinonome.cpp.  
+- Minor modification of message_window.cpp.  
+- Fix scrolleYahooJnews function in yahooj_rss.cpp.  
+- Added file mgo_tec_esp32_m5stack_firebase.h file.  
+  
 (beta ver 1.0.31)  
 Modified dispMsgWindow function in message_window.cpp file slightly.  
   
@@ -43,7 +53,17 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
-(beta ver 1.0.31)  
+(beta ver 1.0.40)  
+- firebase_realtime_database.h & cpp ファイル追加。  
+- display_shinonome_fnt. & cpp ファイル追加。  
+日本語東雲フォント文字列のスクロールを簡単にしてみました。  
+- ili9341_spi.cpp の、scrolle8x16font関数を修正。その他、軽微な修正。  
+- shinonome.cpp の convSjisToFontInc関数を修正。  
+- message_window.cpp の軽微な修正。  
+- yahooj_rss.cpp の scrolleYahooJnews関数修正。  
+- mgo_tec_esp32_m5stack_firebase.h ファイル追加。  
+  
+(beta ver 1.0.31)    
 message_window.cpp ファイルのdispMsgWindow関数を少々修正しました。  
   
 (beta ver 1.0.3)  

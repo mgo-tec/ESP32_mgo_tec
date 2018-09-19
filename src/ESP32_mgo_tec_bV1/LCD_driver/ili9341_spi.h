@@ -1,6 +1,6 @@
 /*
   ili9341_spi.h - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.2
+  Beta version 1.0.3
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -120,7 +120,7 @@ public:
   uint8_t txt_width = 0, txt_height = 0;
 
   uint32_t scl_last_time = 0;
-  uint8_t sngle_fnt_scl_cnt = 0;
+  uint8_t single_fnt_scl_cnt = 0;
   uint16_t x_scl_send_bytes = {};
   uint16_t y_scl_send_bytes = {};
 
