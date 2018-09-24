@@ -10,6 +10,11 @@ Download and use the following library.
 https://github.com/PaulStoffregen/Time  
 - BOSCH BME280 Driver URL:  
 https://github.com/BoschSensortec/BME280_driver  
+- BOSCH BME680 Driver URL:  
+https://github.com/BoschSensortec/BME680_driver  
+  
+If the BOSCH sensor library is not installed, a compile error will be issued.  
+If you do not need it, delete /Sensor/ folder and the files in it.  
   
 # Change log
 (beta ver 1.0.40)  
