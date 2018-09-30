@@ -1,6 +1,6 @@
 /*
   webget.cpp
-  Beta version 1.0.1
+  Beta version 1.0.11
 
 Copyright (c) 2017 Mgo-tec
 
@@ -208,61 +208,78 @@ String WebGetClass::httpsWebGet(const char *root_ca, const char* host1, String t
   return str;
 }
 
-String WebGetClass::httpsGet(const char *Root_Ca, uint8_t rca_set, const char* Host, String t_ip, char c_tag, String F_tag, String B_tag, String E_tag, String Pph){
-  String ret_str1;
+String WebGetClass::httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, String t_ip, char c_tag, String F_tag, String B_tag, String E_tag, String Pph ){
+  int16_t wifi_state = WiFi.status();
+  if( wifi_state != WL_CONNECTED ){
+    return "※WiFi APに接続できません";
+  }
 
+  String ret_str1;
   WiFiClientSecure client;
 
-  if(rca_set ==1){
-    client.setCACert(Root_Ca);
-    Serial.println(F("-------Root CA SET"));
+  if( rca_set ==1 ){
+    client.setCACert( Root_Ca );
+    Serial.println( F("-------Root CA SET") );
   }else{
-    Serial.println(F("------- Nothing Root CA"));
+    Serial.println( F("------- Nothing Root CA") );
   }
 
-  if (client.connect(Host, 443)){
-    Serial.print(Host); Serial.print(F("-------------"));
-    Serial.println(F("connected"));
-    Serial.println(F("-------WEB HTTPS GET Request"));
-    
-    String str1 = String("GET ") + t_ip + " HTTP/1.1\r\n";
-           str1 += "Host: " + String( Host ) + "\r\n";
-           str1 += "User-Agent: BuildFailureDetectorESP32\r\n";
-           str1 += "Connection: close\r\n\r\n"; //closeを使うと、サーバーの応答後に切断される。最後に空行必要
-           str1 += "\0";
+  uint32_t time_out = millis();
+  while( 1 ){
+    /*インターネットが不意に切断されたときや、長時間接続している時には再接続できなくなる。
+    再接続時、client.connect が true になるまで時間がかかる場合があるので、数回トライする必要がある。*/
+    if ( client.connect( Host, 443 ) ){
+      Serial.print( Host ); Serial.print( F("-------------") );
+      Serial.println( F("connected") );
+      Serial.println( F("-------Send HTTPS GET Request") );
 
-    client.print(str1); //client.println にしないこと。最後に改行コードをプラスして送ってしまう為
-    client.flush(); //client出力が終わるまで待つ
-    Serial.print(str1);
-    //Serial.flush(); //シリアル出力が終わるまで待つ指令は、余分なdelayがかかってしまうので基本的に使わない
+      String str1 = String( F("GET ") );
+             str1 += t_ip + F(" HTTP/1.1\r\n");
+             str1 += F("Host: ");
+             str1 += String( Host ) + F("\r\n");
+             str1 += F("User-Agent: BuildFailureDetectorESP32\r\n");
+             str1 += F("Connection: close\r\n\r\n"); //closeを使うと、サーバーの応答後に切断される。最後に空行必要
+             str1 += "\0";
 
-  }else{
-    Serial.println(F("connection failed"));
+      client.print( str1 ); //client.println にしないこと。最後に改行コードをプラスして送ってしまう為
+      client.flush(); //client出力が終わるまで待つ
+      //log_v( "%s", str1.c_str() );
+      //Serial.flush(); //シリアル出力が終わるまで待つ指令は、余分なdelayがかかってしまうので基本的に使わない
+      break;
+    }
+    if( ( millis() - time_out ) > 20000 ){
+      Serial.println( F("time out!") );
+      Serial.println( F("Host connection failed.") );
+      return "※Host に接続できません。";
+    }
+    delay(1);
   }
 
-  if(client){
+  time_out = millis();
+  if( client ){
     String dummy_str;
     uint16_t from, to;
-    Serial.println(F("-------WEB HTTPS Response"));
+    Serial.println( F("-------Receive HTTPS Response") );
 
-    uint32_t Https_Time_Out = millis();
-
-    while(client.connected()){
-      if((millis() - Https_Time_Out) > 60000L) break; //60seconds Time Out
-      while (client.available()) {
-        if((millis() - Https_Time_Out) > 60000L) break; //60seconds Time Out
-        if(dummy_str.indexOf(F_tag) == -1){
-          dummy_str = client.readStringUntil(c_tag);
-          if(dummy_str.indexOf(B_tag) >= 0){
-            from = dummy_str.indexOf(B_tag) + B_tag.length();
-            to = dummy_str.indexOf(E_tag);
+    while( client.connected() ){
+      if( ( millis() - time_out ) > 60000 ){
+        Serial.println( F("time out!"));
+        Serial.println( F("Host HTTPS response failed.") );
+        break;
+      }
+      while( client.available() ) {
+        if( dummy_str.indexOf( F_tag ) == -1){
+          dummy_str = client.readStringUntil( c_tag );
+          if( dummy_str.indexOf( B_tag ) >= 0 ){
+            from = dummy_str.indexOf( B_tag ) + B_tag.length();
+            to = dummy_str.indexOf( E_tag );
             ret_str1 += Pph;
-            ret_str1 += dummy_str.substring(from,to);
+            ret_str1 += dummy_str.substring( from, to );
             ret_str1 += "  ";
           }
         }else{
-          while(client.available()){
-            if((millis() - Https_Time_Out) > 60000L) break; //60seconds Time Out
+          while( client.available() ){
+            if( ( millis() - time_out ) > 60000 ) break; //60seconds Time Out
             client.read();
             //delay(1);
           }
@@ -270,29 +287,27 @@ String WebGetClass::httpsGet(const char *Root_Ca, uint8_t rca_set, const char* H
           delay(10);
           client.stop();
           delay(10);
-          Serial.println(F("-------Client Stop"));
+          Serial.println( F("-------Client Stop") );
 
           break;
         }
-        //delay(1);
       }
-      //delay(1);
     }
   }
   ret_str1 += "\0";
-  ret_str1.replace("&amp;","＆"); //XMLソースの場合、半角&が正しく表示されないので、全角に置き換える
-  ret_str1.replace("&#039;","\'"); //XMLソースの場合、半角アポストロフィーが正しく表示されないので置き換える
-  ret_str1.replace("&#39;","\'"); //XMLソースの場合、半角アポストロフィーが正しく表示されないので置き換える
-  ret_str1.replace("&apos;","\'"); //XMLソースの場合、半角アポストロフィーが正しく表示されないので置き換える
-  ret_str1.replace("&quot;","\""); //XMLソースの場合、ダブルクォーテーションが正しく表示されないので置き換える
+  ret_str1.replace( "&amp;", "＆" ); //XMLソースの場合、半角&が正しく表示されないので、全角に置き換える
+  ret_str1.replace( "&#039;", "\'" ); //XMLソースの場合、半角アポストロフィーが正しく表示されないので置き換える
+  ret_str1.replace( "&#39;", "\'" ); //XMLソースの場合、半角アポストロフィーが正しく表示されないので置き換える
+  ret_str1.replace( "&apos;", "\'" ); //XMLソースの場合、半角アポストロフィーが正しく表示されないので置き換える
+  ret_str1.replace( "&quot;", "\"" ); //XMLソースの場合、ダブルクォーテーションが正しく表示されないので置き換える
 
-  if(ret_str1.length() < 20) ret_str1 = "※WEB GETできませんでした";
+  if( ret_str1.length() < 20 ) ret_str1 = "※WEB GETできませんでした";
 
-  if(client){
+  if( client ){
     delay(10);
     client.stop();
     delay(10);
-    Serial.println(F("-------Client Stop"));
+    Serial.println( F("-------Client Stop") );
   }
 
   return ret_str1;
