@@ -23,6 +23,7 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 See sample sketch.  
 - By pressing the button of M5Stack it made it possible to display select box.  
 - Brushed up the Yahoo news display and simplified it on the sketch.  
+  
 (beta ver 1.0.40)  
 - Added firebase_realtime_database.h & cpp file.  
 - Add display_shinonome_fnt. & cpp file.  
@@ -70,6 +71,7 @@ New Release.
 sampleスケッチ参照。  
 - M5Stack のボタンを押すとセレクトボックス表示できるようにしました。  
 - Yahoo ニュース表示をブラッシュアップし、スケッチ上でシンプル化しました。  
+  
 (beta ver 1.0.40)  
 - firebase_realtime_database.h & cpp ファイル追加。  
 - display_shinonome_fnt. & cpp ファイル追加。  
