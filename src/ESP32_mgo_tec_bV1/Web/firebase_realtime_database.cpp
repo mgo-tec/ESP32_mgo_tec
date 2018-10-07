@@ -1,6 +1,6 @@
 /*
   firebase_realtime_database.cpp
-  Beta version 1.0.0
+  Beta version 1.0.1
 
 The MIT License (MIT)
 
@@ -54,35 +54,48 @@ void FirebaseRD::sendGetRequestSSE( const char *Root_Ca, uint8_t rca_set, String
     Serial.println(F("------- Nothing Root CA"));
   }
 
-  if ( client.connect( mp_host, 443 ) ){
-    Serial.println( F("Connected to server!") );
-    String req_url_str;
-    req_url_str = F("GET /");
-    req_url_str += path + F(".json?auth=");
-    req_url_str += String( mp_auth ) + F(" HTTP/1.1\r\n");
+  uint32_t time_out = millis();
+  while( 1 ){
+    /*インターネットが不意に切断されたときや、長時間接続している時には再接続できなくなる。
+    再接続時、client.connect が true になるまで時間がかかる場合があるので、数回トライする必要がある。*/
+    if ( client.connect( mp_host, 443 ) ){
+      Serial.println( F("Connected to server!") );
+      String req_url_str;
+      req_url_str = F("GET /");
+      req_url_str += path + F(".json?auth=");
+      req_url_str += String( mp_auth ) + F(" HTTP/1.1\r\n");
 
-    String req_header_str;
-    req_header_str = F("Host: ");
-    req_header_str += String( mp_host ) + F("\r\n");
-    req_header_str += F("Accept: text/event-stream\r\n");
-    req_header_str += F("Connection: close\r\n");
-    req_header_str += F("\r\n");
+      String req_header_str;
+      req_header_str = F("Host: ");
+      req_header_str += String( mp_host ) + F("\r\n");
+      req_header_str += F("Accept: text/event-stream\r\n");
+      req_header_str += F("Connection: close\r\n");
+      req_header_str += F("\r\n");
 
-    Serial.println( F("----- Send GET Request Server-Sent Events -----") );
-    client.print( req_url_str );
-    client.print( req_header_str );
-    client.flush(); //client出力が終わるまで待つ
+      Serial.println( F("----- Send GET Request Server-Sent Events") );
+      client.print( req_url_str );
+      client.print( req_header_str );
+      client.flush(); //client出力が終わるまで待つ
 
-    Serial.print( req_url_str );
-    Serial.print( req_header_str );
-    //Serial.flush(); //シリアル出力が終わるまで待つ指令は、余分なdelayがかかってしまうので基本的に使わない
-  }else{
-    SseStatus = ConnectFailed;
-    sse_status = ConnectFailed;
-    Serial.println( F("connection failed") );
+      log_v( "%s", req_url_str.c_str() );
+      log_v( "%s", req_header_str.c_str() );
+      //Serial.print( req_url_str );
+      //Serial.print( req_header_str );
+      //Serial.flush(); //シリアル出力が終わるまで待つ指令は、余分なdelayがかかってしまうので基本的に使わない
+      break;
+    }
+
+    if( ( millis() - time_out ) > 20000 ){
+      SseStatus = ConnectFailed;
+      sse_status = ConnectFailed;
+      Serial.println( F("time out!") );
+      Serial.println( F("Host connection failed.") );
+      return;
+    }
+    delay(1);
   }
 
-  uint32_t time_out = millis();
+  time_out = millis();
   while( client.connected() ){
     if( (millis() - time_out) > 60000 ){
       log_v( "time out" );
@@ -145,41 +158,55 @@ void FirebaseRD::patchHTTPrequest( const char *Root_Ca, uint8_t rca_set, String 
 
   PatchStatus = Connecting;
   patch_status = Connecting;
-  if( client.connect( mp_host, 443 ) ){
-    Serial.println( F("Connected to server!") );
-    String req_url_str;
-    req_url_str = F("PATCH /");
-    req_url_str += path;
-    req_url_str += F(".json?auth=");
-    req_url_str += String( mp_auth );
-    req_url_str += F(" HTTP/1.1\r\n");
+  uint32_t time_out = millis();
+  while( 1 ){
+    /*インターネットが不意に切断されたときや、長時間接続している時には再接続できなくなる。
+    再接続時、client.connect が true になるまで時間がかかる場合があるので、数回トライする必要がある。*/
+    if( client.connect( mp_host, 443 ) ){
+      Serial.println( F("Connected to server!") );
+      String req_url_str;
+      req_url_str = F("PATCH /");
+      req_url_str += path;
+      req_url_str += F(".json?auth=");
+      req_url_str += String( mp_auth );
+      req_url_str += F(" HTTP/1.1\r\n");
 
-    String body = "{\"" + target_node + "\":\"" + data_str + "\"}";
-    body += F("\r\n\r\n");
+      String body = "{\"" + target_node + "\":\"" + data_str + "\"}";
+      body += F("\r\n\r\n");
 
-    String head;
-    head = F("Host: ");
-    head += String(mp_host) + F("\r\n");
-    head += F("Connection: close\r\n");
-    head += F("Content-Length: ");
-    head += String( body.length() ) + F("\r\n\r\n");
+      String head;
+      head = F("Host: ");
+      head += String(mp_host) + F("\r\n");
+      head += F("Connection: close\r\n");
+      head += F("Content-Length: ");
+      head += String( body.length() ) + F("\r\n\r\n");
 
-    client.print( req_url_str );
-    client.print( head );
-    client.println( body );
-    client.flush(); //client出力が終わるまで待つ
+      client.print( req_url_str );
+      client.print( head );
+      client.println( body );
+      client.flush(); //client出力が終わるまで待つ
 
-    Serial.println( F("----- Send HTTP Patch Request -----") );
-    Serial.print( req_url_str );
-    Serial.print( head );
-    Serial.print( body );
-  }else{
-    PatchStatus = ConnectFailed;
-    patch_status = ConnectFailed;
-    Serial.println( F("Connection failed!") );
+      Serial.println( F("----- Send HTTP Patch Request") );
+      log_v( "%s", req_url_str.c_str() );
+      log_v( "%s", head.c_str() );
+      log_v( "%s", body.c_str() );
+      //Serial.print( req_url_str );
+      //Serial.print( head );
+      //Serial.print( body );
+      break;
+    }
+
+    if( ( millis() - time_out ) > 20000 ){
+      PatchStatus = ConnectFailed;
+      patch_status = ConnectFailed;
+      Serial.println( F("time out!") );
+      Serial.println( F("Host connection failed.") );
+      return;
+    }
+    delay(1);
   }
 
-  uint32_t time_out = millis();
+  time_out = millis();
   while( client.connected() ){
     if( (millis() - time_out) > 60000 ){
       log_v( "time out" );

@@ -30,8 +30,8 @@ Licence of Shinonome Font is Public Domain.
 Maintenance development of Font is /efont/.
 */
 
-#ifndef _MGO_TEC_ESP32_SD_SHINONOMEFNT_H_INCLUDED
-#define _MGO_TEC_ESP32_SD_SHINONOMEFNT_H_INCLUDED
+#ifndef MGO_TEC_ESP32_SD_SHINONOMEFNT_H_INCLUDED_
+#define MGO_TEC_ESP32_SD_SHINONOMEFNT_H_INCLUDED_
 
 #include <Arduino.h>
 #include <SD.h>
@@ -47,26 +47,6 @@ namespace mgo_tec_esp32_bv1 {
 
 class SdShinonomeFont
 {
-public:
-  SdShinonomeFont(uint8_t cs, uint32_t sd_freq);
-
-  bool init3File(const char* utf8sjis_file, const char* Shino_Half_Font_file, const char* Shino_Zen_Font_file);
-  bool init2File(const char* Shino_Half_Font_file, const char* Shino_Zen_Font_file);
-  void close3File();
-  void close2File();
-  uint16_t convStrToFont(String str, uint8_t font_buf[][16]);
-  uint16_t convStrToFontF(File utf8sjis_table_file, String str, uint8_t font_buf[][16]);
-  uint16_t convStrToSjisToFont(String str, uint8_t* sj_code, uint8_t font_buf[][16]);
-  uint8_t convSjisToFontF2(File f1, File f2, uint8_t Direction, int16_t Angle, uint8_t jisH, uint8_t jisL, uint8_t buf1[16], uint8_t buf2[16]);
-  uint8_t convSjisToFont(uint8_t jisH, uint8_t jisL, uint8_t buf1[16], uint8_t buf2[16]);
-  void convSjisToFontF2All(File f1, File f2, uint8_t Direction, int16_t Angle, uint8_t* Sjis, uint16_t sj_length, uint8_t font_buf[][16]);
-  void convSjisToFontAdrs(uint8_t jisH, uint8_t jisL, uint32_t* fnt_adrs);
-  void convTableAdrsToFullFont(File shino_full_font_file, uint32_t addrs, uint8_t buf1[16], uint8_t buf2[16]);
-  void convTableAdrsToHarfFont(File shino_half_font_file, uint32_t addrs, uint8_t buf[16]);
-  uint8_t convSjisToFontInc(uint8_t *sj, uint16_t length, uint16_t *sj_cnt, uint8_t buf[2][16]);
-
-  uint16_t convStrToSjis(String str, uint8_t* sj_code);
-
 private:
   uint8_t cs_;
   uint32_t sd_freq_;
@@ -77,6 +57,30 @@ private:
   
   const char *gf1_;
   const char *gf2_;
+
+public:
+  SdShinonomeFont( uint8_t cs = 4, uint32_t sd_freq = 40000000 ){
+    cs_ = cs;
+    sd_freq_ = sd_freq;
+  };
+
+  void init( uint8_t cs = 4, uint32_t sd_freq = 40000000 );
+  bool init3File( const char* utf8sjis_file, const char* Shino_Half_Font_file, const char* Shino_Zen_Font_file );
+  bool init2File( const char* Shino_Half_Font_file, const char* Shino_Zen_Font_file );
+  void close3File();
+  void close2File();
+  uint16_t convStrToFont( String str, uint8_t font_buf[][16] );
+  uint16_t convStrToFontF( File utf8sjis_table_file, String str, uint8_t font_buf[][16] );
+  uint16_t convStrToSjisToFont( String str, uint8_t* sj_code, uint8_t font_buf[][16] );
+  uint8_t convSjisToFontF2( File f1, File f2, uint8_t Direction, int16_t Angle, uint8_t jisH, uint8_t jisL, uint8_t buf1[16], uint8_t buf2[16] );
+  uint8_t convSjisToFont( uint8_t jisH, uint8_t jisL, uint8_t buf1[16], uint8_t buf2[16] );
+  void convSjisToFontF2All( File f1, File f2, uint8_t Direction, int16_t Angle, uint8_t* Sjis, uint16_t sj_length, uint8_t font_buf[][16] );
+  void convSjisToFontAdrs( uint8_t jisH, uint8_t jisL, uint32_t* fnt_adrs );
+  void convTableAdrsToFullFont( File shino_full_font_file, uint32_t addrs, uint8_t buf1[16], uint8_t buf2[16] );
+  void convTableAdrsToHarfFont( File shino_half_font_file, uint32_t addrs, uint8_t buf[16] );
+  uint8_t convSjisToFontInc( uint8_t *sj, uint16_t length, uint16_t *sj_cnt, uint8_t buf[2][16] );
+
+  uint16_t convStrToSjis( String str, uint8_t* sj_code );
 
 };
 

@@ -25,13 +25,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Use Arduino Time Library ( TimeLib.h )
+time.c - low level time and date functions
+Copyright (c) Michael Margolis 2009-2014
+LGPL ver2.1
+https://github.com/PaulStoffregen/Time
 */
 
-#ifndef _MGO_TEC_ESP32_ILI9341_SD_MESSAGEWINDOW_H_INCLUDED
-#define _MGO_TEC_ESP32_ILI9341_SD_MESSAGEWINDOW_H_INCLUDED
+#ifndef MGO_TEC_ESP32_ILI9341_SD_MESSAGEWINDOW_H_INCLUDED_
+#define MGO_TEC_ESP32_ILI9341_SD_MESSAGEWINDOW_H_INCLUDED_
 
 #include <Arduino.h>
-#include "TimeLib.h" //Arduino time library ver1.5
+#include <TimeLib.h> //Arduino time library ver1.5
 #include "ESP32_mgo_tec_bV1/LCD_driver/ili9341_spi.h"
 #include "ESP32_mgo_tec_bV1/SD_font_read/shinonome.h"
 #include "ESP32_mgo_tec_bV1/Web/webget.h"
@@ -47,9 +53,6 @@ namespace mgo_tec_esp32_bv1 {
 
 class MessageWindow
 {
-private:
-  
-
 public:
   enum WifiMsgStatus { WifiMsgReset, WifiConnecting , WifiConnected, WifiFailed }
     WifiStatus = WifiMsgReset;

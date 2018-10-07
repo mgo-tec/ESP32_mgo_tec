@@ -26,17 +26,38 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Use BOSCH BME680 Driver.
-URL: https://github.com/BoschSensortec/BME680_driver
 Copyright (C) 2016 - 2017 Bosch Sensortec GmbH
+The 3-Clause BSD License
+URL: https://github.com/BoschSensortec/BME680_driver
+
+Use Arduino Time Library ( TimeLib.h )
+time.c - low level time and date functions
+Copyright (c) Michael Margolis 2009-2014
+LGPL ver2.1
+https://github.com/PaulStoffregen/Time
 */
 
 #include "ESP32_mgo_tec_bV1/Sensor/display_bme680_i2c.h"
-//#include "display_bme680_i2c.h"
 
-// In the button_switch.cpp file
+extern "C" {
+  #include "bme680.h" //Bosch Driver ( The 3-Clause BSD License )
+}
+
+// In the display_bme680_i2c.cpp file
 namespace mgo_tec_esp32_bv1 {
 
 // Definition of functions is within scope of the namespace.
+
+//using bme680_com_fptr_t = int8_t(*)(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
+static struct bme680_dev gas_sensor;
+static struct bme680_field_data data;
+
+extern "C" {
+  //Boschドライバー側で、typedef の関数ポインタがあり、C++コンパイラエラーが出る。
+  //その為、この２つの関数のみクラスから外し、externで囲う
+  static int8_t bme680UserI2cRead( uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len );
+  static int8_t bme680UserI2cWrite( uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len );
+}
 
 //********************************************************************
 boolean DisplayBme680I2c::createNewArray( GraphParameter &graph ){

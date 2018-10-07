@@ -7,8 +7,8 @@
   Use ESP32, LCD ILI9341 spi, SD spi
 */
 
-#ifndef _MGO_TEC_ESP32_M5STACK_FIREBASE_H_INCLUDED
-#define _MGO_TEC_ESP32_M5STACK_FIREBASE_H_INCLUDED
+#ifndef MGO_TEC_ESP32_M5STACK_FIREBASE_H_INCLUDED_
+#define MGO_TEC_ESP32_M5STACK_FIREBASE_H_INCLUDED_
 
 #include "ESP32_mgo_tec_bV1/LCD_driver/ili9341_spi.h"
 #include "ESP32_mgo_tec_bV1/SD_font_read/utf8tosjis.h"

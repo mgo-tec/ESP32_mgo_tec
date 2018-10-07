@@ -1,6 +1,6 @@
 /*
   button_switch.cpp - for Arduino core for the ESP32.
-  Beta version 1.0
+  Beta version 1.0.1
   
 The MIT License (MIT)
 
@@ -33,6 +33,19 @@ namespace mgo_tec_esp32_bv1 {
 
 // Definition of functions is within scope of the namespace.
 
+//****************************************
+void ButtonSwitch::init( const uint8_t gpio, boolean continuous_set, uint32_t chatter_time, uint32_t long_press_time ){
+  mp_gpio = gpio;
+  mp_continuous_set = continuous_set; //長押し設定 true = ON
+  mp_chatter_time = chatter_time; //チャタリングタイム
+  mp_long_press_time = long_press_time; //長押し時間
+
+  pinMode( gpio, INPUT ); //M5Stack GPIO#37～#39 は内部プルアップ無し
+}
+//****************************************
+void ButtonSwitch::buttonAction(){
+  ButtonSwitch::buttonAction( mp_gpio, mp_continuous_set, mp_chatter_time, mp_long_press_time );
+}
 //****************************************
 void ButtonSwitch::buttonAction( const uint8_t gpio, boolean continuous_set, uint32_t chatter_time, uint32_t long_press_time ){
   ButtonStatus = Release;

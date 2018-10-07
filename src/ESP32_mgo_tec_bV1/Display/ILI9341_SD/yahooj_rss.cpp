@@ -1,7 +1,7 @@
 /*
   yahooj_rss.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.2
+  Beta version 1.0.3
   
 The MIT License (MIT)
 
@@ -25,6 +25,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Use Arduino Time Library ( TimeLib.h )
+time.c - low level time and date functions
+Copyright (c) Michael Margolis 2009-2014
+LGPL ver2.1
+https://github.com/PaulStoffregen/Time
 */
 
 #include "ESP32_mgo_tec_bV1/Display/ILI9341_SD/yahooj_rss.h"
@@ -34,6 +40,27 @@ namespace mgo_tec_esp32_bv1 {
 
 // Definition of functions is within scope of the namespace.
 
+//*******************************************************
+void YahooJrssGet::initScrolle( FontParameter &font, ScrolleParameter &scl_set ){
+  LCD.XscrolleFontArrayInit( font, scl_set, scl_set.disp_txt_len, font.Xsize, font.Ysize);
+  LCD.scrolleFontSetUp( font, scl_set );
+}
+//*******************************************************
+void YahooJrssGet::initWeather( const char *weather_font_file ){
+  mp_weather_file = SD.open( weather_font_file, FILE_READ );
+  if ( !mp_weather_file ) {
+    Serial.print( weather_font_file );
+    Serial.println( F(" File not found") );
+    return;
+  }else{
+    Serial.print( weather_font_file );
+    Serial.println( F(" File read OK!") );
+  }
+}
+  //*******************************************************
+void YahooJrssGet::dispYahooJweatherMyFont( FontParameter &weather_font ){
+  YahooJrssGet::dispYahooJweatherMyFont( mp_weather_file, weather_font );
+}
 //*******************************************************
 void YahooJrssGet::dispYahooJweatherMyFont( File F, FontParameter &weather_font ){
   if( m_isWeather_get == true ){
@@ -51,8 +78,8 @@ void YahooJrssGet::dispYahooJweatherMyFont( File F, FontParameter &weather_font 
     Serial.print(F("Weather Tomorrow = ")); Serial.println(w_str2);
     //Serial.flush(); //シリアル出力が終わるまで待つ指令は、余分なdelayがかかってしまうので基本的に使わない
 
-    weatherJfontNum(w_str1, 0, hour(), today_fnum, today_col);
-    weatherJfontNum(w_str2, 1, hour(), tomorrow_fnum, tomorrow_col);
+    YahooJrssGet::weatherJfontNum(w_str1, 0, hour(), today_fnum, today_col);
+    YahooJrssGet::weatherJfontNum(w_str2, 1, hour(), tomorrow_fnum, tomorrow_col);
 
     uint8_t num;
     //-----------------------------------------------
@@ -189,17 +216,29 @@ void YahooJrssGet::getYahooJnews( const char *host, const char *target_url ){
   YahooJrssGet::getYahooJnewsRCA( "\0", 0, host, target_url );
 }
 //**************************************
+void YahooJrssGet::getYahooJnews( const char *host, const uint16_t port, const char *target_url ){
+  YahooJrssGet::getYahooJnewsRCA( "\0", 0, host, port, target_url );
+}
+//**************************************
 void YahooJrssGet::getYahooJnews( const char *Root_Ca, const char *host, const char *target_url ){
   YahooJrssGet::getYahooJnewsRCA( Root_Ca, 1, host, target_url );
 }
 //**************************************
+void YahooJrssGet::getYahooJnews( const char *Root_Ca, const char *host, const uint16_t port, const char *target_url ){
+  YahooJrssGet::getYahooJnewsRCA( Root_Ca, 1, host, port, target_url );
+}
+//**************************************
 void YahooJrssGet::getYahooJnewsRCA( const char *Root_Ca, uint8_t rca_set, const char *host, const char *target_url ){
+  YahooJrssGet::getYahooJnewsRCA( Root_Ca, rca_set, host, 443, target_url );
+}
+//**************************************
+void YahooJrssGet::getYahooJnewsRCA( const char *Root_Ca, uint8_t rca_set, const char *host, const uint16_t port, const char *target_url ){
   char web_get_time[6];
   sprintf(web_get_time, "%02d:%02d", hour(), minute()); //ゼロを空白で埋める場合は%2dとする
   NewsStatus = Connecting;
   news_msg_status = Connecting;
 
-  String tmp_str = EWG.httpsGet( Root_Ca, rca_set, host, String(target_url), '\n', "</rss>", "<title>", "</title>", "◆ " );
+  String tmp_str = EWG.httpsGet( Root_Ca, rca_set, host, port, String(target_url), '\n', "</rss>", "<title>", "</title>", "◆ " );
 
   if( tmp_str.length() < 80 ){
     delay(500); //メッセージウィンドウを正しく表示させるために必要
@@ -277,6 +316,18 @@ void YahooJrssGet::scrolleYahooJnews( FontParameter &news_font, ScrolleParameter
     if( LCD.scrolle8x16fontInc( news_font, scl_set, scl_set.font_sjis_len, font_buf ) ){
       scl_set.full_or_half = SFR.convSjisToFontInc( sj_txt, scl_set.font_sjis_len, &scl_set.font_count, font_buf );
     }
+  }
+}
+//****************************************
+void YahooJrssGet::scrolleYahooJnews2( FontParameter &news_font, ScrolleParameter &scl_set ){
+  if( m_isNews_first_get == false ){
+    if( m_isNews_get == true ){
+      disp_fnt.newSetText( scl_set, m_news_str );
+      m_news_str = "";
+      //Serial.printf("Free Heap Size ( After News Get ) = %d\r\n", esp_get_free_heap_size());
+      m_isNews_get = false;
+    }
+    disp_fnt.scrolleText( news_font, scl_set );
   }
 }
 //****************************************************************

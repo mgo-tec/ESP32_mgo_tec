@@ -1,16 +1,70 @@
+#######################################
+# Syntax Coloring Map For ESP32_mgo_tec
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+mgo_tec_bv1_m5stack_sd	KEYWORD1
+mgo_tec_bv1_m5stack_sd_simple1	KEYWORD1
+mgo_tec_bv1_m5stack_sd_yahoo	KEYWORD1
 mgo_tec_esp32_ili9341_sd	KEYWORD1
 mgo_tec_m5stack_bme280	KEYWORD1
 mgo_tec_m5stack_bme680	KEYWORD1
 mgo_tec_esp32_m5stack_firebase	KEYWORD1
 
 mgo_tec_esp32_bv1	KEYWORD1
+MGO_TEC_BV1_M5STACK_SD_SKETCH	KEYWORD1
 
-FontParameter	KEYWORD1
-ScrolleParameter	KEYWORD1
-GraphParameter	KEYWORD1
-ILI9341Spi	KEYWORD1
+mM5	KEYWORD1
+LCD	KEYWORD1
+SFR	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+#Class
+  MgotecM5stackSdInit	KEYWORD2
+  MgotecM5stackSdInit1	KEYWORD2
+  MgotecM5stackSdYahooInit1	KEYWORD2
+  FontParameter	KEYWORD2
+  ScrolleParameter	KEYWORD2
+  GraphParameter	KEYWORD2
+  ILI9341Spi	KEYWORD2
+  SdUtf8toSjis	KEYWORD2
+  SdShinonomeFont	KEYWORD2
+  WebGetClass	KEYWORD2
+  ILI9341Watch	KEYWORD2
+  YahooJrssGet	KEYWORD2
+  MessageWindow	KEYWORD2
+  ButtonSwitch	KEYWORD2
+  DisplayBme280I2c	KEYWORD2
+  DisplayBme680I2c	KEYWORD2
+  FirebaseRD	KEYWORD2
+  DispShinonomeFnt	KEYWORD2
+  SelectUrl	KEYWORD2
+  BtnDispSelectBox	KEYWORD2
+
+#Object
+  watch	KEYWORD2
+  yahoo	KEYWORD2
+  font	KEYWORD2
+  scl_set	KEYWORD2
+  disp_fnt	KEYWORD2
+  wifi_msg	KEYWORD2
+  msg	KEYWORD1
+  btnA	KEYWORD2
+  btnB	KEYWORD2
+  btnC	KEYWORD2
+
+#Functions
+#common
   
-  LCD	KEYWORD2
+  init	KEYWORD2
+  initScrolle	KEYWORD2
+
+#ILI9341Spi
   ILI9341init	KEYWORD2
   dispRotation	KEYWORD2
   displayClear	KEYWORD2
@@ -26,7 +80,6 @@ ILI9341Spi	KEYWORD1
   drawCircleLine	KEYWORD2
   drawCircleFill	KEYWORD2
   brightness	KEYWORD2
-
   XscrolleFontArrayInit	KEYWORD2
   YscrolleFontArrayInit	KEYWORD2
   XscrolleFontArrayInitMax	KEYWORD2
@@ -43,16 +96,21 @@ ILI9341Spi	KEYWORD1
   YdownScrolle8x16fontInc	KEYWORD2
   display8x16Font	KEYWORD2
 
-SdUtf8toSjis	KEYWORD1
-  init	KEYWORD2
+#SdUtf8toSjis
   fileClose	KEYWORD2
   convUtf8ToSjis	KEYWORD2
   convUtf8ToSjisF	KEYWORD2
   codeConvUtf8ToSjis	KEYWORD2
   readTableUtf8SjisF	KEYWORD2
 
-SdShinonomeFont	KEYWORD1
-  SFR	KEYWORD2
+#SdUtf8toSjis
+  fileClose	KEYWORD2
+  convUtf8ToSjis	KEYWORD2
+  convUtf8ToSjisF	KEYWORD2
+  codeConvUtf8ToSjis	KEYWORD2
+  readTableUtf8SjisF	KEYWORD2
+
+#SdShinonomeFont
   init3File	KEYWORD2
   init2File	KEYWORD2
   close3File	KEYWORD2
@@ -69,25 +127,28 @@ SdShinonomeFont	KEYWORD1
   convSjisToFontInc	KEYWORD2
   convStrToSjis	KEYWORD2
 
-WebGetClass	KEYWORD1
-  EWG	KEYWORD2
-  EWG_Get_Ntp_Time	KEYWORD2
-  EWG_Send_NTP_Packet	KEYWORD2
-
+#WebGetClass
+  getNtpTime	KEYWORD2
+  sendNtpPacket	KEYWORD2
   wifiAPconnect	KEYWORD2
   ntpServerInit	KEYWORD2
   getNtpTimeInit	KEYWORD2
   webGet	KEYWORD2
-  httpsWebGet	KEYWORD2
   httpsWebGet	KEYWORD2
   httpsGet	KEYWORD2
   weatherJfontNum	KEYWORD2
   getNtpServerSelect	KEYWORD2
   getNtpInterval	KEYWORD2
 
-ILI9341Watch	KEYWORD1
+#ILI9341Watch
   NtpStatus	KEYWORD2
+  colon1_font	KEYWORD2
+  colon2_font	KEYWORD2
+  ymd_font	KEYWORD2
+  ntp_msg	KEYWORD2
+  initDefNum	KEYWORD2
   watchFontSetup	KEYWORD2
+  watchFontSetup2	KEYWORD2
   watchFontRead	KEYWORD2
   scrolleWatch	KEYWORD2
   displayColon	KEYWORD2
@@ -99,17 +160,26 @@ ILI9341Watch	KEYWORD1
   displayYMDW	KEYWORD2
   watchDispReset	KEYWORD2
 
-YahooJrssGet	KEYWORD1
+#YahooJrssGet
   NewsStatus	KEYWORD2
   WeatherStatus	KEYWORD2
+  news_font	KEYWORD2
+  weather_fnt	KEYWORD2
+  news_scl_set	KEYWORD2
+  news_msg	KEYWORD2
+  weather_msg	KEYWORD2
+  initWeather	KEYWORD2
   dispYahooJweatherMyFont	KEYWORD2
   getYahooJnews	KEYWORD2
+  getYahooJnewsRCA	KEYWORD2
   getYahooJnews2	KEYWORD2
   getYahooJweather	KEYWORD2
+  getYahooJweatherRCA	KEYWORD2
   getYahooJweather2	KEYWORD2
   scrolleYahooJnews	KEYWORD2
+  scrolleYahooJnews2	KEYWORD2
 
-MessageWindow	KEYWORD1
+#MessageWindow
   WifiStatus	KEYWORD2
   WebGetStatus	KEYWORD2
   dispWifiStatusMsg	KEYWORD2
@@ -123,16 +193,11 @@ MessageWindow	KEYWORD1
   dispWebGetStatusMsgLongRev	KEYWORD2
   dispMsgWindow	KEYWORD2
 
-ButtonSwitch	KEYWORD1
+#ButtonSwitch
   ButtonStatus	KEYWORD2
-  Release	KEYWORD2
-  OnStart	KEYWORD2
-  MomentPress	KEYWORD2
-  LongPress	KEYWORD2
-  ContPress	KEYWORD2
   buttonAction	KEYWORD2
 
-DisplayBme280I2c	KEYWORD1
+#DisplayBme280I2c
   DispStatus	KEYWORD2
   TimeMeasureMode	KEYWORD2
   m_time_measure_mode	KEYWORD2
@@ -146,7 +211,7 @@ DisplayBme280I2c	KEYWORD1
   displayValue	KEYWORD2
   displayMinMaxValue	KEYWORD2
 
-DisplayBme680I2c	KEYWORD1
+#DisplayBme680I2c
   DispStatus	KEYWORD2
   TimeMeasureMode	KEYWORD2
   m_time_measure_mode	KEYWORD2
@@ -161,17 +226,34 @@ DisplayBme680I2c	KEYWORD1
   displayMinMaxValue	KEYWORD2
   calcGasAverageValue	KEYWORD2
 
-FirebaseRD	KEYWORD1
+#FirebaseRD
   FirebaseState	KEYWORD2
   PatchStatus	KEYWORD2
   SseStatus	KEYWORD2
-  init	KEYWORD2
   sendGetRequestSSE	KEYWORD2
   patchHTTPrequest	KEYWORD2
   pickUpStrSSEdataAll	KEYWORD2
   pickUpStrToTargetStr	KEYWORD2
   pickUpTargetStr	KEYWORD2
 
-DispShinonomeFnt	KEYWORD1
+#DispShinonomeFnt
   scrolleText	KEYWORD2
   newSetText	KEYWORD2
+  dispText	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+#Arduino-ESP32
+  WIFI_OFF	LITERAL1
+  WL_CONNECTED	LITERAL1
+
+#ButtonStatus
+  Release	LITERAL1
+  OnStart	LITERAL1
+  MomentPress	LITERAL1
+  LongPress	LITERAL1
+  ContPress	LITERAL1
+  Release	LITERAL1
+  

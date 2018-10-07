@@ -1,7 +1,7 @@
 /*
   watch.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.11
+  Beta version 1.0.2
   
 The MIT License (MIT)
 
@@ -25,6 +25,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Use Arduino Time Library ( TimeLib.h )
+time.c - low level time and date functions
+Copyright (c) Michael Margolis 2009-2014
+LGPL ver2.1
+https://github.com/PaulStoffregen/Time
 */
 
 #include "ESP32_mgo_tec_bV1/Display/ILI9341_SD/watch.h"
@@ -35,12 +41,32 @@ namespace mgo_tec_esp32_bv1 {
 // Definition of functions is within scope of the namespace.
 
 //*******************************************************
+void ILI9341Watch::init( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize ){
+  uint8_t num;
+  for( num = 0; num < 4; num++ ){ //時、分のフォント色設定
+    LCD.scrolleFontColorSet( font[num] );
+  }
+  for( num = 4; num < 6; num++ ){ //秒のフォント色設定
+    LCD.scrolleFontColorSet( font[num] );
+  }
+  ILI9341Watch::initDefNum();
+  ILI9341Watch::watchFontSetup( x0, y0, Xsize, Ysize ); //時計フォントセット
+}
+//*******************************************************
+void ILI9341Watch::initDefNum(){
+  uint8_t num = 0; //時、十の位の文字列をフォント変換
+  ILI9341Watch::watchStrFontConv( num, "　１２３４５６７８９" );
+  for( num = 1; num < 6; num++ ){
+    ILI9341Watch::watchStrFontConv( num, "０１２３４５６７８９" );
+  }
+}
+//*******************************************************
 void ILI9341Watch::watchFontSetup( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize ){
   uint8_t num = 0;
   uint8_t X_max_txt = 2; //横スクロール時刻文字、各桁全角１文字表示(半角２文字分）
   uint8_t Y_max_txt = 1; //縦スクロール時刻文字、各桁全角１文字表示(半角２文字分）
   for( num = 0; num < MAX_TXT_NUM; num++ ){
-    LCD.scrolleArrayDelete( scllole[num] ); //ヒープ領域メモリ、配列消去
+    LCD.scrolleArrayDelete( scl_set[num] ); //ヒープ領域メモリ、配列消去
   }
   for( num = 0; num < 4; num++ ){
     font[num].Xsize = Xsize, font[num].Ysize = Ysize;
@@ -48,51 +74,51 @@ void ILI9341Watch::watchFontSetup( uint16_t x0, uint16_t y0, uint8_t Xsize, uint
   }
 
   num = 0; //時表示十の位
-  scllole[num].interval = 50;
+  scl_set[num].interval = 50;
   font[num].x0 = 0; //各文字開始位置
   //水平方向スクロール文字フォント配列生成、および初期化
-  LCD.XscrolleFontArrayInit( font[num], scllole[num], X_max_txt, font[num].Xsize, font[num].Ysize);
+  LCD.XscrolleFontArrayInit( font[num], scl_set[num], X_max_txt, font[num].Xsize, font[num].Ysize);
 
   num = 1; //時表示一の位
-  scllole[num].interval = 50;
+  scl_set[num].interval = 50;
   font[num].x0 = 48;
   //垂直方向スクロール文字フォント配列生成、および初期化
-  LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
+  LCD.YscrolleFontArrayInit( font[num], scl_set[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
 
   num = 2; //分表示十の位
-  scllole[num].interval = 50;
+  scl_set[num].interval = 50;
   font[num].x0 = 120;
   //水平方向スクロール文字フォント配列生成、および初期化
-  LCD.XscrolleFontArrayInit( font[num], scllole[num], X_max_txt, font[num].Xsize, font[num].Ysize );
+  LCD.XscrolleFontArrayInit( font[num], scl_set[num], X_max_txt, font[num].Xsize, font[num].Ysize );
 
   num = 3; //分表示一の位
-  scllole[num].interval = 50;
+  scl_set[num].interval = 50;
   font[num].x0 = 168;
   //垂直方向スクロール文字フォント配列生成、および初期化
-  LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );  LCD.scrolleFontSetUp( font[num], scllole[num] );
+  LCD.YscrolleFontArrayInit( font[num], scl_set[num], Y_max_txt, font[num].Xsize, font[num].Ysize );  LCD.scrolleFontSetUp( font[num], scl_set[num] );
 
   num = 4; //秒表示十の位
-  scllole[num].interval = 30;
+  scl_set[num].interval = 30;
   if( Xsize != 1 ) font[num].Xsize = Xsize - 1;
   if( Ysize != 1 ) font[num].Ysize = Ysize - 1;
   font[num].x0 = 240;
   font[num].y0 = y0 + 16;
   if( Ysize == 1 ) font[num].y0 = y0;
   //水平方向スクロール文字フォント配列生成、および初期化
-  LCD.XscrolleFontArrayInit( font[num], scllole[num], X_max_txt, font[num].Xsize, font[num].Ysize );
+  LCD.XscrolleFontArrayInit( font[num], scl_set[num], X_max_txt, font[num].Xsize, font[num].Ysize );
 
   num = 5; //秒表示一の位
-  scllole[num].interval = 24;
+  scl_set[num].interval = 24;
   if( Xsize != 1 ) font[num].Xsize = Xsize - 1;
   if( Ysize != 1 ) font[num].Ysize = Ysize - 1;
   font[num].x0 = 272;
   font[num].y0 = y0 + 16;
   if( Ysize == 1 ) font[num].y0 = y0;
   //垂直方向スクロール文字フォント配列生成、および初期化
-  LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
+  LCD.YscrolleFontArrayInit( font[num], scl_set[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
 
   for( num = 0; num < MAX_TXT_NUM; num++ ){
-    LCD.scrolleFontSetUp( font[num], scllole[num] );
+    LCD.scrolleFontSetUp( font[num], scl_set[num] );
   }
 
   //コロンフォント初期化
@@ -112,7 +138,7 @@ void ILI9341Watch::watchFontSetup2( uint16_t x0, uint16_t y0, uint8_t Xsize, uin
   uint8_t X_max_txt = 2; //横スクロール時刻文字、各桁全角１文字表示(半角２文字分）
   uint8_t Y_max_txt = 1; //縦スクロール時刻文字、各桁全角１文字表示(半角２文字分）
   for( num = 0; num < MAX_TXT_NUM; num++ ){
-    LCD.scrolleArrayDelete( scllole[num] ); //ヒープ領域メモリ、配列消去
+    LCD.scrolleArrayDelete( scl_set[num] ); //ヒープ領域メモリ、配列消去
   }
   for( num = 0; num < 6; num++ ){
     font[num].Xsize = Xsize, font[num].Ysize = Ysize;
@@ -120,51 +146,51 @@ void ILI9341Watch::watchFontSetup2( uint16_t x0, uint16_t y0, uint8_t Xsize, uin
   }
 
   num = 0; //時表示十の位
-  scllole[num].interval = 50;
+  scl_set[num].interval = 50;
   font[num].x0 = 0; //各文字開始位置
   //水平方向スクロール文字フォント配列生成、および初期化
-  LCD.XscrolleFontArrayInit( font[num], scllole[num], X_max_txt, font[num].Xsize, font[num].Ysize);
+  LCD.XscrolleFontArrayInit( font[num], scl_set[num], X_max_txt, font[num].Xsize, font[num].Ysize);
 
   num = 1; //時表示一の位
-  scllole[num].interval = 50;
+  scl_set[num].interval = 50;
   font[num].x0 = 48;
   //垂直方向スクロール文字フォント配列生成、および初期化
-  LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
+  LCD.YscrolleFontArrayInit( font[num], scl_set[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
 
   num = 2; //分表示十の位
-  scllole[num].interval = 50;
+  scl_set[num].interval = 50;
   font[num].x0 = 120;
   //水平方向スクロール文字フォント配列生成、および初期化
-  LCD.XscrolleFontArrayInit( font[num], scllole[num], X_max_txt, font[num].Xsize, font[num].Ysize );
+  LCD.XscrolleFontArrayInit( font[num], scl_set[num], X_max_txt, font[num].Xsize, font[num].Ysize );
 
   num = 3; //分表示一の位
-  scllole[num].interval = 50;
+  scl_set[num].interval = 50;
   font[num].x0 = 168;
   //垂直方向スクロール文字フォント配列生成、および初期化
-  LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );  LCD.scrolleFontSetUp( font[num], scllole[num] );
+  LCD.YscrolleFontArrayInit( font[num], scl_set[num], Y_max_txt, font[num].Xsize, font[num].Ysize );  LCD.scrolleFontSetUp( font[num], scl_set[num] );
 
   num = 4; //秒表示十の位
-  scllole[num].interval = 30;
+  scl_set[num].interval = 30;
 //  if( Xsize != 1 ) font[num].Xsize = Xsize - 1;
 //  if( Ysize != 1 ) font[num].Ysize = Ysize - 1;
   font[num].x0 = 240;
 //  font[num].y0 = y0 + 16;
 //  if( Ysize == 1 ) font[num].y0 = y0;
   //水平方向スクロール文字フォント配列生成、および初期化
-  LCD.XscrolleFontArrayInit( font[num], scllole[num], X_max_txt, font[num].Xsize, font[num].Ysize );
+  LCD.XscrolleFontArrayInit( font[num], scl_set[num], X_max_txt, font[num].Xsize, font[num].Ysize );
 
   num = 5; //秒表示一の位
-  scllole[num].interval = 24;
+  scl_set[num].interval = 24;
 //  if( Xsize != 1 ) font[num].Xsize = Xsize - 1;
 //  if( Ysize != 1 ) font[num].Ysize = Ysize - 1;
   font[num].x0 = 272;
 //  font[num].y0 = y0 + 16;
 //  if( Ysize == 1 ) font[num].y0 = y0;
   //垂直方向スクロール文字フォント配列生成、および初期化
-  LCD.YscrolleFontArrayInit( font[num], scllole[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
+  LCD.YscrolleFontArrayInit( font[num], scl_set[num], Y_max_txt, font[num].Xsize, font[num].Ysize );
 
   for( num = 0; num < MAX_TXT_NUM; num++ ){
-    LCD.scrolleFontSetUp( font[num], scllole[num] );
+    LCD.scrolleFontSetUp( font[num], scl_set[num] );
   }
 
   //コロンフォント初期化
@@ -235,7 +261,7 @@ void ILI9341Watch::watchFontRead(){
     }
 
     for( num = 0; num < MAX_TXT_NUM; num++ ){ //フォント変換
-      scllole[num].full_or_half = SFR.convSjisToFontInc(mp_watch_sjis_buf[num], mp_watch_sjis_len[num], &mp_watch_font_count[num], mp_watch_font_buf[num]);
+      scl_set[num].full_or_half = SFR.convSjisToFontInc(mp_watch_sjis_buf[num], mp_watch_sjis_len[num], &mp_watch_font_count[num], mp_watch_font_buf[num]);
     }
     mp_scl_last_time = now();
   }else if( mp_changeFont == true ){
@@ -250,37 +276,37 @@ void ILI9341Watch::scrolleWatch(){
 
   uint8_t num = 0; //時、十の位文字スクロール
   if( mp_startScrolle[num] ){
-    if( LCD.scrolle8x16fontInc( font[num], scllole[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
+    if( LCD.scrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
       mp_startScrolle[num] = false; //一文字スクロール後、スクロールストップ
     }
   }
   num = 1; //時、一の位文字スクロール
   if( mp_startScrolle[num] ){
-    if( LCD.Yscrolle8x16fontInc( font[num], scllole[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
+    if( LCD.Yscrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
       mp_startScrolle[num] = false;
     }
   }
   num = 2; //分、十の位文字スクロール
   if( mp_startScrolle[num] ){
-    if( LCD.reverseScrolle8x16fontInc( font[num], scllole[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
+    if( LCD.reverseScrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
       mp_startScrolle[num] = false;
     }
   }
   num = 3; //分、一の位文字スクロール
   if( mp_startScrolle[num] ){
-    if( LCD.YdownScrolle8x16fontInc( font[num], scllole[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
+    if( LCD.YdownScrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
       mp_startScrolle[num] = false;
     }
   }
   num = 4; //秒、十の位文字スクロール
   if( mp_startScrolle[num] ){
-    if( LCD.scrolle8x16fontInc( font[num], scllole[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
+    if( LCD.scrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
       mp_startScrolle[num] = false;
     }
   }
   num = 5; //秒、一の位文字スクロール
   if( mp_startScrolle[num] ){
-    if( LCD.Yscrolle8x16fontInc( font[num], scllole[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
+    if( LCD.Yscrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
       mp_startScrolle[num] = false;
     }
   }
@@ -331,7 +357,7 @@ void ILI9341Watch::displayColon2(){
 }
 //*************************************
 void ILI9341Watch::getNTP(){
-  time_t tmp_time = EWG_Get_Ntp_Time();
+  time_t tmp_time = EWG.getNtpTime();
   Serial.println(F("NTP Getting Wait"));
   Serial.println( tmp_time );
 
@@ -341,7 +367,7 @@ void ILI9341Watch::getNTP(){
   }else{
     NtpStatus = ConnectOK;
     setTime( tmp_time );
-    Serial.println( "NTP Get OK! " + String( hour() ) + ":" + String( minute() ) );
+    Serial.printf( "NTP Get OK! %02d:%02d\r\n", hour(), minute() );
   }
 }
 //*************************************
@@ -402,7 +428,7 @@ void ILI9341Watch::getNTP2(uint32_t get_interval){
 void ILI9341Watch::watchStrFontConv(uint8_t num, String str){
   mp_watch_font_count[num] = 0;
   mp_watch_sjis_len[num] = SFR.convStrToSjis( str, mp_watch_sjis_buf[num]);
-  scllole[num].full_or_half = SFR.convSjisToFontInc(mp_watch_sjis_buf[num], mp_watch_sjis_len[num], &mp_watch_font_count[num], mp_watch_font_buf[num]);
+  scl_set[num].full_or_half = SFR.convSjisToFontInc(mp_watch_sjis_buf[num], mp_watch_sjis_len[num], &mp_watch_font_count[num], mp_watch_font_buf[num]);
 }
 //********** 年月日曜日表示 *************************
 void ILI9341Watch::displayYMDW(){

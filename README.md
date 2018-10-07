@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.40  
+Beta ver 1.0.50  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -17,6 +17,12 @@ If the BOSCH sensor library is not installed, a compile error will be issued.
 If you do not need it, delete /Sensor/ folder and the files in it.  
   
 # Change log
+(beta ver 1.0.50)  
+- Fully corrected.  
+- Character display and scroll display program in M5Stack is now easier.  
+See sample sketch.  
+- By pressing the button of M5Stack it made it possible to display select box.  
+- Brushed up the Yahoo news display and simplified it on the sketch.  
 (beta ver 1.0.40)  
 - Added firebase_realtime_database.h & cpp file.  
 - Add display_shinonome_fnt. & cpp file.  
@@ -58,6 +64,12 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.50)  
+- 全面的に修正  
+- M5Stack で文字表示やスクロール表示プログラムが簡単になりました。  
+sampleスケッチ参照。  
+- M5Stack のボタンを押すとセレクトボックス表示できるようにしました。  
+- Yahoo ニュース表示をブラッシュアップし、スケッチ上でシンプル化しました。  
 (beta ver 1.0.40)  
 - firebase_realtime_database.h & cpp ファイル追加。  
 - display_shinonome_fnt. & cpp ファイル追加。  

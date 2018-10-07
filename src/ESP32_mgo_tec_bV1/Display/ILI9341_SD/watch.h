@@ -1,7 +1,7 @@
 /*
   watch.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.11
+  Beta version 1.0.2
   
 The MIT License (MIT)
 
@@ -25,16 +25,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Use Arduino Time Library ( TimeLib.h )
+time.c - low level time and date functions
+Copyright (c) Michael Margolis 2009-2014
+LGPL ver2.1
+https://github.com/PaulStoffregen/Time
 */
 
-#ifndef _MGO_TEC_ESP32_ILI9341_SD_WATCH_H_INCLUDED
-#define _MGO_TEC_ESP32_ILI9341_SD_WATCH_H_INCLUDED
+#ifndef MGO_TEC_ESP32_ILI9341_SD_WATCH_H_INCLUDED_
+#define MGO_TEC_ESP32_ILI9341_SD_WATCH_H_INCLUDED_
 
 #include <Arduino.h>
-#include "TimeLib.h" //Use Arduino time library ver1.5-
+#include <TimeLib.h> //Use Arduino time library ver1.5-
 #include "ESP32_mgo_tec_bV1/LCD_driver/ili9341_spi.h"
 #include "ESP32_mgo_tec_bV1/SD_font_read/shinonome.h" //beta ver 1.22-
 #include "ESP32_mgo_tec_bV1/Web/webget.h"
+#include "ESP32_mgo_tec_bV1/Display/ILI9341_SD/message_window.h"
 
 extern mgo_tec_esp32_bv1::ILI9341Spi LCD;
 extern mgo_tec_esp32_bv1::SdShinonomeFont SFR;
@@ -66,7 +73,6 @@ private:
 
   int32_t mp_scl_last_time = 0;
   bool mp_startScrolle[ MAX_TXT_NUM ] = {};
-  bool m_changeYMD = false;
   uint32_t mp_ntp_get_last_time = 0;
   uint32_t mp_colon_last_time = 0;
 
@@ -79,15 +85,16 @@ public:
   enum NtpState { MsgReset, Connecting, ConnectOK, ConnectFailed }
     NtpStatus = MsgReset;
 
-  int ntp_msg_status = 0;
-
   FontParameter
     font[ MAX_TXT_NUM ],
     colon1_font,
     colon2_font,
     ymd_font;
+  ScrolleParameter scl_set[ MAX_TXT_NUM ];
+  MessageWindow ntp_msg;
 
-  ScrolleParameter scllole[ MAX_TXT_NUM ];
+  int ntp_msg_status = 0;
+  bool m_changeYMD = false;
 
   //時刻コロンフォント表示用変数
   bool m_onColon_disp = false;
@@ -95,6 +102,8 @@ public:
   bool m_isNtp_first_get = true;
 
 public:
+  void init( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
+  void initDefNum();
   void watchFontSetup( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
   void watchFontSetup2( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
   void watchFontRead();

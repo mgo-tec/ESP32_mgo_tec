@@ -1,6 +1,6 @@
 /*
   ili9341_spi.cpp - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.3
+  Beta version 1.0.31
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -40,6 +40,8 @@ namespace mgo_tec_esp32_bv1 {
 
 //****** LCD ILI9341 ディスプレイ初期化 ***********
 void ILI9341Spi::ILI9341init(int8_t sck, int8_t miso, int8_t mosi, int8_t cs, int8_t dc, int8_t rst, int8_t led, uint32_t clk, bool use_hwcs){
+  //LCD と micro SD カードを共用の VSPI で使う場合は use_hwcs=falseにする。
+  //SPIFFS で使う場合は use_hwcs=true にする
   ILI9341Spi::brightness(0);
 
   m_sck = sck;
@@ -463,7 +465,7 @@ uint8_t ILI9341Spi::XscrolleFontArrayInit( FontParameter &font, ScrolleParameter
   ILI9341Spi::fontParamMaxClip( font, scl_set );  
   scl_set.heap_array_size1 = scl_set.txt_width * 8 * font.Xsize * 2;
   scl_set.heap_array_size2 = 16;
-  Serial.printf("X.heap_array_size1=%d, ary_size2=%d\r\n", scl_set.heap_array_size1, scl_set.heap_array_size2);
+  log_v( "X.heap_array_size1=%d, ary_size2=%d", scl_set.heap_array_size1, scl_set.heap_array_size2 );
 
   return ILI9341Spi::array2newCreate( scl_set, scl_set.heap_array_size1, scl_set.heap_array_size2 );
 }
@@ -496,7 +498,7 @@ uint8_t ILI9341Spi::YscrolleFontArrayInit( FontParameter &font, ScrolleParameter
   ILI9341Spi::fontParamMaxClip( font, scl_set );
   scl_set.heap_array_size1 = 16 * font.Xsize * 2;
   scl_set.heap_array_size2 = 16 * scl_set.txt_height;
-  Serial.printf("Y.heap_array_size1=%d, ary_size2=%d\r\n", scl_set.heap_array_size1, scl_set.heap_array_size2);
+  log_v( "Y.heap_array_size1=%d, ary_size2=%d", scl_set.heap_array_size1, scl_set.heap_array_size2 );
 
   return ILI9341Spi::array2newCreate( scl_set, scl_set.heap_array_size1, scl_set.heap_array_size2 );
 }
@@ -519,10 +521,10 @@ uint8_t ILI9341Spi::YscrolleFontArrayInitMax( FontParameter &font, ScrolleParame
 //********************************************************************
 uint8_t ILI9341Spi::array2newCreate( ScrolleParameter &scl_set, uint16_t ary_size1, uint16_t ary_size2){
   if( scl_set.isHeap_create == true ){
-    Serial.printf("Cannot create new heap memory.\r\n heap size = %d\r\n", esp_get_free_heap_size());
+    log_v( "Cannot create new heap memory.\r\n heap size = %d", esp_get_free_heap_size() );
     ILI9341Spi::scrolleArrayDelete( scl_set );
   }
-  //Serial.printf("Before Create New Free Heap Size = %d\r\n", esp_get_free_heap_size());
+  //log_v("Before Create New Free Heap Size = %d", esp_get_free_heap_size());
 
   //ヒープ領域２次元配列動的確保
   scl_set.heap_array = new uint8_t *[ ary_size2 ];
@@ -540,17 +542,17 @@ uint8_t ILI9341Spi::array2newCreate( ScrolleParameter &scl_set, uint16_t ary_siz
   }
 
   scl_set.isHeap_create = true;
-  Serial.printf("After Create New Free Heap Size = %d\r\n", esp_get_free_heap_size());
+  log_v( "After Create New Free Heap Size = %d", esp_get_free_heap_size() );
   return 1;
 }
 //********************************************************************
 void ILI9341Spi::scrolleArrayDelete( ScrolleParameter &scl_set ){
   if( scl_set.isHeap_create == false ){
-    Serial.printf("Cannot create delete heap memory.\r\n heap size = %d\r\n", esp_get_free_heap_size());
-    Serial.println(F("First, you should create heap memory!"));
+    log_v( "Cannot create delete heap memory.\r\n heap size = %d", esp_get_free_heap_size() );
+    log_v( "First, you should create heap memory!" );
     return;
   }
-  //Serial.printf("Before Delete Free Heap Size = %d\r\n", esp_get_free_heap_size());
+  //log_v("Before Delete Free Heap Size = %d", esp_get_free_heap_size());
 
   for (int i = 0; i < scl_set.heap_array_size2; i++){
     delete[] scl_set.heap_array[i];
@@ -558,7 +560,7 @@ void ILI9341Spi::scrolleArrayDelete( ScrolleParameter &scl_set ){
   delete[] scl_set.heap_array;
 
   scl_set.isHeap_create = false;
-  Serial.printf("After Delete Free Heap Size = %d\r\n", esp_get_free_heap_size());
+  log_v( "After Delete Free Heap Size = %d", esp_get_free_heap_size() );
 }
 //********************************************************************
 void ILI9341Spi::fontParamMaxClip( FontParameter &font, ScrolleParameter &scl_set ){

@@ -1,6 +1,6 @@
 /*
   ili9341_spi.h - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.3
+  Beta version 1.0.31
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -31,12 +31,12 @@ M5stack library - MIT License
 Copyright (c) 2017 M5Stack
 */
 
-#ifndef _MGO_TEC_ESP32_LCD_ILI9341_SPI_H_INCLUDED
-#define _MGO_TEC_ESP32_LCD_ILI9341_SPI_H_INCLUDED
+#ifndef MGO_TEC_ESP32_LCD_ILI9341_SPI_H_INCLUDED_
+#define MGO_TEC_ESP32_LCD_ILI9341_SPI_H_INCLUDED_
 
 #include <Arduino.h>
 #include <SPI.h>
-#include "soc/spi_reg.h"
+#include <soc/spi_reg.h>
 
 // In the ili9341_spi.h file
 namespace mgo_tec_esp32_bv1 {
@@ -79,18 +79,8 @@ public:
 
   uint16_t max_disp_x0_x1, max_disp_y0_y1;
   uint8_t txt_width = 0, txt_height = 0;
-  uint16_t x_pixel_size,  y_pixel_size;
-
-  FontParameter& Set_Xsize( uint8_t value ) { Xsize = value; return *this; };
-  FontParameter& Set_Ysize( uint8_t value ) { Ysize = value; return *this; };
-  FontParameter& Set_x0( uint8_t value ) { x0 = value; return *this; };
-  FontParameter& Set_y0( uint8_t value ) { y0 = value; return *this; };
-  FontParameter& Set_red( uint8_t value ) { red = value; return *this; };
-  FontParameter& Set_green( uint8_t value ) { green = value; return *this; };
-  FontParameter& Set_blue( uint8_t value ) { blue = value; return *this; };
-  FontParameter& Set_bg_red( uint8_t value ) { bg_red = value; return *this; };
-  FontParameter& Set_bg_green( uint8_t value ) { bg_green = value; return *this; };
-  FontParameter& Set_bg_blue( uint8_t value ) { bg_blue = value; return *this; };
+  uint16_t x_pixel_size, y_pixel_size;
+  uint8_t x_padding = 4, y_padding = 4;
 };
 
 //------------------------------------
@@ -118,6 +108,7 @@ public:
   uint16_t x_pixel_size,  y_pixel_size;
   uint16_t font_sjis_len = 0;
   uint8_t txt_width = 0, txt_height = 0;
+  uint8_t disp_txt_len = 40; //ディスプレイに表示する8x16フォント文字数
 
   uint32_t scl_last_time = 0;
   uint8_t single_fnt_scl_cnt = 0;
@@ -215,7 +206,15 @@ public: //LCD変数群
   uint16_t m_max_pix_y1 = m_max_disp_height - 1;
 
 public:
-  void ILI9341init( int8_t sck, int8_t miso, int8_t mosi, int8_t cs, int8_t dc, int8_t rst, int8_t led, uint32_t clk, bool use_hwcs );
+  void ILI9341init( int8_t sck = 18,
+                    int8_t miso = -1,
+                    int8_t mosi = 23,
+                    int8_t cs = 14,
+                    int8_t dc = 27,
+                    int8_t rst = 33,
+                    int8_t led = 32,
+                    uint32_t clk = 40000000,
+                    bool use_hwcs = false );
   void dispRotation( uint8_t rot );
   void displayClear();
   void displayClear( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 );

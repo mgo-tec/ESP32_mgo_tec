@@ -1,6 +1,6 @@
 /*
   WebGet.h
-  Beta version 1.0.1
+  Beta version 1.0.2
 
 Copyright (c) 2018 Mgo-tec
 
@@ -39,17 +39,23 @@ WiFiUdp.h
 Copyright (c) 2008 Bjoern Hartmann
 Licensed under the MIT.
 
+Use Arduino Time Library ( TimeLib.h )
+time.c - low level time and date functions
+Copyright (c) Michael Margolis 2009-2014
+LGPL ver2.1
+https://github.com/PaulStoffregen/Time
+
 */
 
-#ifndef _MGO_TEC_ESP32_WEBGET_H_INCLUDED
-#define _MGO_TEC_ESP32_WEBGET_H_INCLUDED
+#ifndef MGO_TEC_ESP32_WEBGET_H_INCLUDED_
+#define MGO_TEC_ESP32_WEBGET_H_INCLUDED_
 
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <WiFiClientSecure.h>
 #include <WiFiUdp.h>
-#include "TimeLib.h" //Arduino time library ver1.5-
+#include <TimeLib.h> //Arduino time library ver1.5-
 
 // In the webget.h file
 namespace mgo_tec_esp32_bv1 {
@@ -57,30 +63,36 @@ namespace mgo_tec_esp32_bv1 {
 // All declarations are within the namespace scope.
 // Notice the lack of indentation.
 
-
-time_t EWG_Get_Ntp_Time();
-void EWG_Send_NTP_Packet(IPAddress &address);
-
+//****************************
 class WebGetClass
 {
-public:
-
-  bool wifiAPconnect(const char *ssid, const char *password);
-  void ntpServerInit(int timezone, const char *NtpServerName);
-  void getNtpTimeInit(int timezone, const char *NtpServerName);
-
-  String webGet(const char* host0, String target_ip, char char_tag, String Final_tag, String Begin_tag, String End_tag, String Paragraph);
-  String httpsWebGet(const char* host1, String target_ip, char char_tag, String Final_tag, String Begin_tag, String End_tag, String Paragraph);
-  String httpsWebGet(const char *root_ca, const char* host1, String target_ip, char char_tag, String Final_tag, String Begin_tag, String End_tag, String Paragraph);
-  String httpsGet(const char *Root_Ca, uint8_t rca_set, const char* Host, String t_ip, char c_tag, String F_tag, String B_tag, String E_tag, String Pph);
-
-  void weatherJfontNum(String str, uint8_t wDay, uint8_t Htime, uint8_t Fnum[3], uint8_t col[3][3]);
-  bool getNtpServerSelect(uint8_t timezone);
-  void getNtpInterval(uint32_t interval);
-
 private:
   uint32_t mp_LastNTPtime = 0;
-  //WiFiClientSecure client;
+  IPAddress mp_NtpServerIP;
+  static const int mp_NTP_PACKET_SIZE = 48; // NTP time stamp is in the first 48 bytes of the message
+  byte mp_packetBuffer[ mp_NTP_PACKET_SIZE ]; //buffer to hold incoming and outgoing packets
+  WiFiUDP mp_Udp;
+  int mp_timeZone = 9; // Tokyo
+
+public:
+  bool wifiAPconnect( const char *ssid, const char *password );
+  void ntpServerInit( int timezone, const char *NtpServerName );
+  void ntpServerInit( int timezone, const char *NtpServerName, const uint16_t local_port );
+  void getNtpTimeInit( int timezone, const char *NtpServerName );
+
+  String webGet( const char* host0, String target_ip, char char_tag, String Final_tag, String Begin_tag, String End_tag, String Paragraph );
+  String httpsWebGet( const char* host1, String target_ip, char char_tag, String Final_tag, String Begin_tag, String End_tag, String Paragraph );
+  String httpsWebGet( const char *root_ca, const char* host1, String target_ip, char char_tag, String Final_tag, String Begin_tag, String End_tag, String Paragraph );
+  String httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, String t_ip, char c_tag, String F_tag, String B_tag, String E_tag, String Pph );
+
+  String httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, const uint16_t Port, String t_ip, char c_tag, String F_tag, String B_tag, String E_tag, String Pph );
+
+  bool getNtpServerSelect( uint8_t timezone );
+  void getNtpInterval( uint32_t interval );
+  
+  time_t getNtpTime();
+  void sendNtpPacket( IPAddress &address );
+
 };
 
 }// namespace mgo_tec_esp32_bv1

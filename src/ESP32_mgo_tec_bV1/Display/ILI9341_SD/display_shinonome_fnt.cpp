@@ -1,7 +1,7 @@
 /*
   display_shinonome_fnt.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.0
+  Beta version 1.0.1
   
 The MIT License (MIT)
 
@@ -32,6 +32,12 @@ SOFTWARE.
 // In the display_shinonome_fnt.cpp file
 namespace mgo_tec_esp32_bv1 {
 // Definition of functions is within scope of the namespace.
+
+//********************************************************************
+void DispShinonomeFnt::initScrolle( FontParameter &font, ScrolleParameter &scl_set ){
+  LCD.XscrolleFontArrayInit( font, scl_set, scl_set.disp_txt_len, font.Xsize, font.Ysize);
+  LCD.scrolleFontSetUp( font, scl_set );
+}
 //********************************************************************
 uint8_t DispShinonomeFnt::createNewSingleArray( uint16_t ary_size ){
   if( mp_isHeap_create == true ){
@@ -88,8 +94,8 @@ void DispShinonomeFnt::newSetText( ScrolleParameter &scl_set, String str ){
     str = "　"; //全角スペース
   }
   DispShinonomeFnt::createNewSingleArray( str.length() );
-  //ここで正しいShift_JISコード長を取得
   
+  //ここで正しいShift_JISコード長を取得
   scl_set.font_sjis_len = SFR.convStrToSjis( str, mp_heap_single_array );
   log_v("scl_set.font_sjis_len = %d", scl_set.font_sjis_len);
   //※convSjisToFontInc関数の前にfont_countをゼロにすること。
@@ -98,6 +104,32 @@ void DispShinonomeFnt::newSetText( ScrolleParameter &scl_set, String str ){
   scl_set.full_or_half = SFR.convSjisToFontInc( mp_heap_single_array, scl_set.font_sjis_len, &scl_set.font_count, mp_font_buf);
   scl_set.single_fnt_scl_cnt = 0;
   scl_set.full_or_half_cnt = 0;
+}
+//****************************************
+uint16_t DispShinonomeFnt::dispText( String str ){
+  FontParameter font;
+  return DispShinonomeFnt::dispText( font, str );
+}
+//****************************************
+uint16_t DispShinonomeFnt::dispText( FontParameter &font, String str ){
+  //UTF-8は2～3バイトコードのため、Shift_JISより長い。
+  //ひとまず、UTF-8コードによる長めの配列確保
+  uint16_t len = str.length();
+  if( len == 0 ) {
+    log_v("str.length = %d", len);
+    log_v("Add Space.");
+    //文字列長さ０の場合はスペースを挿入しないと、文字化けする。
+    str = "　"; //全角スペース
+  }
+  uint8_t font_array[ len ][ 16 ] = {};
+  
+  //ここで正しいShift_JISコード長を取得
+  len = SFR.convStrToFont( str, font_array );
+  font.txt_width = len;
+  log_v("font.txt_width = %d", len );
+  
+  LCD.display8x16Font( font, font.txt_width, font_array );
+  return len;
 }
 
 }  // namespace mynamespace

@@ -1,6 +1,6 @@
 /*
   display_bme280_i2c.h - for Arduino core for the ESP32.
-  Beta version 1.0.1
+  Beta version 1.0.2
   
 The MIT License (MIT)
 
@@ -26,46 +26,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 Use BOSCH BME280 Driver.
-URL: https://github.com/BoschSensortec/BME280_driver
 Copyright (C) 2016 - 2017 Bosch Sensortec GmbH
+The 3-Clause BSD License
+URL: https://github.com/BoschSensortec/BME280_driver
+
+Use Arduino Time Library ( TimeLib.h )
+time.c - low level time and date functions
+Copyright (c) Michael Margolis 2009-2014
+LGPL ver2.1
+https://github.com/PaulStoffregen/Time
 
 */
 
-#ifndef _MGO_TEC_ESP32_DISPLAY_BME280_I2C_H_INCLUDED
-#define _MGO_TEC_ESP32_DISPLAY_BME280_I2C_H_INCLUDED
+#ifndef MGO_TEC_ESP32_DISPLAY_BME280_I2C_H_INCLUDED_
+#define MGO_TEC_ESP32_DISPLAY_BME280_I2C_H_INCLUDED_
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "TimeLib.h" //Use Arduino time library ver1.5-
+#include <TimeLib.h> //Use Arduino time library ver1.5-
 #include "ESP32_mgo_tec_bV1/LCD_driver/ili9341_spi.h"
 #include "ESP32_mgo_tec_bV1/SD_font_read/shinonome.h"
 
 extern "C" {
-#include "bme280.h" //Bosch Driver ( The 3-Clause BSD License )
+  #include "bme280.h" //Bosch Driver ( The 3-Clause BSD License )
 }
 
 extern mgo_tec_esp32_bv1::ILI9341Spi LCD;
 extern mgo_tec_esp32_bv1::SdShinonomeFont SFR;
 
-// In the button_switch.h file
+// In the display_bme280_i2c.h file
 namespace mgo_tec_esp32_bv1 {
 
 // All declarations are within the namespace scope.
 // Notice the lack of indentation.
 
-extern "C" {
-  //Boschドライバー側で、typedef の関数ポインタがあり、C++コンパイラエラーが出る。
-  //その為、この２つの関数のみクラスから外し、externで囲う
-  int8_t bme280UserI2cRead( uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len );
-  int8_t bme280UserI2cWrite( uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len );
-}
-
 class DisplayBme280I2c
 {
 private:
   //using bme280_com_fptr_t = int8_t(*)(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
-  struct bme280_dev dev;
-  struct bme280_data comp_data;
+
   uint32_t mp_get_data_last_time = 0;
   uint32_t mp_disp_min_max_last_time = 0;
   String mp_prev_pres_str, mp_prev_temp_str, mp_prev_hum_str;

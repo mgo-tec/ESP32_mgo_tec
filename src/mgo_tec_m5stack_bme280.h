@@ -10,10 +10,16 @@
   The 3-Clause BSD License
   Copyright (C) 2016 - 2017 Bosch Sensortec GmbH
   URL: https://github.com/BoschSensortec/BME280_driver
+  
+  Use Arduino Time Library ( TimeLib.h )
+  time.c - low level time and date functions
+  Copyright (c) Michael Margolis 2009-2014
+  LGPL ver2.1
+  https://github.com/PaulStoffregen/Time
 */
 
-#ifndef _MGO_TEC_M5STACK_BME280_H_INCLUDED
-#define _MGO_TEC_M5STACK_BME280_H_INCLUDED
+#ifndef MGO_TEC_M5STACK_BME280_H_INCLUDED_
+#define MGO_TEC_M5STACK_BME280_H_INCLUDED_
 
 #include "ESP32_mgo_tec_bV1/LCD_driver/ili9341_spi.h"
 #include "ESP32_mgo_tec_bV1/SD_font_read/utf8tosjis.h"
