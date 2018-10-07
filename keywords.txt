@@ -53,7 +53,7 @@ SFR	KEYWORD1
   scl_set	KEYWORD2
   disp_fnt	KEYWORD2
   wifi_msg	KEYWORD2
-  msg	KEYWORD1
+  msg	KEYWORD2
   btnA	KEYWORD2
   btnB	KEYWORD2
   btnC	KEYWORD2
