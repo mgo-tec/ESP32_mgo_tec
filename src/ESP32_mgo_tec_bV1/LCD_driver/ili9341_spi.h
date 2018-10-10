@@ -1,6 +1,6 @@
 /*
   ili9341_spi.h - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.31
+  Beta version 1.0.32
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -182,12 +182,6 @@ private:
 
   #define SWAP(type, x, y) do { type tmp = x; x = y; y = tmp; } while (0)
 
-  void commandWrite( uint8_t b );
-  void dataWrite( uint8_t b );
-  void dataWrite16( uint16_t b );
-  void dataWrite32( uint32_t b );
-  void dataWriteBytes( uint8_t *b, uint32_t b_size );
-  void spiSetChange();
   void spiWriteBlock( uint16_t color, uint32_t repeat );
   void rangeXY( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 );
   void blockSPIfastWrite( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t red, uint8_t green, uint8_t blue, uint32_t repeat );
@@ -215,7 +209,15 @@ public:
                     int8_t led = 32,
                     uint32_t clk = 40000000,
                     bool use_hwcs = false );
+  void commandWrite( uint8_t b );
+  void dataWrite( uint8_t b );
+  void dataWrite16( uint16_t b );
+  void dataWrite32( uint32_t b );
+  void dataWriteBytes( uint8_t *b, uint32_t b_size );
+  void spiSetChange();
   void dispRotation( uint8_t rot );
+  void dispInversionOn();
+  void dispInversionOff();
   void displayClear();
   void displayClear( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 );
   void drawPixel65kDotColor_sd( uint16_t x0, uint16_t y0, uint16_t DotColor );

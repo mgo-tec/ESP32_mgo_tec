@@ -1,6 +1,6 @@
 /*
   ili9341_spi.cpp - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.31
+  Beta version 1.0.32
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -196,6 +196,18 @@ void ILI9341Spi::dispRotation(uint8_t rot){
   ILI9341Spi::spiSetChange();
   ILI9341Spi::commandWrite(0x36); //MADCTL: Memory Access Control
     ILI9341Spi::dataWrite(b); //M5stack only. D3: BGR(RGB-BGR Order control bit )="1"
+  if(!m_useHw_Cs) digitalWrite(m_cs, HIGH);
+}
+//********* Color bit Inversion OFF ************
+void ILI9341Spi::dispInversionOn(){
+  ILI9341Spi::spiSetChange();
+  ILI9341Spi::commandWrite(0x21); //MADCTL: Memory Access Control
+  if(!m_useHw_Cs) digitalWrite(m_cs, HIGH);
+}
+//********* Color bit Inversion ON ************
+void ILI9341Spi::dispInversionOff(){
+  ILI9341Spi::spiSetChange();
+  ILI9341Spi::commandWrite(0x20); //MADCTL: Memory Access Control
   if(!m_useHw_Cs) digitalWrite(m_cs, HIGH);
 }
 //********* 4wire SPI Data / Command write************

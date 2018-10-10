@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.50  
+Beta ver 1.0.51  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -17,6 +17,9 @@ If the BOSCH sensor library is not installed, a compile error will be issued.
 If you do not need it, delete /Sensor/ folder and the files in it.  
   
 # Change log
+(beta ver 1.0.51)  
+Added the dispInversionOn and dispInversionOff functions in the ili9341spi.h and ili9341spi.cpp files.
+  
 (beta ver 1.0.50)  
 - Fully corrected.  
 - Character display and scroll display program in M5Stack is now easier.  
@@ -65,6 +68,9 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.51)  
+- ili9341_spi.h および ili9341_spi.cpp ファイルの dispInversionOn および dispInversionOff 関数を追加。  
+  
 (beta ver 1.0.50)  
 - 全面的に修正  
 - M5Stack で文字表示やスクロール表示プログラムが簡単になりました。  

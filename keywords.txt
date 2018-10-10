@@ -67,6 +67,8 @@ SFR	KEYWORD1
 #ILI9341Spi
   ILI9341init	KEYWORD2
   dispRotation	KEYWORD2
+  dispInversionOn	KEYWORD2
+  dispInversionOff	KEYWORD2
   displayClear	KEYWORD2
   drawPixel65kDotColor_sd	KEYWORD2
   drawPixel65kDotColor	KEYWORD2
