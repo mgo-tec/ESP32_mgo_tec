@@ -1,6 +1,6 @@
 /*
   button_switch.h - for Arduino core for the ESP32.
-  Beta version 1.0.1
+  Beta version 1.0.11
   
 The MIT License (MIT)
 
@@ -26,8 +26,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef MGO_TEC_ESP32_BUTTON_SWITCH_H_INCLUDED_
-#define MGO_TEC_ESP32_BUTTON_SWITCH_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_BUTTON_SWITCH_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_BUTTON_SWITCH_H_INCLUDED_
 
 #include <Arduino.h>
 

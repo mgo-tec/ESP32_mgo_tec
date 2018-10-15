@@ -1,7 +1,7 @@
 /*
   watch.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.2
+  Beta version 1.0.3
   
 The MIT License (MIT)
 
@@ -269,6 +269,11 @@ void ILI9341Watch::watchFontRead(){
       mp_changeFont = false;
     }
   }
+}
+//********** scrolleWatch and colon ************************
+void ILI9341Watch::scrolleWatchCl(){
+  ILI9341Watch::scrolleWatch();
+  ILI9341Watch::displayColon2();
 }
 //************************************************************
 void ILI9341Watch::scrolleWatch(){

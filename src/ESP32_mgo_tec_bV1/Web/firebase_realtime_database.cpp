@@ -1,6 +1,6 @@
 /*
   firebase_realtime_database.cpp
-  Beta version 1.0.1
+  Beta version 1.0.2
 
 The MIT License (MIT)
 
@@ -45,7 +45,7 @@ void FirebaseRD::sendGetRequestSSE( String path ){
 }
 
 void FirebaseRD::sendGetRequestSSE( const char *Root_Ca, uint8_t rca_set, String path ){
-  SseStatus = Connecting;
+  FirebaseRD::SseStatus = Connecting;
   sse_status = Connecting;
   if( rca_set ==1 ){
     client.setCACert(Root_Ca);
@@ -86,7 +86,7 @@ void FirebaseRD::sendGetRequestSSE( const char *Root_Ca, uint8_t rca_set, String
     }
 
     if( ( millis() - time_out ) > 20000 ){
-      SseStatus = ConnectFailed;
+      FirebaseRD::SseStatus = ConnectFailed;
       sse_status = ConnectFailed;
       Serial.println( F("time out!") );
       Serial.println( F("Host connection failed.") );
@@ -99,12 +99,12 @@ void FirebaseRD::sendGetRequestSSE( const char *Root_Ca, uint8_t rca_set, String
   while( client.connected() ){
     if( (millis() - time_out) > 60000 ){
       log_v( "time out" );
-      SseStatus = ConnectFailed;
+      FirebaseRD::SseStatus = ConnectFailed;
       sse_status = ConnectFailed;
       break;
     } 
     if( receiveHttpResHeader() ){
-      SseStatus = ConnectOK;
+      FirebaseRD::SseStatus = ConnectOK;
       sse_status= ConnectOK;
       break;
     }
@@ -145,7 +145,7 @@ void FirebaseRD::patchHTTPrequest( const char *Root_Ca, uint8_t rca_set, String 
     delay(2);
     client.stop(); //Server-Sent Events受信中は、一旦client.stop()しないと、Firebase 側がPUTを受け付けない。
     delay(2); //このdelayは必要
-    SseStatus = MsgReset;
+    FirebaseRD::SseStatus = MsgReset;
     sse_status = MsgReset;
   }
 
@@ -234,7 +234,7 @@ void FirebaseRD::patchHTTPrequest( const char *Root_Ca, uint8_t rca_set, String 
 //***************************************
 boolean FirebaseRD::pickUpStrSSEdataAll( String &str ){
   str = "";
-  if( SseStatus == ConnectOK ){
+  if( FirebaseRD::SseStatus == ConnectOK ){
     String resp_str;
     while( client.available() ){
       resp_str = client.readStringUntil('\n');
@@ -262,6 +262,8 @@ boolean FirebaseRD::pickUpStrToTargetStr( String resp_str, String node_str, Stri
   return false;
 }
 //**************************************
+//※これは１つのデータしか取得できない。
+//Realtime Database に初回接続した時、全てのデータを取得しても、そのうちの target データしか取得できないことに注意
 boolean FirebaseRD::pickUpTargetStr( String node_str, String &target_str ){
   String resp_str;
   if( FirebaseRD::pickUpStrSSEdataAll( resp_str ) ){
@@ -269,5 +271,18 @@ boolean FirebaseRD::pickUpTargetStr( String node_str, String &target_str ){
   }
   return false;
 }
+//********** HTML Color Code str to 65k color value *****************************************
+void FirebaseRD::pickUpColorData( String color_str, uint8_t &Red, uint8_t &Green, uint8_t &Blue ){
+  String red_str = color_str.substring( 1, 3 );
+  String green_str = color_str.substring( 3, 5 );
+  String blue_str = color_str.substring( 5, 7 );
+  uint8_t red_value = strtol( red_str.c_str(), NULL, 16 );
+  uint8_t green_value = strtol( green_str.c_str(), NULL, 16 );
+  uint8_t blue_value = strtol( blue_str.c_str(), NULL, 16 );
+  Red = (uint8_t)floor( (double)red_value / 8.0 );
+  Green = (uint8_t)floor( (double)green_value / 4.0 );
+  Blue = (uint8_t)floor( (double)blue_value / 8.0 );
+}
+
 
 }  // namespace mynamespace

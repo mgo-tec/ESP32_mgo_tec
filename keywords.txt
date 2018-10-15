@@ -13,6 +13,7 @@ mgo_tec_esp32_ili9341_sd	KEYWORD1
 mgo_tec_m5stack_bme280	KEYWORD1
 mgo_tec_m5stack_bme680	KEYWORD1
 mgo_tec_esp32_m5stack_firebase	KEYWORD1
+mgo_tec_m5stack_firebase_sd	KEYWORD1
 
 mgo_tec_esp32_bv1	KEYWORD1
 MGO_TEC_BV1_M5STACK_SD_SKETCH	KEYWORD1
@@ -45,10 +46,12 @@ SFR	KEYWORD1
   DispShinonomeFnt	KEYWORD2
   SelectUrl	KEYWORD2
   BtnDispSelectBox	KEYWORD2
+  HtmlColorCodeClass	KEYWORD2
 
 #Object
   watch	KEYWORD2
   yahoo	KEYWORD2
+  firebase	KEYWORD2
   font	KEYWORD2
   scl_set	KEYWORD2
   disp_fnt	KEYWORD2
@@ -58,11 +61,17 @@ SFR	KEYWORD1
   btnB	KEYWORD2
   btnC	KEYWORD2
 
-#Functions
-#common
-  
+#Functions#########################
+#common 
   init	KEYWORD2
   initScrolle	KEYWORD2
+
+#FontParameter
+  htmlColorCode	KEYWORD2
+  htmlBgColorCode	KEYWORD2
+
+#HtmlColorCodeClass
+  convHtmlColCodeTo65kCol	KEYWORD2
 
 #ILI9341Spi
   ILI9341init	KEYWORD2
@@ -153,6 +162,7 @@ SFR	KEYWORD1
   watchFontSetup2	KEYWORD2
   watchFontRead	KEYWORD2
   scrolleWatch	KEYWORD2
+  scrolleWatchCl	KEYWORD2
   displayColon	KEYWORD2
   displayColon2	KEYWORD2
   getNTP	KEYWORD2
@@ -194,6 +204,10 @@ SFR	KEYWORD1
   dispWebGetStatusMsgShortRev	KEYWORD2
   dispWebGetStatusMsgLongRev	KEYWORD2
   dispMsgWindow	KEYWORD2
+  clearMsgWindow	KEYWORD2
+  htmlColorCodeF	KEYWORD2
+  htmlColorCodeL	KEYWORD2
+  htmlColorCodeFL	KEYWORD2
 
 #ButtonSwitch
   ButtonStatus	KEYWORD2
@@ -237,6 +251,7 @@ SFR	KEYWORD1
   pickUpStrSSEdataAll	KEYWORD2
   pickUpStrToTargetStr	KEYWORD2
   pickUpTargetStr	KEYWORD2
+  pickUpColorData	KEYWORD2
 
 #DispShinonomeFnt
   scrolleText	KEYWORD2
@@ -258,4 +273,3 @@ SFR	KEYWORD1
   LongPress	LITERAL1
   ContPress	LITERAL1
   Release	LITERAL1
-  

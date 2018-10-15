@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.51  
+Beta ver 1.0.60  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -16,7 +16,14 @@ https://github.com/BoschSensortec/BME680_driver
 If the BOSCH sensor library is not installed, a compile error will be issued.  
 If you do not need it, delete /Sensor/ folder and the files in it.  
   
+※BOSCH純正BME280,及び BME680ドライバライブラリをインストールされていない場合はコンパイルエラーが出ます。  
+その場合、/Sensor/フォルダを削除してください。  
+  
 # Change log
+(beta ver 1.0.60)  
+- It is possible to input HTML color code for graphic display and character display.  
+- Other minor corrections.  
+  
 (beta ver 1.0.51)  
 Added the dispInversionOn and dispInversionOff functions in the ili9341spi.h and ili9341spi.cpp files.
   
@@ -68,6 +75,10 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.60)  
+- グラフィック表示および文字表示に HTML カラーコード入力ができるようにしました。  
+- その他軽微な修正。  
+  
 (beta ver 1.0.51)  
 - ili9341_spi.h および ili9341_spi.cpp ファイルの dispInversionOn および dispInversionOff 関数を追加。  
   

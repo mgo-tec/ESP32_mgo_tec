@@ -1,7 +1,7 @@
 /*
   display_shinonome_fnt.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.1
+  Beta version 1.0.2
   
 The MIT License (MIT)
 
@@ -76,6 +76,19 @@ void DispShinonomeFnt::deleteSingleArray(){
   log_v("Shift_JIS Array Delete.");
   log_v("After Free Heap Size = %d", esp_get_free_heap_size());
 }
+//********** HTML Color Code str to 65k color value *****************************************
+void DispShinonomeFnt::setFntHtmlColor( String html_color_code, FontParameter &font ){
+  String red_str = html_color_code.substring( 1, 3 );
+  String green_str = html_color_code.substring( 3, 5 );
+  String blue_str = html_color_code.substring( 5, 7 );
+  uint8_t red_value = strtol( red_str.c_str(), NULL, 16 );
+  uint8_t green_value = strtol( green_str.c_str(), NULL, 16 );
+  uint8_t blue_value = strtol( blue_str.c_str(), NULL, 16 );
+  //red:max=31, green:max=63, blue:max=31
+  font.red = (uint8_t)floor( (double)red_value / 8.0 );
+  font.green = (uint8_t)floor( (double)green_value / 4.0 );
+  font.blue = (uint8_t)floor( (double)blue_value / 8.0 );
+}
 //****************************************
 void DispShinonomeFnt::scrolleText( FontParameter &font, ScrolleParameter &scl_set ){
   if( LCD.scrolle8x16fontInc( font, scl_set, scl_set.font_sjis_len, mp_font_buf ) ){
@@ -121,8 +134,7 @@ uint16_t DispShinonomeFnt::dispText( FontParameter &font, String str ){
     //文字列長さ０の場合はスペースを挿入しないと、文字化けする。
     str = "　"; //全角スペース
   }
-  uint8_t font_array[ len ][ 16 ] = {};
-  
+  uint8_t font_array[ len + 1 ][ 16 ] = {}; 
   //ここで正しいShift_JISコード長を取得
   len = SFR.convStrToFont( str, font_array );
   font.txt_width = len;

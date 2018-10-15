@@ -1,6 +1,6 @@
 /*
   ili9341_spi.h - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.32
+  Beta version 1.0.4
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -31,12 +31,14 @@ M5stack library - MIT License
 Copyright (c) 2017 M5Stack
 */
 
-#ifndef MGO_TEC_ESP32_LCD_ILI9341_SPI_H_INCLUDED_
-#define MGO_TEC_ESP32_LCD_ILI9341_SPI_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_LCD_ILI9341_SPI_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_LCD_ILI9341_SPI_H_INCLUDED_
 
 #include <Arduino.h>
 #include <SPI.h>
 #include <soc/spi_reg.h>
+#include <utility> //use std::swap
+#include "html_color_code.h"
 
 // In the ili9341_spi.h file
 namespace mgo_tec_esp32_bv1 {
@@ -47,6 +49,9 @@ namespace mgo_tec_esp32_bv1 {
 //------------------------------------
 class FontParameter
 {
+private:
+  HtmlColorCodeClass mp_hccc;
+
 public:
   FontParameter(){
     Xsize = 1;
@@ -81,6 +86,10 @@ public:
   uint8_t txt_width = 0, txt_height = 0;
   uint16_t x_pixel_size, y_pixel_size;
   uint8_t x_padding = 4, y_padding = 4;
+
+  void htmlColorCode( String html_color_code );
+  void htmlBgColorCode( String html_color_code );
+  //void convHtmlColCodeTo65kCol( String html_color_code, uint8_t &red, uint8_t &green, uint8_t &blue );
 };
 
 //------------------------------------
@@ -165,22 +174,21 @@ public:
 class ILI9341Spi
 {
 private: //SPIインターフェース関連変数
-  const uint8_t _SPI_NUM = 0x3; //VSPI=0x3, HSPI=0x2
-  int8_t m_sck;
-  int8_t m_miso;
-  int8_t m_mosi;
-  int8_t m_rst;
-  int8_t m_ledpin;
-  int8_t m_dc;
-  int8_t m_cs;
-  bool m_useHw_Cs;
-  uint32_t m_Freq;
+  const uint8_t mp_spi_num = 0x3; //VSPI=0x3, HSPI=0x2
+  int8_t mp_sck;
+  int8_t mp_miso;
+  int8_t mp_mosi;
+  int8_t mp_rst;
+  int8_t mp_ledpin;
+  int8_t mp_dc;
+  int8_t mp_cs;
+  bool mp_useHw_Cs;
+  uint32_t mp_Freq;
+  HtmlColorCodeClass mp_hccc;
 
 private:
   const uint16_t mp_max_disp_width = 320;
   const uint16_t mp_max_disp_height = 240;
-
-  #define SWAP(type, x, y) do { type tmp = x; x = y; y = tmp; } while (0)
 
   void spiWriteBlock( uint16_t color, uint32_t repeat );
   void rangeXY( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 );
@@ -221,15 +229,26 @@ public:
   void displayClear();
   void displayClear( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 );
   void drawPixel65kDotColor_sd( uint16_t x0, uint16_t y0, uint16_t DotColor );
-  void drawPixel65kDotColor( uint16_t x0, uint16_t y0, uint16_t DotColor );
+  void drawPixel65k3Color_sd( uint16_t x0, uint16_t y0, String html_color_code );
   void drawPixel65k3Color_sd( uint16_t x0, uint16_t y0, uint8_t red, uint8_t green, uint8_t blue );
+  //------SPIFFS use-------
+  void drawPixel65kDotColor( uint16_t x0, uint16_t y0, uint16_t DotColor );
+  void drawPixel65k3Color( uint16_t x0, uint16_t y0, String html_color_code );
   void drawPixel65k3Color( uint16_t x0, uint16_t y0, uint8_t red, uint8_t green, uint8_t blue );
+  //-----------------------
+  void drawLine( int16_t x0, int16_t y0, int16_t x1, int16_t y1, String html_color_code );
   void drawLine( int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint8_t red, uint8_t green, uint8_t blue );
+  void drawHorizontalLine( int16_t x0, int16_t x1, int16_t y0, String html_color_code );
   void drawHorizontalLine( int16_t x0, int16_t x1, int16_t y0, uint8_t red, uint8_t green, uint8_t blue );
+  void drawVerticallLine( int16_t x0, int16_t y0, int16_t y1, String html_color_code );
   void drawVerticallLine( int16_t x0, int16_t y0, int16_t y1, uint8_t red, uint8_t green, uint8_t blue );
+  void drawRectangleLine( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, String html_color_code );
   void drawRectangleLine( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t red, uint8_t green, uint8_t blue );
+  void drawRectangleFill( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, String html_color_code );
   void drawRectangleFill( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t red, uint8_t green, uint8_t blue );
+  void drawCircleLine( uint16_t x0, uint16_t y0, uint16_t r, String html_color_code );
   void drawCircleLine( uint16_t x0, uint16_t y0, uint16_t r, uint8_t red, uint8_t green, uint8_t blue );
+  void drawCircleFill( uint16_t x0, uint16_t y0, uint16_t r, String html_color_code );
   void drawCircleFill( uint16_t x0, uint16_t y0, uint16_t r, uint8_t red, uint8_t green, uint8_t blue );
   void idleModeOff();
   void idleModeOn();
@@ -252,8 +271,8 @@ public:
   boolean reverseScrolle8x16fontInc( FontParameter &font, ScrolleParameter &scl_set, const uint16_t &fontSJ_Length, uint8_t Fnt[][16], bool xy_range_set = true );
   boolean Yscrolle8x16fontInc( FontParameter &font, ScrolleParameter &scl_set, const uint16_t &fontSJ_Length, uint8_t Fnt[][16], bool xy_range_set = true );
   boolean YdownScrolle8x16fontInc( FontParameter &font, ScrolleParameter &scl_set, const uint16_t &fontSJ_Length, uint8_t Fnt[][16], bool xy_range_set = true );
-
   void display8x16Font( FontParameter &font, uint16_t fontSJ_Length, uint8_t Fnt[][16] );
+
 };
 
 }// namespace mgo_tec_esp32_bv1

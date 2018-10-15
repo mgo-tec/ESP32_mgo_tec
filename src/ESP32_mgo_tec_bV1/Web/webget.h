@@ -1,6 +1,6 @@
 /*
   WebGet.h
-  Beta version 1.0.2
+  Beta version 1.0.21
 
 Copyright (c) 2018 Mgo-tec
 
@@ -47,8 +47,8 @@ https://github.com/PaulStoffregen/Time
 
 */
 
-#ifndef MGO_TEC_ESP32_WEBGET_H_INCLUDED_
-#define MGO_TEC_ESP32_WEBGET_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_WEBGET_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_WEBGET_H_INCLUDED_
 
 #include <Arduino.h>
 #include <WiFi.h>

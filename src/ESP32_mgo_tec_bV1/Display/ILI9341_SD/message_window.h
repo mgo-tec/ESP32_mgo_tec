@@ -1,7 +1,7 @@
 /*
   message_window.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.3
+  Beta version 1.0.4
   
 The MIT License (MIT)
 
@@ -33,8 +33,8 @@ LGPL ver2.1
 https://github.com/PaulStoffregen/Time
 */
 
-#ifndef MGO_TEC_ESP32_ILI9341_SD_MESSAGEWINDOW_H_INCLUDED_
-#define MGO_TEC_ESP32_ILI9341_SD_MESSAGEWINDOW_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_ILI9341_SD_MESSAGEWINDOW_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_ILI9341_SD_MESSAGEWINDOW_H_INCLUDED_
 
 #include <Arduino.h>
 #include <TimeLib.h> //Arduino time library ver1.5
@@ -53,6 +53,9 @@ namespace mgo_tec_esp32_bv1 {
 
 class MessageWindow
 {
+private:
+  HtmlColorCodeClass mp_hccc;
+
 public:
   enum WifiMsgStatus { WifiMsgReset, WifiConnecting , WifiConnected, WifiFailed }
     WifiStatus = WifiMsgReset;
@@ -92,6 +95,10 @@ public:
   //---------------------------
   void dispMsgWindow( int16_t msg_num, String str );
   void clearMsgWindow( int16_t msg_num );
+  void htmlColorCodeF( String html_color_code );
+  void htmlColorCodeL( String html_color_code );
+  void htmlColorCodeFL( String html_color_code );
+  void htmlBgColorCode( String html_color_code );
 
 };
 

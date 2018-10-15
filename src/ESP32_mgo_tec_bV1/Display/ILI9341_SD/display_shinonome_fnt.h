@@ -1,7 +1,7 @@
 /*
   display_shinonome_fnt.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.1
+  Beta version 1.0.2
   
 The MIT License (MIT)
 
@@ -27,8 +27,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef MGO_TEC_ESP32_ILI9341_SD_DISPSHINONOMEFNT_H_INCLUDED_
-#define MGO_TEC_ESP32_ILI9341_SD_DISPSHINONOMEFNT_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_ILI9341_SD_DISPSHINONOMEFNT_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_ILI9341_SD_DISPSHINONOMEFNT_H_INCLUDED_
 
 #include <Arduino.h>
 #include "ESP32_mgo_tec_bV1/LCD_driver/ili9341_spi.h"
@@ -61,6 +61,7 @@ public:
 
 public:
   void initScrolle( FontParameter &font, ScrolleParameter &scl_set );
+  void setFntHtmlColor( String html_color_code, FontParameter &font );
   void scrolleText( FontParameter &font, ScrolleParameter &scl_set );
   void newSetText( ScrolleParameter &scl_set, String str );
   uint16_t dispText( String str );

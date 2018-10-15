@@ -1,7 +1,7 @@
 /*
   watch.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.2
+  Beta version 1.0.3
   
 The MIT License (MIT)
 
@@ -33,8 +33,8 @@ LGPL ver2.1
 https://github.com/PaulStoffregen/Time
 */
 
-#ifndef MGO_TEC_ESP32_ILI9341_SD_WATCH_H_INCLUDED_
-#define MGO_TEC_ESP32_ILI9341_SD_WATCH_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_ILI9341_SD_WATCH_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_ILI9341_SD_WATCH_H_INCLUDED_
 
 #include <Arduino.h>
 #include <TimeLib.h> //Use Arduino time library ver1.5-
@@ -108,6 +108,7 @@ public:
   void watchFontSetup2( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
   void watchFontRead();
   void scrolleWatch();
+  void scrolleWatchCl();
   void displayColon(uint16_t colon1_sj_len, uint16_t colon2_sj_len, uint8_t colon1_buf[][ 16 ], uint8_t colon2_buf[][ 16 ]);
   void displayColon2();
   void getNTP();

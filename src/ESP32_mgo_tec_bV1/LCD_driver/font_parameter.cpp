@@ -1,13 +1,11 @@
 /*
-  utf8tosjis.h - Arduino core for the ESP32 Library( use SD ).
-  Beta version 1.0.01
-  
-  This is a library for converting from UTF-8 code string to Shift_JIS code string.
-  In advance, you need to upload a conversion table file Utf8Sjis.tbl using micro SD card & ESP-WROOM-32 ( ESP32 ).
+  font_parameter.cpp - for Arduino core for the ESP32.
+  ( Use LCD ILI9341 and SD )
+  Beta version 1.0.00
   
 The MIT License (MIT)
 
-Copyright (c) 2018 Mgo-tec
+Copyright (c) 2018 Mgo-tec. All rights reserved.
 Blog URL ---> https://www.mgo-tec.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,32 +27,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef MGO_TEC_ESP32_BV1_SD_UTF8TOSJIS_H_INCLUDED_
-#define MGO_TEC_ESP32_BV1_SD_UTF8TOSJIS_H_INCLUDED_
-#include <Arduino.h>
-#include <SD.h>
+#include "ESP32_mgo_tec_bV1/LCD_driver/ili9341_spi.h"
 
-// In the utf8tosjis.h file
+// In the font_parameter.cpp file
 namespace mgo_tec_esp32_bv1 {
+// Definition of functions is within scope of the namespace.
 
-// All declarations are within the namespace scope.
-// Notice the lack of indentation.
+//********** Font HTML Color Code str to 65k color value *************
+void FontParameter::htmlColorCode( String html_color_code ){
+  mp_hccc.convHtmlColCodeTo65kCol(
+    html_color_code,
+    FontParameter::red,
+    FontParameter::green,
+    FontParameter::blue );
+}
+//********** Font HTML Background-Color Code str to 65k color value *************
+void FontParameter::htmlBgColorCode( String html_color_code ){
+  mp_hccc.convHtmlColCodeTo65kCol(
+    html_color_code,
+    FontParameter::bg_red,
+    FontParameter::bg_green,
+    FontParameter::bg_blue );
+}
 
-class SdUtf8toSjis
-{
-public:
-
-  void init( const char* utf8sjis_file );
-  void fileClose();
-  uint16_t convUtf8ToSjis( String utf8_str, uint8_t* sjis_byte );
-  void convUtf8ToSjisF( File table_file, String utf8_str, uint8_t* sjis_byte, uint16_t* sj_length );
-  void codeConvUtf8ToSjis( uint8_t utf8_1, uint8_t utf8_2, uint8_t utf8_3, uint32_t* spiffs_addrs );
-  void readTableUtf8SjisF( File table_file, uint32_t addrs, uint8_t* buf );
-
-private:
-  File mp_utf8sjis_table_file;
-};
-
-}// namespace mgo_tec_esp32_bv1
-
-#endif
+}  // namespace mynamespace

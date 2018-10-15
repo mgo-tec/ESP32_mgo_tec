@@ -1,7 +1,7 @@
 /*
   button_select_box.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.0
+  Beta version 1.0.01
   
 The MIT License (MIT)
 
@@ -27,8 +27,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef MGO_TEC_ESP32_BUTTON_SELECT_BOX_H_INCLUDED_
-#define MGO_TEC_ESP32_BUTTON_SELECT_BOX_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_BUTTON_SELECT_BOX_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_BUTTON_SELECT_BOX_H_INCLUDED_
 
 #include <Arduino.h>
 #include "ESP32_mgo_tec_bV1/Switch/button_switch.h"

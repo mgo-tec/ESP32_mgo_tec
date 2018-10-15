@@ -1,6 +1,6 @@
 /*
   display_bme280_i2c.h - for Arduino core for the ESP32.
-  Beta version 1.0.2
+  Beta version 1.0.21
   
 The MIT License (MIT)
 
@@ -38,8 +38,8 @@ https://github.com/PaulStoffregen/Time
 
 */
 
-#ifndef MGO_TEC_ESP32_DISPLAY_BME280_I2C_H_INCLUDED_
-#define MGO_TEC_ESP32_DISPLAY_BME280_I2C_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_DISPLAY_BME280_I2C_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_DISPLAY_BME280_I2C_H_INCLUDED_
 
 #include <Arduino.h>
 #include <Wire.h>

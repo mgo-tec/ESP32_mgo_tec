@@ -1,6 +1,6 @@
 /*
   display_bme680_i2c.h - for Arduino core for the ESP32.
-  Beta version 1.0.0
+  Beta version 1.0.01
   
 The MIT License (MIT)
 
@@ -37,8 +37,8 @@ LGPL ver2.1
 https://github.com/PaulStoffregen/Time
 */
 
-#ifndef MGO_TEC_ESP32_DISPLAY_BME680_I2C_H_INCLUDED_
-#define MGO_TEC_ESP32_DISPLAY_BME680_I2C_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_DISPLAY_BME680_I2C_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_DISPLAY_BME680_I2C_H_INCLUDED_
 
 #include <Arduino.h>
 #include <Wire.h>

@@ -1,7 +1,7 @@
 /*
   message_window.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.3
+  Beta version 1.0.4
   
 The MIT License (MIT)
 
@@ -345,16 +345,16 @@ void MessageWindow::dispMsgWindow( int16_t msg_num, String str ){
   if( msg_num != m_prev_msg_num ){
     if( m_txt_length > 40 ) m_txt_length = 40; //最大半角40文字
     uint16_t X1 = m_x0 + m_padding * 2 + (m_txt_length * 8) * m_size - 1;
-    if( X1 > LCD.m_max_pix_x1){
+    if( X1 > LCD.m_max_pix_x1 ){
       X1 = LCD.m_max_pix_x1;
     }
     uint16_t Y1 = m_y0 + m_padding * 2 + m_size * 16 - 1;
-    if( Y1 > LCD.m_max_pix_y1){
+    if( Y1 > LCD.m_max_pix_y1 ){
       Y1 = LCD.m_max_pix_y1;
     }
 
     uint8_t f_buf[ str.length() + 2 ][ 16 ] = {};
-    uint16_t len = SFR.convStrToFont(str, f_buf);
+    uint16_t len = SFR.convStrToFont( str, f_buf );
     if( len > m_txt_length ) len = m_txt_length;
 
     font.Xsize = m_size;
@@ -388,6 +388,43 @@ void MessageWindow::clearMsgWindow( int16_t msg_num ){
     LCD.drawRectangleFill( m_x0, m_y0, X1, Y1, m_bg_red, m_bg_green, m_bg_blue );
     m_prev_msg_num = -1;
   }
+}
+//****** font only ******************************
+void MessageWindow::htmlColorCodeF( String html_color_code ){
+  mp_hccc.convHtmlColCodeTo65kCol(
+    html_color_code,
+    font.red,
+    font.green,
+    font.blue );
+}
+//****** Line Only ******************************
+void MessageWindow::htmlColorCodeL( String html_color_code ){
+  mp_hccc.convHtmlColCodeTo65kCol(
+    html_color_code,
+    m_line_red,
+    m_line_green,
+    m_line_blue );
+}
+//****** font and Line ***************************
+void MessageWindow::htmlColorCodeFL( String html_color_code ){
+  mp_hccc.convHtmlColCodeTo65kCol(
+    html_color_code,
+    font.red,
+    font.green,
+    font.blue );
+  mp_hccc.convHtmlColCodeTo65kCol(
+    html_color_code,
+    m_line_red,
+    m_line_green,
+    m_line_blue );
+}
+//******* font background-color ******************
+void MessageWindow::htmlBgColorCode( String html_color_code ){
+  mp_hccc.convHtmlColCodeTo65kCol(
+    html_color_code,
+    m_bg_red,
+    m_bg_green,
+    m_bg_blue );
 }
 
 }  // namespace mynamespace

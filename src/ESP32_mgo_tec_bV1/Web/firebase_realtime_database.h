@@ -1,6 +1,6 @@
 /*
   firebase_realtime_database.h
-  Beta version 1.0.1
+  Beta version 1.0.2
 
 The MIT License (MIT)
 
@@ -26,8 +26,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef MGO_TEC_ESP32_FIREBASEREALTIMEDATABASE_H_INCLUDED_
-#define MGO_TEC_ESP32_FIREBASEREALTIMEDATABASE_H_INCLUDED_
+#ifndef MGO_TEC_ESP32_BV1_FIREBASEREALTIMEDATABASE_H_INCLUDED_
+#define MGO_TEC_ESP32_BV1_FIREBASEREALTIMEDATABASE_H_INCLUDED_
 
 #include <Arduino.h>
 #include <WiFiClientSecure.h>
@@ -49,7 +49,9 @@ public:
   enum FirebaseState { MsgReset, Connecting, ConnectOK, ConnectFailed }
     PatchStatus = MsgReset,
     SseStatus = MsgReset;
-  int patch_status = 0, sse_status = 0;
+  int patch_status = 0, sse_status = 0; //This use for status message window.
+
+  String m_sse_all_data;
 
   void init( const char *host, const char *auth );
   void sendGetRequestSSE( String path );
@@ -60,6 +62,8 @@ public:
   boolean pickUpStrSSEdataAll( String &str );
   boolean pickUpStrToTargetStr( String resp_str, String node_str, String &target_str );
   boolean pickUpTargetStr( String node_str, String &target_str );
+  void pickUpColorData( String color_str, uint8_t &Red, uint8_t &Green, uint8_t &Blue );
+
 
 };
 
