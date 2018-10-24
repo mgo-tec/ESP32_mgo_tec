@@ -1,6 +1,6 @@
 /*
   mgo_tec_bv1_m5stack_sd_init1.h
-  Beta version 1.0.0
+  Beta version 1.0.1
 */
 
 #ifndef MGO_TEC_BV1_M5STACK_SD_INIT1_H_INCLUDED_
@@ -22,8 +22,6 @@ class MgotecM5stackSdInit1 : public MgotecM5stackSdInit
 public:
   FontParameter font[8];
   ScrolleParameter scl_set[8];
-  ILI9341Watch watch;
-  MessageWindow msg[8], wifi_msg;
   DispShinonomeFnt disp_fnt[8];
 };
 

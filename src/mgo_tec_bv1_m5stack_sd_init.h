@@ -1,7 +1,7 @@
 /*
   mgo_tec_bv1_m5stack_sd_init.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.0
+  Beta version 1.0.1
   
 The MIT License (MIT)
 
@@ -37,6 +37,8 @@ https://github.com/PaulStoffregen/Time
 #define MGO_TEC_BV1_M5STACK_SD_INIT_H_INCLUDED_
 
 #include "mgo_tec_bv1_esp32_sd_def.h"
+#include "ESP32_mgo_tec_bV1/Display/ILI9341_SD/watch.h"
+#include "ESP32_mgo_tec_bV1/Display/ILI9341_SD/message_window.h"
 #include "ESP32_mgo_tec_bV1/Switch/button_switch.h"
 
 extern mgo_tec_esp32_bv1::ILI9341Spi LCD;
@@ -56,6 +58,8 @@ private:
   const uint8_t buttonC_GPIO = 37;
 
 public:
+  ILI9341Watch watch;
+  MessageWindow msg, wifi_msg;
   ButtonSwitch btnA, btnB, btnC;
 
   void init( const char* utf8sjis_file,

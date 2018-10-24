@@ -1,6 +1,6 @@
 /*
   firebase_realtime_database.cpp
-  Beta version 1.0.2
+  Beta version 1.0.3
 
 The MIT License (MIT)
 
@@ -226,13 +226,13 @@ void FirebaseRD::patchHTTPrequest( const char *Root_Ca, uint8_t rca_set, String 
       delay(10);
       PatchStatus = ConnectOK;
       patch_status = ConnectOK;
-      sendGetRequestSSE( Root_Ca, rca_set, path );
+      FirebaseRD::sendGetRequestSSE( Root_Ca, rca_set, path );
       break;
     }
   }
 }
 //***************************************
-boolean FirebaseRD::pickUpStrSSEdataAll( String &str ){
+boolean FirebaseRD::receiveSSEdataAll( String &str ){
   str = "";
   if( FirebaseRD::SseStatus == ConnectOK ){
     String resp_str;
@@ -249,11 +249,17 @@ boolean FirebaseRD::pickUpStrSSEdataAll( String &str ){
   }
   return false;
 }
+//****** 古いバージョンの関数の名前解決用関数*************
+boolean FirebaseRD::pickUpStrSSEdataAll( String &str ){
+  return FirebaseRD::receiveSSEdataAll( str );
+}
 //***************************************
 boolean FirebaseRD::pickUpStrToTargetStr( String resp_str, String node_str, String &target_str ){
-  int str_index = resp_str.indexOf( node_str + "\"" );
-  if( str_index > 0 ){
-    int target_index0 = resp_str.indexOf( ":\"", str_index ) + 2;
+  int node_str_index_start = resp_str.indexOf( node_str + "\"" );
+  int node_str_index_end = node_str_index_start + node_str.length();
+  String temp_str = resp_str.substring( node_str_index_start, node_str_index_end );
+  if( temp_str == node_str ){
+    int target_index0 = resp_str.indexOf( ":\"", node_str_index_end ) + 2;
     int target_index1 = resp_str.indexOf( "\"", target_index0 );
     target_str = resp_str.substring( target_index0, target_index1 );
     log_v( "target_str = %s", target_str.c_str() );
@@ -266,7 +272,7 @@ boolean FirebaseRD::pickUpStrToTargetStr( String resp_str, String node_str, Stri
 //Realtime Database に初回接続した時、全てのデータを取得しても、そのうちの target データしか取得できないことに注意
 boolean FirebaseRD::pickUpTargetStr( String node_str, String &target_str ){
   String resp_str;
-  if( FirebaseRD::pickUpStrSSEdataAll( resp_str ) ){
+  if( FirebaseRD::receiveSSEdataAll( resp_str ) ){
     return FirebaseRD::pickUpStrToTargetStr( resp_str, node_str, target_str );
   }
   return false;

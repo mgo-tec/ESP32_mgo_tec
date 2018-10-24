@@ -57,6 +57,8 @@ SFR	KEYWORD1
   disp_fnt	KEYWORD2
   wifi_msg	KEYWORD2
   msg	KEYWORD2
+  sse_msg	KEYWORD2
+  patch_msg	KEYWORD2
   btnA	KEYWORD2
   btnB	KEYWORD2
   btnC	KEYWORD2
@@ -157,10 +159,15 @@ SFR	KEYWORD1
   colon2_font	KEYWORD2
   ymd_font	KEYWORD2
   ntp_msg	KEYWORD2
+  init2	KEYWORD2
+  initNormal	KEYWORD2
+  setupNormalFont	KEYWORD2
   initDefNum	KEYWORD2
   watchFontSetup	KEYWORD2
   watchFontSetup2	KEYWORD2
   watchFontRead	KEYWORD2
+  dispNormalWatchCl	KEYWORD2
+  dispNormalWatch	KEYWORD2
   scrolleWatch	KEYWORD2
   scrolleWatchCl	KEYWORD2
   displayColon	KEYWORD2
@@ -248,6 +255,7 @@ SFR	KEYWORD1
   SseStatus	KEYWORD2
   sendGetRequestSSE	KEYWORD2
   patchHTTPrequest	KEYWORD2
+  receiveSSEdataAll	KEYWORD2
   pickUpStrSSEdataAll	KEYWORD2
   pickUpStrToTargetStr	KEYWORD2
   pickUpTargetStr	KEYWORD2
@@ -265,6 +273,16 @@ SFR	KEYWORD1
 #Arduino-ESP32
   WIFI_OFF	LITERAL1
   WL_CONNECTED	LITERAL1
+
+#Common
+  WifiMsgReset	LITERAL1
+  WifiConnecting	LITERAL1
+  WifiConnected	LITERAL1
+  WifiFailed	LITERAL1
+  MsgReset	LITERAL1
+  Connecting	LITERAL1
+  ConnectOK	LITERAL1
+  ConnectFailed	LITERAL1
 
 #ButtonStatus
   Release	LITERAL1

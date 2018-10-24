@@ -1,6 +1,6 @@
 /*
   firebase_realtime_database.h
-  Beta version 1.0.2
+  Beta version 1.0.3
 
 The MIT License (MIT)
 
@@ -31,6 +31,12 @@ SOFTWARE.
 
 #include <Arduino.h>
 #include <WiFiClientSecure.h>
+#include "ESP32_mgo_tec_bV1/Display/ILI9341_SD/message_window.h"
+#include "ESP32_mgo_tec_bV1/Display/ILI9341_SD/display_shinonome_fnt.h"
+
+#ifndef MGO_TEC_ESP32_BV1_FIREBASERD_FONT_MAX
+  #define MGO_TEC_ESP32_BV1_FIREBASERD_FONT_MAX 0
+#endif
 
 // In the webget.h file
 namespace mgo_tec_esp32_bv1 {
@@ -51,6 +57,13 @@ public:
     SseStatus = MsgReset;
   int patch_status = 0, sse_status = 0; //This use for status message window.
 
+  FontParameter font[ MGO_TEC_ESP32_BV1_FIREBASERD_FONT_MAX ];
+  ScrolleParameter scl_set[ MGO_TEC_ESP32_BV1_FIREBASERD_FONT_MAX ];
+  DispShinonomeFnt disp_fnt[ MGO_TEC_ESP32_BV1_FIREBASERD_FONT_MAX ];
+  MessageWindow msg[ MGO_TEC_ESP32_BV1_FIREBASERD_FONT_MAX ],
+                sse_msg,
+                patch_msg;
+
   String m_sse_all_data;
 
   void init( const char *host, const char *auth );
@@ -59,6 +72,7 @@ public:
   boolean receiveHttpResHeader();
   void patchHTTPrequest( String path, String target_node, String data_str );
   void patchHTTPrequest( const char *Root_Ca, uint8_t rca_set, String path, String target_node, String data_str );
+  boolean receiveSSEdataAll( String &str );
   boolean pickUpStrSSEdataAll( String &str );
   boolean pickUpStrToTargetStr( String resp_str, String node_str, String &target_str );
   boolean pickUpTargetStr( String node_str, String &target_str );

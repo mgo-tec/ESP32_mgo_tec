@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.60  
+Beta ver 1.0.65  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -20,6 +20,10 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 その場合、/Sensor/フォルダを削除してください。  
   
 # Change log
+(beta ver 1.0.65)  
+- Firebase related libraries have been added and fixed.  
+- Other, minor fixes.  
+  
 (beta ver 1.0.60)  
 - It is possible to input HTML color code for graphic display and character display.  
 - Other minor corrections.  
@@ -75,6 +79,10 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.65)  
+- Firebase 関連のライブラリを追加および修正しました。  
+- その他、軽微な修正。  
+  
 (beta ver 1.0.60)  
 - グラフィック表示および文字表示に HTML カラーコード入力ができるようにしました。  
 - その他軽微な修正。  

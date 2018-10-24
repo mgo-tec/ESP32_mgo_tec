@@ -1,7 +1,7 @@
 /*
   watch.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.3
+  Beta version 1.0.4
   
 The MIT License (MIT)
 
@@ -53,12 +53,69 @@ void ILI9341Watch::init( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize 
   ILI9341Watch::watchFontSetup( x0, y0, Xsize, Ysize ); //時計フォントセット
 }
 //*******************************************************
+void ILI9341Watch::init2( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize ){
+  uint8_t num;
+  for( num = 0; num < 4; num++ ){ //時、分のフォント色設定
+    LCD.scrolleFontColorSet( font[num] );
+  }
+  for( num = 4; num < 6; num++ ){ //秒のフォント色設定
+    LCD.scrolleFontColorSet( font[num] );
+  }
+  ILI9341Watch::initDefNum();
+  ILI9341Watch::watchFontSetup2( x0, y0, Xsize, Ysize ); //時計フォントセット
+}
+//*******************************************************
+void ILI9341Watch::initNormal( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize ){
+  ILI9341Watch::initDefNum();
+  ILI9341Watch::setupNormalFont( x0, y0, Xsize, Ysize ); //時計フォントセット
+  ILI9341Watch::watchDispReset();
+}
+//*******************************************************
 void ILI9341Watch::initDefNum(){
   uint8_t num = 0; //時、十の位の文字列をフォント変換
   ILI9341Watch::watchStrFontConv( num, "　１２３４５６７８９" );
   for( num = 1; num < 6; num++ ){
     ILI9341Watch::watchStrFontConv( num, "０１２３４５６７８９" );
   }
+}
+//*******************************************************
+void ILI9341Watch::setupNormalFont( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize ){
+  uint8_t num = 0;
+  for( num = 0; num < 4; num++ ){
+    font[num].Xsize = Xsize, font[num].Ysize = Ysize;
+    font[num].y0 = y0; //各文字開始位置
+  }
+  num = 0; //時表示十の位
+  font[num].x0 = 0; //各文字開始位置
+
+  num = 1; //時表示一の位
+  font[num].x0 = 48;
+
+  num = 2; //分表示十の位
+  font[num].x0 = 120;
+
+  num = 3; //分表示一の位
+  font[num].x0 = 168;
+
+  num = 4; //秒表示十の位
+  if( Xsize != 1 ) font[num].Xsize = Xsize - 1;
+  if( Ysize != 1 ) font[num].Ysize = Ysize - 1;
+  font[num].x0 = 240;
+  font[num].y0 = y0 + 16;
+  if( Ysize == 1 ) font[num].y0 = y0;
+
+  num = 5; //秒表示一の位
+  if( Xsize != 1 ) font[num].Xsize = Xsize - 1;
+  if( Ysize != 1 ) font[num].Ysize = Ysize - 1;
+  font[num].x0 = 272;
+  font[num].y0 = y0 + 16;
+  if( Ysize == 1 ) font[num].y0 = y0;
+
+  //コロンフォント初期化
+  colon1_font.x0 = 96, colon1_font.y0 = y0;
+  colon1_font.Xsize = Xsize, colon1_font.Ysize = Ysize;
+  colon2_font.x0 = 216, colon2_font.y0 = y0;
+  colon2_font.Xsize = Xsize, colon2_font.Ysize = Ysize;
 }
 //*******************************************************
 void ILI9341Watch::watchFontSetup( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize ){
@@ -130,7 +187,7 @@ void ILI9341Watch::watchFontSetup( uint16_t x0, uint16_t y0, uint8_t Xsize, uint
 
   watchDispReset();
 
-  Serial.printf("Free Heap Size = %d\r\n", esp_get_free_heap_size());
+  log_v("Free Heap Size = %d", esp_get_free_heap_size());
 }
   //*******************************************************
 void ILI9341Watch::watchFontSetup2( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize ){
@@ -202,11 +259,11 @@ void ILI9341Watch::watchFontSetup2( uint16_t x0, uint16_t y0, uint8_t Xsize, uin
 
   watchDispReset();
 
-  Serial.printf("Free Heap Size = %d\r\n", esp_get_free_heap_size());
+  log_v("Free Heap Size = %d", esp_get_free_heap_size());
 }
 //****** LCD ILI9341 ディスプレイ初期化 ***********
 void ILI9341Watch::watchFontRead(){
-  if( mp_changeFont == false && mp_scl_last_time != now() ){
+  if( mp_isChangeFont == false && mp_scl_last_time != now() ){
     uint8_t num = 0;
 
     m_onColon_disp = true; //コロン表示開始フラグ
@@ -222,51 +279,67 @@ void ILI9341Watch::watchFontRead(){
       num = 0;
       mp_watch_font_count[num] = mp_now_hour1 * 2; //全角は8x16フォント２つ分なので、フォントカウントを2倍進める
       mp_prev_hour1 = mp_now_hour1;
-      mp_startScrolle[num] = true;
+      mp_isStartScrolle[num] = true;
     }
     mp_now_hour2 = hour() % 10; //時、一の位
     if( mp_now_hour2 != mp_prev_hour2 ){
       num = 1;
       mp_watch_font_count[num] = mp_now_hour2 * 2;
       mp_prev_hour2 = mp_now_hour2;
-      mp_startScrolle[num] = true;
+      mp_isStartScrolle[num] = true;
     }
     mp_now_min1 = minute() / 10; //分、十の位
     if( mp_now_min1 != mp_prev_min1 ){
       num = 2;
       mp_watch_font_count[num] = mp_now_min1 * 2;
       mp_prev_min1 = mp_now_min1;
-      mp_startScrolle[num] = true;
+      mp_isStartScrolle[num] = true;
     }
     mp_now_min2 = minute() % 10; //分、一の位
     if( mp_now_min2 != mp_prev_min2 ){
       num = 3;
       mp_watch_font_count[num] = mp_now_min2 * 2;
       mp_prev_min2 = mp_now_min2;
-      mp_startScrolle[num] = true;
+      mp_isStartScrolle[num] = true;
     }
     mp_now_sec1 = second() / 10; //秒、十の位
     if( mp_now_sec1 != mp_prev_sec1 ){
       num = 4;
       mp_watch_font_count[num] = mp_now_sec1 * 2;
       mp_prev_sec1 = mp_now_sec1;
-      mp_startScrolle[num] = true;
+      mp_isStartScrolle[num] = true;
     }
     mp_now_sec2 = second() % 10; //秒、一の位
     if( mp_now_sec2 != mp_prev_sec2 ){
       num = 5;
       mp_watch_font_count[num] = mp_now_sec2 * 2;
       mp_prev_sec2 = mp_now_sec2;
-      mp_startScrolle[num] = true;
+      mp_isStartScrolle[num] = true;
     }
 
     for( num = 0; num < MAX_TXT_NUM; num++ ){ //フォント変換
       scl_set[num].full_or_half = SFR.convSjisToFontInc(mp_watch_sjis_buf[num], mp_watch_sjis_len[num], &mp_watch_font_count[num], mp_watch_font_buf[num]);
     }
     mp_scl_last_time = now();
-  }else if( mp_changeFont == true ){
+  }else if( mp_isChangeFont == true ){
     if( now() - mp_font_change_last_time > 2 ){
-      mp_changeFont = false;
+      mp_isChangeFont = false;
+    }
+  }
+}
+//********** scrolleWatch and colon ************************
+void ILI9341Watch::dispNormalWatchCl(){
+  ILI9341Watch::dispNormalWatch();
+  ILI9341Watch::displayColon2();
+}
+//************************************************************
+void ILI9341Watch::dispNormalWatch(){
+  ILI9341Watch::watchFontRead();
+  uint8_t num = 0;
+  for( num = 0; num < MAX_TXT_NUM; num++ ){
+    if( mp_isStartScrolle[num] ){
+      LCD.display8x16Font( font[num], 2, mp_watch_font_buf[num] ); //全角の場合は 2
+      mp_isStartScrolle[num] = false;
     }
   }
 }
@@ -280,39 +353,39 @@ void ILI9341Watch::scrolleWatch(){
   ILI9341Watch::watchFontRead();
 
   uint8_t num = 0; //時、十の位文字スクロール
-  if( mp_startScrolle[num] ){
+  if( mp_isStartScrolle[num] ){
     if( LCD.scrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
-      mp_startScrolle[num] = false; //一文字スクロール後、スクロールストップ
+      mp_isStartScrolle[num] = false; //一文字スクロール後、スクロールストップ
     }
   }
   num = 1; //時、一の位文字スクロール
-  if( mp_startScrolle[num] ){
+  if( mp_isStartScrolle[num] ){
     if( LCD.Yscrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
-      mp_startScrolle[num] = false;
+      mp_isStartScrolle[num] = false;
     }
   }
   num = 2; //分、十の位文字スクロール
-  if( mp_startScrolle[num] ){
+  if( mp_isStartScrolle[num] ){
     if( LCD.reverseScrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
-      mp_startScrolle[num] = false;
+      mp_isStartScrolle[num] = false;
     }
   }
   num = 3; //分、一の位文字スクロール
-  if( mp_startScrolle[num] ){
+  if( mp_isStartScrolle[num] ){
     if( LCD.YdownScrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
-      mp_startScrolle[num] = false;
+      mp_isStartScrolle[num] = false;
     }
   }
   num = 4; //秒、十の位文字スクロール
-  if( mp_startScrolle[num] ){
+  if( mp_isStartScrolle[num] ){
     if( LCD.scrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
-      mp_startScrolle[num] = false;
+      mp_isStartScrolle[num] = false;
     }
   }
   num = 5; //秒、一の位文字スクロール
-  if( mp_startScrolle[num] ){
+  if( mp_isStartScrolle[num] ){
     if( LCD.Yscrolle8x16fontInc( font[num], scl_set[num], mp_watch_sjis_len[num], mp_watch_font_buf[num] ) ){
-      mp_startScrolle[num] = false;
+      mp_isStartScrolle[num] = false;
     }
   }
 }
@@ -363,8 +436,8 @@ void ILI9341Watch::displayColon2(){
 //*************************************
 void ILI9341Watch::getNTP(){
   time_t tmp_time = EWG.getNtpTime();
-  Serial.println(F("NTP Getting Wait"));
-  Serial.println( tmp_time );
+  Serial.println(F("NTP Getting..."));
+  Serial.printf("seconds since the epoch = %lu\r\n", tmp_time );
 
   if( tmp_time < 1000 ){
     NtpStatus = ConnectFailed;
@@ -373,6 +446,14 @@ void ILI9341Watch::getNTP(){
     NtpStatus = ConnectOK;
     setTime( tmp_time );
     Serial.printf( "NTP Get OK! %02d:%02d\r\n", hour(), minute() );
+  }
+}
+//*************************************
+void ILI9341Watch::getNTPserverSel( int timezone, const char *ntp_server_name, uint32_t interval ){
+  if( (m_isNtp_first_get == true) || ((millis() - mp_ntp_get_last_time) > interval) ){
+    ILI9341Watch::getNTPserverSel( timezone, ntp_server_name );
+    mp_ntp_get_last_time = millis();
+    m_isNtp_first_get = false;
   }
 }
 //*************************************
@@ -408,7 +489,7 @@ void ILI9341Watch::getNTPserverSel( int timezone, const char *ntp_server_name ){
     if( isNtpOK ){
       NtpStatus = ConnectOK;
       ntp_msg_status = (int)ConnectOK;
-      Serial.println( "NTP Get OK! " + String( hour() ) + ":" + String( minute() ) );
+      Serial.printf( "NTP Get OK! %02d:%02d\r\n", hour(), minute() );
     }else{
       NtpStatus = ConnectFailed;
       ntp_msg_status = (int)ConnectFailed;
@@ -422,12 +503,14 @@ void ILI9341Watch::getNTPserverSel( int timezone, const char *ntp_server_name ){
   }
 }
 //*************************************
-void ILI9341Watch::getNTP2(uint32_t get_interval){
+boolean ILI9341Watch::getNTP2(uint32_t get_interval){
   if( (m_isNtp_first_get == true) || ((millis() - mp_ntp_get_last_time) > get_interval) ){
     ILI9341Watch::getNTP();
     mp_ntp_get_last_time = millis();
     m_isNtp_first_get = false;
+    return true;
   }
+  return false;
 }
 //********** 時刻文字列フォント変換 *****************
 void ILI9341Watch::watchStrFontConv(uint8_t num, String str){
@@ -466,7 +549,7 @@ void ILI9341Watch::watchDispReset(){
   mp_now_min1 = -1, mp_now_min2 = -1;
   mp_prev_sec1 = -1, mp_prev_sec2 = -1;
   mp_now_sec1 = -1, mp_now_sec2 = -1;
-  mp_changeFont = true;
+  mp_isChangeFont = true;
   mp_font_change_last_time = now();
   mp_scl_last_time = 0;
 }

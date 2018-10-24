@@ -1,7 +1,7 @@
 /*
   watch.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.3
+  Beta version 1.0.4
   
 The MIT License (MIT)
 
@@ -69,10 +69,10 @@ private:
   int8_t mp_now_sec1 = -1, mp_now_sec2 = -1;
 
   uint32_t mp_font_change_last_time = 0;
-  bool mp_changeFont = false;
+  bool mp_isChangeFont = false;
 
   int32_t mp_scl_last_time = 0;
-  bool mp_startScrolle[ MAX_TXT_NUM ] = {};
+  boolean mp_isStartScrolle[ MAX_TXT_NUM ] = {};
   uint32_t mp_ntp_get_last_time = 0;
   uint32_t mp_colon_last_time = 0;
 
@@ -94,27 +94,33 @@ public:
   MessageWindow ntp_msg;
 
   int ntp_msg_status = 0;
-  bool m_changeYMD = false;
+  boolean m_changeYMD = false;
 
   //時刻コロンフォント表示用変数
-  bool m_onColon_disp = false;
+  boolean m_onColon_disp = false;
   //-----NTPサーバー時刻取得　引数初期化------------
-  bool m_isNtp_first_get = true;
+  boolean m_isNtp_first_get = true;
 
 public:
   void init( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
+  void init2( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
+  void initNormal( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
   void initDefNum();
+  void setupNormalFont( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
   void watchFontSetup( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
   void watchFontSetup2( uint16_t x0, uint16_t y0, uint8_t Xsize, uint8_t Ysize );
   void watchFontRead();
-  void scrolleWatch();
+  void dispNormalWatchCl();
+  void dispNormalWatch();
   void scrolleWatchCl();
-  void displayColon(uint16_t colon1_sj_len, uint16_t colon2_sj_len, uint8_t colon1_buf[][ 16 ], uint8_t colon2_buf[][ 16 ]);
+  void scrolleWatch();
+  void displayColon( uint16_t colon1_sj_len, uint16_t colon2_sj_len, uint8_t colon1_buf[][ 16 ], uint8_t colon2_buf[][ 16 ] );
   void displayColon2();
   void getNTP();
-  void getNTP2(uint32_t get_interval);
+  boolean getNTP2( uint32_t get_interval );
+  void getNTPserverSel( int timezone, const char *ntp_server_name, uint32_t interval );
   void getNTPserverSel( int timezone, const char *ntp_server_name );
-  void watchStrFontConv(uint8_t num, String str);
+  void watchStrFontConv( uint8_t num, String str );
   void displayYMDW();
   void watchDispReset();
 
