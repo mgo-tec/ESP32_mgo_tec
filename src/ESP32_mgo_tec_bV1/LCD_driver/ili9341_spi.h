@@ -1,6 +1,6 @@
 /*
   ili9341_spi.h - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.4
+  Beta version 1.0.5
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -89,6 +89,8 @@ public:
 
   void htmlColorCode( String html_color_code );
   void htmlBgColorCode( String html_color_code );
+  void colorRGB255( uint8_t red, uint8_t green, uint8_t blue );
+  void bgColorRGB255( uint8_t red, uint8_t green, uint8_t blue );
   //void convHtmlColCodeTo65kCol( String html_color_code, uint8_t &red, uint8_t &green, uint8_t &blue );
 };
 
@@ -246,6 +248,7 @@ public:
   void drawRectangleLine( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t red, uint8_t green, uint8_t blue );
   void drawRectangleFill( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, String html_color_code );
   void drawRectangleFill( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t red, uint8_t green, uint8_t blue );
+  void drawRectangleFill255( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t red, uint8_t green, uint8_t blue );
   void drawCircleLine( uint16_t x0, uint16_t y0, uint16_t r, String html_color_code );
   void drawCircleLine( uint16_t x0, uint16_t y0, uint16_t r, uint8_t red, uint8_t green, uint8_t blue );
   void drawCircleFill( uint16_t x0, uint16_t y0, uint16_t r, String html_color_code );

@@ -1,7 +1,7 @@
 /*
   font_parameter.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.00
+  Beta version 1.0.10
   
 The MIT License (MIT)
 
@@ -48,6 +48,18 @@ void FontParameter::htmlBgColorCode( String html_color_code ){
     FontParameter::bg_red,
     FontParameter::bg_green,
     FontParameter::bg_blue );
+}
+//********** Font RGB color value set ( 0-255 )*************
+void FontParameter::colorRGB255( uint8_t red, uint8_t green, uint8_t blue ){
+  FontParameter::red = (uint8_t)floor( (double)red / 8.0 );
+  FontParameter::green = (uint8_t)floor( (double)green / 4.0);
+  FontParameter::blue = (uint8_t)floor( (double)blue / 8.0);
+}
+//********** Font RGB Background-color value set ( 0-255 )*************
+void FontParameter::bgColorRGB255( uint8_t red, uint8_t green, uint8_t blue ){
+  FontParameter::bg_red = (uint8_t)floor( (double)red / 8.0 );
+  FontParameter::bg_green = (uint8_t)floor( (double)green / 4.0);
+  FontParameter::bg_blue = (uint8_t)floor( (double)blue / 8.0);
 }
 
 }  // namespace mynamespace

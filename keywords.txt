@@ -71,6 +71,8 @@ SFR	KEYWORD1
 #FontParameter
   htmlColorCode	KEYWORD2
   htmlBgColorCode	KEYWORD2
+  colorRGB255	KEYWORD2
+  bgColorRGB255	KEYWORD2
 
 #HtmlColorCodeClass
   convHtmlColCodeTo65kCol	KEYWORD2
@@ -90,6 +92,7 @@ SFR	KEYWORD1
   drawVerticallLine	KEYWORD2
   drawRectangleLine	KEYWORD2
   drawRectangleFill	KEYWORD2
+  drawRectangleFill255	KEYWORD2
   drawCircleLine	KEYWORD2
   drawCircleFill	KEYWORD2
   brightness	KEYWORD2

@@ -1,6 +1,6 @@
 /*
   ili9341_spi.cpp - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.4
+  Beta version 1.0.5
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -446,6 +446,16 @@ void ILI9341Spi::drawRectangleFill( uint16_t x0, uint16_t y0, uint16_t x1, uint1
   uint16_t Width_y = y1 - y0 + 1;
   uint32_t Total = Width_x * Width_y ;
   ILI9341Spi::blockSPIfastWrite( x0, y0, x1, y1, red, green, blue, Total );
+}
+//**********red(0-255), green(0-255), blue(0-255)************
+void ILI9341Spi::drawRectangleFill255( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t red, uint8_t green, uint8_t blue ){
+  uint16_t Width_x = x1 - x0 + 1;
+  uint16_t Width_y = y1 - y0 + 1;
+  uint32_t Total = Width_x * Width_y;
+  uint8_t tmp_red = (uint8_t)floor( (double)red / 8.0 );
+  uint8_t tmp_green = (uint8_t)floor( (double)green / 4.0 );
+  uint8_t tmp_blue = (uint8_t)floor( (double)blue / 8.0 );
+  ILI9341Spi::blockSPIfastWrite( x0, y0, x1, y1, tmp_red, tmp_green, tmp_blue, Total );
 }
 //***************************************
 void ILI9341Spi::drawCircleLine( uint16_t x0, uint16_t y0, uint16_t r, String html_color_code ){
