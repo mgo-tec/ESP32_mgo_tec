@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.65  
+Beta ver 1.0.67  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -20,6 +20,11 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 その場合、/Sensor/フォルダを削除してください。  
   
 # Change log
+(beta ver 1.0.67)  
+Added function that can input RGB color with value 0-255.  
+- Added colorRGB255, bgColorRGB255 function to FontParameter class.  
+- Added drawRectangleFill255 function to ILI9341Spi class.  
+  
 (beta ver 1.0.65)  
 - Firebase related libraries have been added and fixed.  
 - Other, minor fixes.  
@@ -79,6 +84,11 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.67)  
+RGB の色を0-255の値で入力できる関数を追加。  
+- FontParameterクラスにcolorRGB255, bgColorRGB255関数追加。  
+- ILI9341SpiクラスにdrawRectangleFill255関数追加。  
+  
 (beta ver 1.0.65)  
 - Firebase 関連のライブラリを追加および修正しました。  
 - その他、軽微な修正。  
