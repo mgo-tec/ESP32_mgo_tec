@@ -1,6 +1,6 @@
 /*
   ili9341_spi.h - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.5
+  Beta version 1.0.6
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -230,6 +230,7 @@ public:
   void dispInversionOff();
   void displayClear();
   void displayClear( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1 );
+  void drawPixel65kColRGB565Bytes( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t *b, uint32_t b_size );
   void drawPixel65kDotColor_sd( uint16_t x0, uint16_t y0, uint16_t DotColor );
   void drawPixel65k3Color_sd( uint16_t x0, uint16_t y0, String html_color_code );
   void drawPixel65k3Color_sd( uint16_t x0, uint16_t y0, uint8_t red, uint8_t green, uint8_t blue );
