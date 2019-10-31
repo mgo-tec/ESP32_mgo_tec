@@ -83,6 +83,7 @@ SFR	KEYWORD1
   dispInversionOn	KEYWORD2
   dispInversionOff	KEYWORD2
   displayClear	KEYWORD2
+  drawPixel65kColRGB565Bytes	KEYWORD2
   drawPixel65kDotColor_sd	KEYWORD2
   drawPixel65kDotColor	KEYWORD2
   drawPixel65k3Color_sd	KEYWORD2

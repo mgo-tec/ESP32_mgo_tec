@@ -54,6 +54,24 @@ void MgotecM5stackSdInit::init( const char* utf8sjis_file,
   LCD.displayClear();
   LCD.brightness( 255 ); //LCD LED Full brightness
 }
+
+void MgotecM5stackSdInit::init()
+{
+  btnA.init( buttonA_GPIO, true, 30, 500 ); //長押し設定 true, チャタリング対策 30ms, 長押し500ms
+  btnB.init( buttonB_GPIO, true, 30, 500 ); //長押し設定 true, チャタリング対策 30ms, 長押し500ms
+  btnC.init( buttonC_GPIO, true, 30, 500 ); //長押し設定 true, チャタリング対策 30ms, 長押し500ms
+  SFR.init( 4, 40000000 ); //sd_cs = 4, sd_frequency = 40000000
+  LCD.ILI9341init();
+  LCD.displayClear();
+  LCD.brightness( 255 ); //LCD LED Full brightness
+}
+
+void MgotecM5stackSdInit::init_button()
+{
+  btnA.init( buttonA_GPIO, true, 30, 500 ); //長押し設定 true, チャタリング対策 30ms, 長押し500ms
+  btnB.init( buttonB_GPIO, true, 30, 500 ); //長押し設定 true, チャタリング対策 30ms, 長押し500ms
+  btnC.init( buttonC_GPIO, true, 30, 500 ); //長押し設定 true, チャタリング対策 30ms, 長押し500ms
+}
   
 
 }  // namespace mynamespace

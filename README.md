@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.67  
+Beta ver 1.0.69  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -20,6 +20,11 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 その場合、/Sensor/フォルダを削除してください。  
   
 # Change log
+(beta ver 1.0.69)  
+- Added drawPixel65kColRGB565Bytes function to ili9341_spi.cpp file.  
+RGB565 image data can be sent at once and displayed on the LCD.  
+- Added init function and init_button function separately from button operation function from init function in mgo_tec_bv1_m5stack_sd_init.cpp file.  
+  
 (beta ver 1.0.67)  
 Added function that can input RGB color with value 0-255.  
 - Added colorRGB255, bgColorRGB255 function to FontParameter class.  
@@ -84,6 +89,11 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.69)  
+- ili9341_spi.cppファイルにdrawPixel65kColRGB565Bytes関数を追加。  
+RGB565画像データを一気に送ってLCDに表示できるようにしました。  
+- mgo_tec_bv1_m5stack_sd_init.cppファイルのinit関数からボタン操作関数と分離してinit関数とinit_button関数を新たに追加ました。  
+  
 (beta ver 1.0.67)  
 RGB の色を0-255の値で入力できる関数を追加。  
 - FontParameterクラスにcolorRGB255, bgColorRGB255関数追加。  

@@ -65,6 +65,8 @@ public:
   void init( const char* utf8sjis_file,
               const char* shino_half_font_file,
               const char* shino_full_font_file );
+  void init();
+  void init_button();
 
 };
 

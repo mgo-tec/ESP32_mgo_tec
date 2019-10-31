@@ -1,6 +1,6 @@
 /*
   ili9341_spi.cpp - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.5
+  Beta version 1.0.6
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -311,6 +311,14 @@ void ILI9341Spi::spiWriteBlock(uint16_t color, uint32_t repeat) {
     while ( READ_PERI_REG( SPI_CMD_REG( mp_spi_num ) ) & SPI_USR )
       ;
   }
+}
+//*********** 65k Color Pixel write bytes ****************************
+void ILI9341Spi::drawPixel65kColRGB565Bytes( uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t *b, uint32_t b_size ){
+  ILI9341Spi::spiSetChange();
+  ILI9341Spi::rangeXY( x0, y0, x1, y1 );
+  ILI9341Spi::commandWrite( 0x2C ); //RAM write
+  SPI.writeBytes( b, b_size );
+  if( !mp_useHw_Cs ) digitalWrite( mp_cs, HIGH );
 }
 //*********** 65k Color Pixel (Dot) Write ( SD card use )*************
 void ILI9341Spi::drawPixel65kDotColor_sd( uint16_t x0, uint16_t y0, uint16_t DotColor ){
