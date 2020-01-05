@@ -1,6 +1,6 @@
 /*
   ili9341_spi.h - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.6
+  Beta version 1.0.7
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -184,6 +184,7 @@ private: //SPIインターフェース関連変数
   int8_t mp_ledpin;
   int8_t mp_dc;
   int8_t mp_cs;
+  bool mp_isIPS_lcd = false;
   bool mp_useHw_Cs;
   uint32_t mp_Freq;
   HtmlColorCodeClass mp_hccc;

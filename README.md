@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.69  
+Beta ver 1.0.70  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -20,6 +20,13 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 その場合、/Sensor/フォルダを削除してください。  
   
 # Change log
+(beta ver 1.0.70)  
+Support for the latest M5Stack IPS display (ILI9342C).  
+The first M5Stack ILI9341 is automatically detected.  
+Modify the following files.  
+- ili9341_spi.h  
+- ili9341_spi.cpp  
+  
 (beta ver 1.0.69)  
 - Added drawPixel65kColRGB565Bytes function to ili9341_spi.cpp file.  
 RGB565 image data can be sent at once and displayed on the LCD.  
@@ -89,6 +96,13 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.70)  
+最新のM5StackのIPSディスプレイ (ILI9342C) に対応しました。  
+初代M5Stack ILI9341とは自動判別するようにしました。  
+以下のファイルを修正。  
+- ili9341_spi.h  
+- ili9341_spi.cpp  
+  
 (beta ver 1.0.69)  
 - ili9341_spi.cppファイルにdrawPixel65kColRGB565Bytes関数を追加。  
 RGB565画像データを一気に送ってLCDに表示できるようにしました。  
