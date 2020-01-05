@@ -1,6 +1,6 @@
 /*
   ili9341_spi.cpp - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.6
+  Beta version 1.0.7
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -55,6 +55,12 @@ void ILI9341Spi::ILI9341init( int8_t sck, int8_t miso, int8_t mosi, int8_t cs, i
   mp_useHw_Cs = use_hwcs; //VSPI Hardware CS 
   mp_Freq = clk;
 
+  //ILI9342C を判別するためのリセットピン読み取り
+  pinMode(mp_rst, INPUT_PULLDOWN);
+  delay(1);
+  mp_isIPS_lcd = digitalRead(mp_rst);
+  delay(1);
+
   pinMode( mp_rst, OUTPUT ); //Set RESET pin
   pinMode( mp_dc, OUTPUT ); //Set Data/Command pin
 
@@ -81,16 +87,69 @@ void ILI9341Spi::ILI9341init( int8_t sck, int8_t miso, int8_t mosi, int8_t cs, i
   }
   digitalWrite( mp_dc, HIGH );
 
-  ILI9341Spi::commandWrite( 0x38 ); //Idle mode OFF
-  ILI9341Spi::commandWrite( 0x3A ); //COLMOD: Pixel Format Set
-    ILI9341Spi::dataWrite( 0b01010101 ); //RGB 16 bits / pixel, MCU 16 bits / pixel
-  ILI9341Spi::commandWrite( 0x36 ); //MADCTL: Memory Access Control
-    ILI9341Spi::dataWrite( 0b0001000 ); //M5stack only. D3: BGR(RGB-BGR Order control bit )="1"
-    //ILI9341Spi::dataWrite( 0b00101000 ); //サインスマート 2.2インチ用。D3: BGR(RGB-BGR Order control bit )="1"
-  ILI9341Spi::commandWrite( 0x11 ); //Sleep OUT
-  delay(10);
+  ILI9341Spi::commandWrite(0x11); //sleep out
 
-  ILI9341Spi::commandWrite( 0x29 ); //Display ON
+  ILI9341Spi::commandWrite(0x36); //Memory Access Control
+    ILI9341Spi::dataWrite(0b00001000);//MY,MX,MV,ML,BGR,MH ローテーションとRGB->BGR
+
+  ILI9341Spi::commandWrite(0x3A); //COLMOD: Pixel Format Set
+    ILI9341Spi::dataWrite(0b01100101);
+
+  ILI9341Spi::commandWrite(0xB1); //Frame Rate Control
+    ILI9341Spi::dataWrite(0x00);
+    ILI9341Spi::dataWrite(0x13); // 0x18 79Hz, 0x1B default 70Hz, 0x13 100Hz
+
+  ILI9341Spi::commandWrite(0xB6);    // Display Function Control
+    ILI9341Spi::dataWrite(0x0a);
+    ILI9341Spi::dataWrite(0b00000010);
+    ILI9341Spi::dataWrite(0x1d);
+    ILI9341Spi::dataWrite(0x04);
+
+  if(mp_isIPS_lcd) {
+    ILI9341Spi::commandWrite(0x21); //Display Inversion ON
+  }else{
+    ILI9341Spi::commandWrite(0x20); //Display Inversion OFF
+  }
+
+  ILI9341Spi::commandWrite(0x26);    //Gamma curve selected
+    ILI9341Spi::dataWrite(0x01);
+
+  ILI9341Spi::commandWrite(0xE0);    //Set Gamma
+    ILI9341Spi::dataWrite(0x0F);
+    ILI9341Spi::dataWrite(0x31);
+    ILI9341Spi::dataWrite(0x2B);
+    ILI9341Spi::dataWrite(0x0C);
+    ILI9341Spi::dataWrite(0x0E);
+    ILI9341Spi::dataWrite(0x08);
+    ILI9341Spi::dataWrite(0x4E);
+    ILI9341Spi::dataWrite(0xF1);
+    ILI9341Spi::dataWrite(0x37);
+    ILI9341Spi::dataWrite(0x07);
+    ILI9341Spi::dataWrite(0x10);
+    ILI9341Spi::dataWrite(0x03);
+    ILI9341Spi::dataWrite(0x0E);
+    ILI9341Spi::dataWrite(0x09);
+    ILI9341Spi::dataWrite(0x00);
+
+  ILI9341Spi::commandWrite(0xE1);    //Set Gamma
+    ILI9341Spi::dataWrite(0x00);
+    ILI9341Spi::dataWrite(0x0E);
+    ILI9341Spi::dataWrite(0x14);
+    ILI9341Spi::dataWrite(0x03);
+    ILI9341Spi::dataWrite(0x11);
+    ILI9341Spi::dataWrite(0x07);
+    ILI9341Spi::dataWrite(0x31);
+    ILI9341Spi::dataWrite(0xC1);
+    ILI9341Spi::dataWrite(0x48);
+    ILI9341Spi::dataWrite(0x08);
+    ILI9341Spi::dataWrite(0x0F);
+    ILI9341Spi::dataWrite(0x0C);
+    ILI9341Spi::dataWrite(0x31);
+    ILI9341Spi::dataWrite(0x36);
+    ILI9341Spi::dataWrite(0x0F);
+
+  delay(120);
+  ILI9341Spi::commandWrite(0x29);//Display On
 
   ILI9341Spi::displayClear( 0, 0, 319, 239 );
 
@@ -211,13 +270,21 @@ void ILI9341Spi::dispRotation( uint8_t rot ){
 //********* Color bit Inversion OFF ************
 void ILI9341Spi::dispInversionOn(){
   ILI9341Spi::spiSetChange();
-  ILI9341Spi::commandWrite( 0x21 ); //MADCTL: Memory Access Control
+  if(mp_isIPS_lcd) {
+    ILI9341Spi::commandWrite(0x20); //Display Inversion OFF
+  }else{
+    ILI9341Spi::commandWrite(0x21); //Display Inversion ON
+  }
   if( !mp_useHw_Cs ) digitalWrite( mp_cs, HIGH );
 }
 //********* Color bit Inversion ON ************
 void ILI9341Spi::dispInversionOff(){
   ILI9341Spi::spiSetChange();
-  ILI9341Spi::commandWrite( 0x20 ); //MADCTL: Memory Access Control
+  if(mp_isIPS_lcd) {
+    ILI9341Spi::commandWrite(0x21); //Display Inversion ON
+  }else{
+    ILI9341Spi::commandWrite(0x20); //Display Inversion OFF
+  }
   if( !mp_useHw_Cs ) digitalWrite( mp_cs, HIGH );
 }
 //********* 4wire SPI Data / Command write************
