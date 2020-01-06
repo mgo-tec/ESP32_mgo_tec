@@ -23,6 +23,7 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 (beta ver 1.0.70)  
 Support for the latest M5Stack IPS display (ILI9342C).  
 The first M5Stack ILI9341 is automatically detected.  
+Thanks to [lovyan] (https://twitter.com/lovyan03) for teaching me.  
 Modify the following files.  
 - ili9341_spi.h  
 - ili9341_spi.cpp  
@@ -99,6 +100,7 @@ New Release.
 (beta ver 1.0.70)  
 最新のM5StackのIPSディスプレイ (ILI9342C) に対応しました。  
 初代M5Stack ILI9341とは自動判別するようにしました。  
+教えて頂いた[らびやん](https://twitter.com/lovyan03)さんに感謝です。  
 以下のファイルを修正。  
 - ili9341_spi.h  
 - ili9341_spi.cpp  
