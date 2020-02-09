@@ -1,6 +1,6 @@
 /*
   ili9341_spi.cpp - for Arduino core for the ESP32 ( Use SPI library ).
-  Beta version 1.0.7
+  Beta version 1.0.8
   ESP32_LCD_ILI9341_SPI library class has been redesigned.
   
 The MIT License (MIT)
@@ -100,9 +100,9 @@ void ILI9341Spi::ILI9341init( int8_t sck, int8_t miso, int8_t mosi, int8_t cs, i
     ILI9341Spi::dataWrite(0x13); // 0x18 79Hz, 0x1B default 70Hz, 0x13 100Hz
 
   ILI9341Spi::commandWrite(0xB6);    // Display Function Control
-    ILI9341Spi::dataWrite(0x0a);
+    ILI9341Spi::dataWrite(0x02);
     ILI9341Spi::dataWrite(0b00000010);
-    ILI9341Spi::dataWrite(0x1d);
+    ILI9341Spi::dataWrite(0x27);
     ILI9341Spi::dataWrite(0x04);
 
   if(mp_isIPS_lcd) {
@@ -236,24 +236,30 @@ void ILI9341Spi::dispRotation( uint8_t rot ){
 
     //------------------------
     case 250:
-      b = 0b00101000; //HiLetgo 2.8", サインスマート販売のILI9341横正常表示
+      b = 0b00101000; //ESP32_mgo_tec bv1.0.69 HiLetgo 2.8", サインスマート販売のILI9341横正常表示
       m_max_disp_width = mp_max_disp_width;
       m_max_disp_height = mp_max_disp_height;
       break;
     case 251:
-      b = 0b10001000; //HiLetgo 2.8", サインスマート販売のILI9341の縦方向表示
+      b = 0b10001000; //ESP32_mgo_tec bv1.0.69 HiLetgo 2.8", サインスマート販売のILI9341の縦方向表示
       m_max_disp_width = mp_max_disp_height;
       m_max_disp_height = mp_max_disp_width;
       break;
-    case 252: //HiLetgo 2.8"　横表示　上下逆
+    case 252: //ESP32_mgo_tec bv1.0.69 HiLetgo 2.8"　横表示　上下逆
       b = 0b11101000;
       m_max_disp_width = mp_max_disp_width;
       m_max_disp_height = mp_max_disp_height;
       break;
-    case 253: //HiLetgo 2.8"、 縦表示　上下逆
+    case 253: //ESP32_mgo_tec bv1.0.69 HiLetgo 2.8"、 縦表示　上下逆
       b = 0b01001000;
       m_max_disp_width = mp_max_disp_height;
       m_max_disp_height = mp_max_disp_width;
+      break;
+    case 254:
+      b = 0b00101000; //ESP32_mgo_tec bv1.0.71～ HiLetgo 2.8" 横正常表示
+      m_max_disp_width = mp_max_disp_width;
+      m_max_disp_height = mp_max_disp_height;
+      ILI9341Spi::dispInversionOn();
       break;
     default:
       break;
