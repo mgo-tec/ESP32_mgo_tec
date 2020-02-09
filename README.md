@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.70  
+Beta ver 1.0.71  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -20,6 +20,10 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 その場合、/Sensor/フォルダを削除してください。  
   
 # Change log
+(beta ver 1.0.71)  
+- The display error when the ESP32 development board and the ILI9341 module were connected by SPI was corrected.  
+- Slightly fixed NTP server related.  
+  
 (beta ver 1.0.70)  
 Support for the latest M5Stack IPS display (ILI9342C).  
 The first M5Stack ILI9341 is automatically detected.  
@@ -97,6 +101,10 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.71)  
+- ESP32開発ボードとILI9341モジュールをSPI接続した場合の表示異常を修正しました。  
+- NTPサーバー関連を少々修正。  
+  
 (beta ver 1.0.70)  
 最新のM5StackのIPSディスプレイ (ILI9342C) に対応しました。  
 初代M5Stack ILI9341とは自動判別するようにしました。  

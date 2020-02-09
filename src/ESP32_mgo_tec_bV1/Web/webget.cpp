@@ -1,6 +1,6 @@
 /*
   webget.cpp
-  Beta version 1.0.2
+  Beta version 1.0.3
 
 Copyright (c) 2017 Mgo-tec
 
@@ -362,8 +362,8 @@ bool WebGetClass::getNtpServerSelect( uint8_t timezone ){
   if( tmp_time < 600000 ){
     Serial.println( F("------ NTP time GET Try again") );
     const char *ntpServerName[7] = {
-      "time.windows.com"
-      "time.nist.gov",
+      "time.windows.com",
+      "ntp.nc.u-tokyo.ac.jp",
       "time-a.nist.gov",
       "time-b.nist.gov",
       "time-nw.nist.gov",
