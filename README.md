@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.71  
+Beta ver 1.0.72  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -20,6 +20,10 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 その場合、/Sensor/フォルダを削除してください。  
   
 # Change log
+(beta ver 1.0.72)  
+- Fixed the problem that Yahoo Japan RSS weather forecast is not displayed when the string "later" is used.  
+(yahooj_rss.cpp file modified)  
+  
 (beta ver 1.0.71)  
 - The display error when the ESP32 development board and the ILI9341 module were connected by SPI was corrected.  
 - Slightly fixed NTP server related.  
@@ -101,6 +105,9 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.72)  
+- Yahoo Japan RSS 天気予報表示で、「のち」という文字列の場合表示されない問題を修正しました。（yahooj_rss.cpp ファイル修正）  
+  
 (beta ver 1.0.71)  
 - ESP32開発ボードとILI9341モジュールをSPI接続した場合の表示異常を修正しました。  
 - NTPサーバー関連を少々修正。  

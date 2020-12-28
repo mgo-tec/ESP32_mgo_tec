@@ -1,7 +1,7 @@
 /*
   yahooj_rss.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.3
+  Beta version 1.0.31
   
 The MIT License (MIT)
 
@@ -146,7 +146,7 @@ void YahooJrssGet::weatherJfontNum(String str, uint8_t wDay, uint8_t Htime, uint
   if((str.indexOf("時々") >= 0) || (str.indexOf("一時") >= 0)){
     Single = false;
     Fnum[1] = 27;
-  }else if(str.indexOf("後") >= 0){
+  }else if((str.indexOf("後") >= 0) || (str.indexOf("のち") >= 0)) {
     Single = false;
     Fnum[1] = 28;
   }else if(str.indexOf("時々") < 0 && str.indexOf("後") < 0){
