@@ -20,7 +20,7 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 その場合、/Sensor/フォルダを削除してください。  
   
 # Change log
-(beta ver 1.0.72)  
+(beta ver 1.0.80)  
 Updated so that the weather forecast can be obtained from the Japan Meteorological Agency website.  
   
 (beta ver 1.0.72)  
