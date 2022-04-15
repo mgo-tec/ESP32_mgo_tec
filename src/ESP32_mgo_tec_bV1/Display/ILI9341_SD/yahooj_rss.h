@@ -1,7 +1,7 @@
 /*
   yahooj_rss.h - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 1.0.31
+  Beta version 2.0.0
   
 The MIT License (MIT)
 
@@ -67,7 +67,10 @@ private:
   File mp_weather_file;
 
   void weatherJfontNum( String str, uint8_t wDay, uint8_t Htime, uint8_t Fnum[3], uint8_t col[3][3] );
-  void myFontReadSd( File F, uint8_t ZorH, uint8_t num, uint8_t buf[2][16] );
+  
+  void JapanWeatherFontNum(uint16_t weather_code, uint8_t wDay, uint8_t Htime, uint8_t (&Fnum)[3], uint8_t (&col)[3][3]);
+  
+  void myFontReadSd( File F, uint8_t ZorH, uint8_t num, uint8_t (&buf)[2][16] );
 
 public:
   enum NewsState { MsgReset, Connecting, ConnectOK, ConnectFailed }
@@ -94,6 +97,9 @@ public:
   void dispYahooJweatherMyFont( FontParameter &weather_font );
   void dispYahooJweatherMyFont( File F, FontParameter &weather_font );
 
+  void dispJapanWeatherMyFont( FontParameter &weather_font );
+  void dispJapanWeatherMyFont( File F, FontParameter &weather_font );
+
   void getYahooJnews( const char *host, const char *target_url );
   void getYahooJnews( const char *host, const uint16_t port, const char *target_url );
   void getYahooJnews( const char *Root_Ca, const char *host, const char *target_url );
@@ -107,6 +113,13 @@ public:
   void getYahooJweatherRCA( const char *Root_Ca, uint8_t rca_set, const char *host, const char *target_url );
 
   void getYahooJweather2( const char *host, const char *target_url, uint32_t get_interval );
+
+  void getJpWeatherRCA(
+    const char *Root_Ca,
+    uint8_t rca_set,
+    const char *host,
+    String target_url,
+    String area_code_str);
 
   void scrolleYahooJnews( FontParameter &font, ScrolleParameter &scl_set, uint8_t *sj_txt, uint8_t font_buf[][16] );
   void scrolleYahooJnews2( FontParameter &news_font, ScrolleParameter &scl_set );

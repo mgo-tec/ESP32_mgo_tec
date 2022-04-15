@@ -1,6 +1,6 @@
 /*
   webget.cpp
-  Beta version 1.0.3
+  Beta version 2.0.0
 
 Copyright (c) 2017 Mgo-tec
 
@@ -209,11 +209,11 @@ String WebGetClass::httpsWebGet( const char *root_ca, const char* host1, String 
   return str;
 }
 
-String WebGetClass::httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, String t_ip, char c_tag, String F_tag, String B_tag, String E_tag, String Pph ){
-  return WebGetClass::httpsGet( Root_Ca, rca_set, Host, 443, t_ip, c_tag, F_tag, B_tag, E_tag, Pph );
+String WebGetClass::httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, String target_url, char c_tag, String F_tag, String B_tag, String E_tag, String Pph ){
+  return WebGetClass::httpsGet( Root_Ca, rca_set, Host, 443, target_url, c_tag, F_tag, B_tag, E_tag, Pph );
 }
 
-String WebGetClass::httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, const uint16_t Port, String t_ip, char c_tag, String F_tag, String B_tag, String E_tag, String Pph ){
+String WebGetClass::httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, const uint16_t Port, String target_url, char c_tag, String F_tag, String B_tag, String E_tag, String Pph ){
   int16_t wifi_state = WiFi.status();
   if( wifi_state != WL_CONNECTED ){
     return "※WiFi APに接続できません";
@@ -226,7 +226,8 @@ String WebGetClass::httpsGet( const char *Root_Ca, uint8_t rca_set, const char* 
     client.setCACert( Root_Ca );
     Serial.println( F("-------Root CA SET") );
   }else{
-    Serial.println( F("------- Nothing Root CA") );
+    client.setInsecure();
+    Serial.println( F("------- No Root CA connection") );
   }
 
   uint32_t time_out = millis();
@@ -239,7 +240,7 @@ String WebGetClass::httpsGet( const char *Root_Ca, uint8_t rca_set, const char* 
       Serial.println( F("-------Send HTTPS GET Request") );
 
       String str1 = String( F("GET ") );
-             str1 += t_ip + F(" HTTP/1.1\r\n");
+             str1 += target_url + F(" HTTP/1.1\r\n");
              str1 += F("Host: ");
              str1 += String( Host ) + F("\r\n");
              str1 += F("User-Agent: BuildFailureDetectorESP32\r\n");
@@ -272,6 +273,7 @@ String WebGetClass::httpsGet( const char *Root_Ca, uint8_t rca_set, const char* 
         Serial.println( F("Host HTTPS response failed.") );
         break;
       }
+
       while( client.available() ) {
         if( dummy_str.indexOf( F_tag ) == -1){
           dummy_str = client.readStringUntil( c_tag );
@@ -305,6 +307,122 @@ String WebGetClass::httpsGet( const char *Root_Ca, uint8_t rca_set, const char* 
   ret_str1.replace( "&#39;", "\'" ); //XMLソースの場合、半角アポストロフィーが正しく表示されないので置き換える
   ret_str1.replace( "&apos;", "\'" ); //XMLソースの場合、半角アポストロフィーが正しく表示されないので置き換える
   ret_str1.replace( "&quot;", "\"" ); //XMLソースの場合、ダブルクォーテーションが正しく表示されないので置き換える
+
+  if( ret_str1.length() < 20 ) ret_str1 = "※WEB GETできませんでした";
+
+  if( client ){
+    delay(10);
+    client.stop();
+    delay(10);
+    Serial.println( F("-------Client Stop") );
+  }
+
+  return ret_str1;
+}
+//********************気象庁天気予報ゲット*******************************
+String WebGetClass::getJapanWeatherPartJson(
+  const char *Root_Ca,
+  uint8_t rca_set,
+  const char* Host,
+  const uint16_t Port,
+  String target_url,
+  char separation_tag,
+  String search_key,
+  String paragraph)
+{
+
+  int16_t wifi_state = WiFi.status();
+  if( wifi_state != WL_CONNECTED ){
+    return "※WiFi APに接続できません";
+  }
+
+  String ret_str1;
+  WiFiClientSecure client;
+
+  if( rca_set == 1 ){
+    client.setCACert( Root_Ca );
+    Serial.println( F("-------Root CA SET") );
+  }else{
+    client.setInsecure();
+    Serial.println( F("------- No Root CA connection") );
+  }
+
+  uint32_t time_out = millis();
+  while(true){
+    /*インターネットが不意に切断されたときや、長時間接続している時には再接続できなくなる。
+    再接続時、client.connect が true になるまで時間がかかる場合があるので、数回トライする必要がある。*/
+    if ( client.connect( Host, Port ) ){
+      Serial.print( Host ); Serial.print( F("-------------") );
+      Serial.println( F("connected") );
+      Serial.println( F("-------Send HTTPS GET Request") );
+
+      String str1 = String( F("GET ") );
+             str1 += target_url + F(" HTTP/1.1\r\n");
+             str1 += F("Host: ");
+             str1 += String( Host ) + F("\r\n");
+             str1 += F("User-Agent: BuildFailureDetectorESP32\r\n");
+             str1 += F("Accept: text/html,application/xhtml+xml,application/xml\r\n");
+             str1 += F("Connection: keep-alive\r\n\r\n"); //closeを使うと、サーバーの応答後に切断される。最後に空行必要
+             str1 += "\0";
+
+      client.print( str1 ); //client.println にしないこと。最後に改行コードをプラスして送ってしまう為
+      client.flush(); //client出力が終わるまで待つ
+      log_v( "%s", str1.c_str() );
+      //Serial.flush(); //シリアル出力が終わるまで待つ指令は、余分なdelayがかかってしまうので基本的に使わない
+      break;
+    }
+    if( ( millis() - time_out ) > 20000 ){
+      Serial.println( F("time out!") );
+      Serial.println( F("Host connection failed.") );
+      return "※Host に接続できません。";
+    }
+    delay(1);
+  }
+
+  time_out = millis();
+  if( client ){
+    String tmp_str;
+    Serial.println( F("-------Receive HTTPS Response") );
+
+    if( client.connected() ){
+      //search_key = "code\":\"130010\"},\"weatherCodes\":[\""
+      //{"name":"東京地方","code":"130010"},"weatherCodes":["300","201","201"],
+      //from_tag = "{/"name/":"
+      //to_tag = "],"
+      //separation_tag = ']'
+      while(true) {
+        if( ( millis() - time_out ) > 60000 ){
+          Serial.println( F("time out!"));
+          Serial.println( F("Host HTTPS response failed.") );
+          break;
+        }
+
+        tmp_str = client.readStringUntil( separation_tag );
+        //Serial.println(tmp_str);
+        if( tmp_str.indexOf( search_key ) >= 0 ){
+          ret_str1 += paragraph;
+          ret_str1 += tmp_str;
+          ret_str1 += "] ";
+          break;
+        }
+
+        delay(1);
+      }
+
+      while(client.available()){
+        if( ( millis() - time_out ) > 60000 ) break; //60seconds Time Out
+        client.read();
+        delay(1);
+      }
+
+      delay(10);
+      client.stop();
+      delay(10);
+      Serial.println( F("-------Client Stop") );
+
+    }
+  }
+  ret_str1 += "\0";
 
   if( ret_str1.length() < 20 ) ret_str1 = "※WEB GETできませんでした";
 

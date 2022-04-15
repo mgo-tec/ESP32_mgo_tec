@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.72  
+Beta ver 1.0.80 
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -20,6 +20,9 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 その場合、/Sensor/フォルダを削除してください。  
   
 # Change log
+(beta ver 1.0.72)  
+Updated so that the weather forecast can be obtained from the Japan Meteorological Agency website.  
+  
 (beta ver 1.0.72)  
 - Fixed the problem that Yahoo Japan RSS weather forecast is not displayed when the string "later" is used.  
 (yahooj_rss.cpp file modified)  
@@ -105,6 +108,10 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.80)  
+Yahoo RSS 天気予報が2022/03/31で配信終了してしまったため、気象庁ホームページから天気予報を取得できるように修正。  
+[https://www.mgo-tec.com/blog-entry-jp-weather01.html](https://www.mgo-tec.com/blog-entry-jp-weather01.html)  
+  
 (beta ver 1.0.72)  
 - Yahoo Japan RSS 天気予報表示で、「のち」という文字列の場合表示されない問題を修正しました。（yahooj_rss.cpp ファイル修正）  
   

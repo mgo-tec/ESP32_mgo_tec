@@ -1,6 +1,6 @@
 /*
   WebGet.h
-  Beta version 1.0.21
+  Beta version 2.0.0
 
 Copyright (c) 2018 Mgo-tec
 
@@ -83,9 +83,19 @@ public:
   String webGet( const char* host0, String target_ip, char char_tag, String Final_tag, String Begin_tag, String End_tag, String Paragraph );
   String httpsWebGet( const char* host1, String target_ip, char char_tag, String Final_tag, String Begin_tag, String End_tag, String Paragraph );
   String httpsWebGet( const char *root_ca, const char* host1, String target_ip, char char_tag, String Final_tag, String Begin_tag, String End_tag, String Paragraph );
-  String httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, String t_ip, char c_tag, String F_tag, String B_tag, String E_tag, String Pph );
+  String httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, String target_url, char c_tag, String F_tag, String B_tag, String E_tag, String Pph );
 
-  String httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, const uint16_t Port, String t_ip, char c_tag, String F_tag, String B_tag, String E_tag, String Pph );
+  String httpsGet( const char *Root_Ca, uint8_t rca_set, const char* Host, const uint16_t Port, String target_url, char c_tag, String F_tag, String B_tag, String E_tag, String Pph );
+
+  String getJapanWeatherPartJson(
+    const char *Root_Ca,
+    uint8_t rca_set,
+    const char* Host,
+    const uint16_t Port,
+    String target_url,
+    char separation_tag,
+    String search_key,
+    String paragraph);
 
   bool getNtpServerSelect( uint8_t timezone );
   void getNtpInterval( uint32_t interval );
