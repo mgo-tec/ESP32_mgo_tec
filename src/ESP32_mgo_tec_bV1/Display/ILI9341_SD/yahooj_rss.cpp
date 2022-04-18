@@ -1,7 +1,7 @@
 /*
   yahooj_rss.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 2.0.0
+  Beta version 2.0.1
   
 The MIT License (MIT)
 
@@ -302,7 +302,7 @@ void YahooJrssGet::JapanWeatherFontNum(
       col[0][0] =  Sunny_red; col[0][1] = Sunny_green; col[0][2] = Sunny_blue;
       Fnum[0] = sunny_fnt_num;
       Fnum[1] = 27; //[時々（一時）]縦棒
-      col[2][0] =  Rain_red; col[2][1] = Rain_green; col[2][2] = Rain_blue;
+      col[2][0] =  Snow_red; col[2][1] = Snow_green; col[2][2] = Snow_blue;
       Fnum[2] = snow_fnt_num;
       break;
 
@@ -355,7 +355,7 @@ void YahooJrssGet::JapanWeatherFontNum(
     case 231:
       //Serial.println("曇り");
       Fnum[0] = 0;
-      col[1][0] =  Sunny_red; col[1][1] = Sunny_green; col[1][2] = Sunny_blue;
+      col[1][0] =  Cloudy_red; col[1][1] = Cloudy_green; col[1][2] = Cloudy_blue;
       Fnum[1] = cloudy_fnt_num; //縦棒、または矢印
       Fnum[2] = 0;
       break;
@@ -552,7 +552,7 @@ void YahooJrssGet::JapanWeatherFontNum(
     case 450:
       //Serial.println("雪");
       Fnum[0] = 0;
-      col[1][0] =  Rain_red; col[1][1] = Rain_green; col[1][2] = Rain_blue;
+      col[1][0] =  Snow_red; col[1][1] = Snow_green; col[1][2] = Snow_blue;
       Fnum[1] = storm_fnt_num; //縦棒、または矢印
       Fnum[2] = 0;
       break;
@@ -573,7 +573,7 @@ void YahooJrssGet::JapanWeatherFontNum(
       col[0][0] =  Snow_red; col[0][1] = Snow_green; col[0][2] = Snow_blue;
       Fnum[0] = snow_fnt_num;
       Fnum[1] = 27; //[時々（一時）]縦棒
-      col[2][0] =  Sunny_red; col[2][1] = Sunny_green; col[2][2] = Sunny_blue;
+      col[2][0] =  Cloudy_red; col[2][1] = Cloudy_green; col[2][2] = Cloudy_blue;
       Fnum[2] = sunny_fnt_num;
       break;
     
@@ -594,7 +594,7 @@ void YahooJrssGet::JapanWeatherFontNum(
     case 407:
       //Serial.println("暴風雪");
       Fnum[0] = 0;
-      col[1][0] =  Rain_red; col[1][1] = Rain_green; col[1][2] = Rain_blue;
+      col[1][0] =  Snow_red; col[1][1] = Snow_green; col[1][2] = Snow_blue;
       Fnum[1] = storm_fnt_num; //縦棒、または矢印
       Fnum[2] = 0;
       break;
