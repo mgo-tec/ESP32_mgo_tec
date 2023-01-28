@@ -1,7 +1,7 @@
 /*
   yahooj_rss.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 2.0.1
+  Beta version 2.0.11
   
 The MIT License (MIT)
 
@@ -229,13 +229,9 @@ void YahooJrssGet::JapanWeatherFontNum(
   uint8_t Rain_red = 0, Rain_green = 0, Rain_blue = 31;
   uint8_t Snow_red = 31, Snow_green = 63, Snow_blue = 31;
   uint8_t Thunder_red = 31, Thunder_green = 63, Thunder_blue = 0;
-  uint8_t Brack_red = 0, Brack_green = 0, Brack_blue = 0;
 
   col[1][0] = 31; col[1][1] = 63; col[1][2] = 31; //矢印
-
-  uint8_t fnt_num = 0;
-  bool Single = true;
-
+  
   uint8_t sunny_fnt_num;
   if((wDay == 0) && (Htime >= 15)){ //wDay = 0 今日、wDay = 1 明日
     Sunny_red =  Thunder_red, Sunny_green = Thunder_green, Sunny_blue = Thunder_blue;
@@ -248,7 +244,7 @@ void YahooJrssGet::JapanWeatherFontNum(
   uint8_t rain_fnt_num = 22;
   uint8_t snow_fnt_num = 24;
   uint8_t storm_fnt_num = 23;
-  uint8_t thunder_fnt_num = 25;
+  //uint8_t thunder_fnt_num = 25;
 
 
   switch(weather_code){
