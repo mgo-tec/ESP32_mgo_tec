@@ -21,7 +21,7 @@ If you do not need it, delete /Sensor/ folder and the files in it.
   
 # Change log
 (beta ver 1.0.83)  
-Fixed an issue in yahooj_rss.cpp where a rainstorm icon would appear when it was snowing.  
+Fixed an issue in yahooj_rss.cpp where a rainstorm icon would appear when it was snowing..  
   
 (beta ver 1.0.82)  
 In yahooj_rss.cpp, there was an unused constant and I got a compilation error, so I deleted it.  
