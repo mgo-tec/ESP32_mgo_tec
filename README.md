@@ -1,6 +1,6 @@
 # ESP32_mgo_tec
 This is Arduino core for the ESP32 library Package by mgo-tec.  
-Beta ver 1.0.82  
+Beta ver 1.0.83  
   
 I renewed my past library and compiled it into one package.  
 We modified function names and variable names as much as possible to general rules.   
@@ -20,6 +20,9 @@ If you do not need it, delete /Sensor/ folder and the files in it.
 その場合、/Sensor/フォルダを削除してください。  
   
 # Change log
+(beta ver 1.0.83)  
+Fixed an issue in yahooj_rss.cpp where a rainstorm icon would appear when it was snowing.  
+  
 (beta ver 1.0.82)  
 In yahooj_rss.cpp, there was an unused constant and I got a compilation error, so I deleted it.  
   
@@ -114,6 +117,9 @@ Fix LCD ILI9341 screen MAX size variable initialization.
 New Release.   
   
 # 【更新履歴】(Japanese)
+(beta ver 1.0.83)  
+yahooj_rss.cpp で、雪の場合に暴風雨アイコンが出てしまうのを修正しました。  
+  
 (beta ver 1.0.82)  
 yahooj_rss.cpp で、未使用の定数があり、コンパイルエラーが出たので消去しました。  
   

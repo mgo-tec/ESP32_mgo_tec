@@ -1,7 +1,7 @@
 /*
   yahooj_rss.cpp - for Arduino core for the ESP32.
   ( Use LCD ILI9341 and SD )
-  Beta version 2.0.11
+  Beta version 2.0.12
   
 The MIT License (MIT)
 
@@ -549,7 +549,7 @@ void YahooJrssGet::JapanWeatherFontNum(
       //Serial.println("雪");
       Fnum[0] = 0;
       col[1][0] =  Snow_red; col[1][1] = Snow_green; col[1][2] = Snow_blue;
-      Fnum[1] = storm_fnt_num; //縦棒、または矢印
+      Fnum[1] = snow_fnt_num; //縦棒、または矢印
       Fnum[2] = 0;
       break;
     
